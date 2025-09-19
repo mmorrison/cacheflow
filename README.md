@@ -55,9 +55,9 @@ That's it! CacheFlow handles the rest.
 
 | Metric         | Traditional | CacheFlow | Improvement |
 | -------------- | ----------- | --------- | ----------- |
-| Response Time  | 200ms       | 20ms      | 10x faster  |
-| Cache Hit Rate | 60%         | 95%       | 58% better  |
-| Memory Usage   | 100MB       | 50MB      | 50% less    |
+| Response Time  |        |     |   |
+| Cache Hit Rate |        |     |   |
+| Memory Usage   |        |     |   |
 
 ## 🎯 Real-World Usage
 

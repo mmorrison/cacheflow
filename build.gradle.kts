@@ -12,7 +12,7 @@ plugins {
     id("com.github.ben-manes.versions") version "0.49.0"
 }
 
-group = "com.yourcompany"
+group = "io.cacheflow"
 
 version = "0.1.0-alpha"
 
