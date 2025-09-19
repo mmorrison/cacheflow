@@ -3,22 +3,25 @@ package io.cacheflow.spring.aspect
 import io.cacheflow.spring.annotation.CacheFlow
 import io.cacheflow.spring.annotation.CacheFlowCached
 import io.cacheflow.spring.annotation.CacheFlowEvict
+import io.cacheflow.spring.dependency.DependencyResolver
 import io.cacheflow.spring.service.CacheFlowService
+import io.cacheflow.spring.versioning.CacheKeyVersioner
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
-import org.springframework.expression.spel.standard.SpelExpressionParser
-import org.springframework.expression.spel.support.StandardEvaluationContext
 import org.springframework.stereotype.Component
 
 /** AOP Aspect for handling CacheFlow annotations. */
 @Aspect
 @Component
 class CacheFlowAspect(
-    private val cacheService: CacheFlowService
+    private val cacheService: CacheFlowService,
+    private val dependencyResolver: DependencyResolver,
+    private val cacheKeyVersioner: CacheKeyVersioner
 ) {
-    private val expressionParser = SpelExpressionParser()
+    private val cacheKeyGenerator = CacheKeyGenerator(cacheKeyVersioner)
+    private val dependencyManager = DependencyManager(dependencyResolver)
     private val defaultTtlSeconds = 3_600L
 
     /**
@@ -36,13 +39,32 @@ class CacheFlowAspect(
     }
 
     private fun processCacheFlow(joinPoint: ProceedingJoinPoint, cached: CacheFlow): Any? {
+        // Get configuration - use config registry if config name is provided
+        val config = if (cached.config.isNotBlank()) {
+            // TODO: Inject CacheFlowConfigRegistry to get complex configuration
+            // For now, use the annotation parameters directly
+            cached
+        } else {
+            cached
+        }
+
         // Generate cache key
-        val key = generateCacheKeyFromExpression(cached.key, joinPoint)
-        if (key.isBlank()) return joinPoint.proceed()
+        val baseKey = cacheKeyGenerator.generateCacheKeyFromExpression(config.key, joinPoint)
+        if (baseKey.isBlank()) return joinPoint.proceed()
+
+        // Apply versioning if enabled
+        val key = if (config.versioned) {
+            cacheKeyGenerator.generateVersionedKey(baseKey, config, joinPoint)
+        } else {
+            baseKey
+        }
+
+        // Track dependencies if specified
+        dependencyManager.trackDependencies(key, config.dependsOn, joinPoint)
 
         // Check cache first
         val cachedValue = cacheService.get(key)
-        return cachedValue ?: executeAndCache(joinPoint, key, cached)
+        return cachedValue ?: executeAndCache(joinPoint, key, config)
     }
 
     private fun executeAndCache(joinPoint: ProceedingJoinPoint, key: String, cached: CacheFlow): Any? {
@@ -69,13 +91,32 @@ class CacheFlowAspect(
     }
 
     private fun processCacheFlowCached(joinPoint: ProceedingJoinPoint, cached: CacheFlowCached): Any? {
+        // Get configuration - use config registry if config name is provided
+        val config = if (cached.config.isNotBlank()) {
+            // TODO: Inject CacheFlowConfigRegistry to get complex configuration
+            // For now, use the annotation parameters directly
+            cached
+        } else {
+            cached
+        }
+
         // Generate cache key
-        val key = generateCacheKeyFromExpression(cached.key, joinPoint)
-        if (key.isBlank()) return joinPoint.proceed()
+        val baseKey = cacheKeyGenerator.generateCacheKeyFromExpression(config.key, joinPoint)
+        if (baseKey.isBlank()) return joinPoint.proceed()
+
+        // Apply versioning if enabled
+        val key = if (config.versioned) {
+            cacheKeyGenerator.generateVersionedKey(baseKey, config, joinPoint)
+        } else {
+            baseKey
+        }
+
+        // Track dependencies if specified
+        dependencyManager.trackDependencies(key, config.dependsOn, joinPoint)
 
         // Check cache first
         val cachedValue = cacheService.get(key)
-        return cachedValue ?: executeAndCacheCached(joinPoint, key, cached)
+        return cachedValue ?: executeAndCacheCached(joinPoint, key, config)
     }
 
     private fun executeAndCacheCached(joinPoint: ProceedingJoinPoint, key: String, cached: CacheFlowCached): Any? {
@@ -112,44 +153,6 @@ class CacheFlowAspect(
         return result
     }
 
-    private fun generateCacheKeyFromExpression(keyExpression: String, joinPoint: ProceedingJoinPoint): String {
-        if (keyExpression.isBlank()) {
-            return generateDefaultCacheKey(joinPoint)
-        }
-
-        return try {
-            val context = StandardEvaluationContext()
-            val method = joinPoint.signature as MethodSignature
-            val parameterNames = method.parameterNames
-
-            // Add method parameters to context
-            joinPoint.args.forEachIndexed { index, arg ->
-                context.setVariable(parameterNames[index], arg)
-            }
-
-            // Add method target to context
-            context.setVariable("target", joinPoint.target)
-
-            val expression = expressionParser.parseExpression(keyExpression)
-            expression.getValue(context, String::class.java) ?: generateDefaultCacheKey(joinPoint)
-        } catch (e: org.springframework.expression.ParseException) {
-            // Log the parsing exception for debugging but fall back to default key generation
-            println("Failed to parse cache key expression '$keyExpression': ${e.message}")
-            generateDefaultCacheKey(joinPoint)
-        } catch (e: org.springframework.expression.EvaluationException) {
-            // Log the evaluation exception for debugging but fall back to default key generation
-            println("Failed to evaluate cache key expression '$keyExpression': ${e.message}")
-            generateDefaultCacheKey(joinPoint)
-        }
-    }
-
-    private fun generateDefaultCacheKey(joinPoint: ProceedingJoinPoint): String {
-        val method = joinPoint.signature as MethodSignature
-        val className = method.declaringType.simpleName
-        val methodName = method.name
-        val args = joinPoint.args.joinToString(",") { it?.toString() ?: "null" }
-        return "$className.$methodName($args)"
-    }
 
     private fun evictCacheEntries(evict: CacheFlowEvict, joinPoint: ProceedingJoinPoint) {
         when {
@@ -157,9 +160,9 @@ class CacheFlowAspect(
                 cacheService.evictAll()
             }
             evict.key.isNotBlank() -> {
-                val key = generateCacheKeyFromExpression(evict.key, joinPoint)
+                val key = cacheKeyGenerator.generateCacheKeyFromExpression(evict.key, joinPoint)
                 if (key.isNotBlank()) {
-                    cacheService.evict(key)
+                    dependencyManager.evictWithDependencies(key, cacheService)
                 }
             }
             evict.tags.isNotEmpty() -> {
@@ -167,4 +170,5 @@ class CacheFlowAspect(
             }
         }
     }
+
 }
