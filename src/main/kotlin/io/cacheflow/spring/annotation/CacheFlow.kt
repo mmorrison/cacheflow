@@ -13,36 +13,36 @@ package io.cacheflow.spring.annotation
  * @param sync Whether to use synchronous caching
  */
 @Target(
-        AnnotationTarget.FUNCTION,
-        AnnotationTarget.PROPERTY_GETTER,
-        AnnotationTarget.PROPERTY_SETTER
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER
 )
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CacheFlow(
-        val key: String = "",
-        val keyGenerator: String = "defaultKeyGenerator",
-        val ttl: Long = -1,
-        val dependsOn: Array<String> = [],
-        val tags: Array<String> = [],
-        val condition: String = "",
-        val unless: String = "",
-        val sync: Boolean = false
+    val key: String = "",
+    val keyGenerator: String = "defaultKeyGenerator",
+    val ttl: Long = -1,
+    val dependsOn: Array<String> = [],
+    val tags: Array<String> = [],
+    val condition: String = "",
+    val unless: String = "",
+    val sync: Boolean = false
 )
 
 /** Alternative annotation name for compatibility */
 @Target(
-        AnnotationTarget.FUNCTION,
-        AnnotationTarget.PROPERTY_GETTER,
-        AnnotationTarget.PROPERTY_SETTER
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER
 )
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CacheFlowCached(
-        val key: String = "",
-        val keyGenerator: String = "defaultKeyGenerator",
-        val ttl: Long = -1,
-        val dependsOn: Array<String> = [],
-        val tags: Array<String> = [],
-        val condition: String = "",
-        val unless: String = "",
-        val sync: Boolean = false
+    val key: String = "",
+    val keyGenerator: String = "defaultKeyGenerator",
+    val ttl: Long = -1,
+    val dependsOn: Array<String> = [],
+    val tags: Array<String> = [],
+    val condition: String = "",
+    val unless: String = "",
+    val sync: Boolean = false
 )

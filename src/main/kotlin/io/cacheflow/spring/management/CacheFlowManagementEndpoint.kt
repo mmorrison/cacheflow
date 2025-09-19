@@ -1,7 +1,10 @@
 package io.cacheflow.spring.management
 
 import io.cacheflow.spring.service.CacheFlowService
-import org.springframework.boot.actuate.endpoint.annotation.*
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation
+import org.springframework.boot.actuate.endpoint.annotation.Selector
+import org.springframework.boot.actuate.endpoint.annotation.WriteOperation
 import org.springframework.stereotype.Component
 
 /** Management endpoint for CacheFlow operations. */

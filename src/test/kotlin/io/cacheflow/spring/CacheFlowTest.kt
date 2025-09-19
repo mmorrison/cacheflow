@@ -2,9 +2,9 @@ package io.cacheflow.spring
 
 import io.cacheflow.spring.config.CacheFlowProperties
 import io.cacheflow.spring.service.impl.CacheFlowServiceImpl
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
 
 class CacheFlowTest {
 

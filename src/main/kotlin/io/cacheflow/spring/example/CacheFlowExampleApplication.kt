@@ -28,8 +28,8 @@ class CacheFlowExampleApplication : CommandLineRunner {
 
     override fun run(vararg args: String?) {
         val service =
-                SpringApplication.run(CacheFlowExampleApplication::class.java, *args)
-                        .getBean(ExampleService::class.java)
+            SpringApplication.run(CacheFlowExampleApplication::class.java, *args)
+                .getBean(ExampleService::class.java)
 
         println("=== CacheFlow Example ===")
 

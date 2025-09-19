@@ -1,9 +1,12 @@
 package io.cacheflow.spring.aspect
 
-import io.cacheflow.spring.annotation.*
+import io.cacheflow.spring.annotation.CacheFlow
+import io.cacheflow.spring.annotation.CacheFlowCached
+import io.cacheflow.spring.annotation.CacheFlowEvict
 import io.cacheflow.spring.service.CacheFlowService
 import org.aspectj.lang.ProceedingJoinPoint
-import org.aspectj.lang.annotation.*
+import org.aspectj.lang.annotation.Around
+import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.context.ApplicationContext
 import org.springframework.expression.spel.standard.SpelExpressionParser
@@ -14,8 +17,8 @@ import org.springframework.stereotype.Component
 @Aspect
 @Component
 class CacheFlowAspect(
-        private val cacheService: CacheFlowService,
-        private val applicationContext: ApplicationContext
+    private val cacheService: CacheFlowService,
+    private val applicationContext: ApplicationContext
 ) {
     private val expressionParser = SpelExpressionParser()
 
@@ -76,14 +79,14 @@ class CacheFlowAspect(
 
         // Execute method first if beforeInvocation is false
         val result =
-                if (evict.beforeInvocation) {
-                    performEviction(evict, joinPoint)
-                    joinPoint.proceed()
-                } else {
-                    val methodResult = joinPoint.proceed()
-                    performEviction(evict, joinPoint)
-                    methodResult
-                }
+            if (evict.beforeInvocation) {
+                performEviction(evict, joinPoint)
+                joinPoint.proceed()
+            } else {
+                val methodResult = joinPoint.proceed()
+                performEviction(evict, joinPoint)
+                methodResult
+            }
 
         return result
     }

@@ -2,8 +2,8 @@ package io.cacheflow.spring.service.impl
 
 import io.cacheflow.spring.config.CacheFlowProperties
 import io.cacheflow.spring.service.CacheFlowService
-import java.util.concurrent.ConcurrentHashMap
 import org.springframework.stereotype.Service
+import java.util.concurrent.ConcurrentHashMap
 
 /** Simple in-memory implementation of CacheFlowService. */
 @Service

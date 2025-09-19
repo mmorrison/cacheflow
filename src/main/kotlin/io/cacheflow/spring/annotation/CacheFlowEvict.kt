@@ -10,32 +10,32 @@ package io.cacheflow.spring.annotation
  * @param condition Condition to determine if eviction should be applied
  */
 @Target(
-        AnnotationTarget.FUNCTION,
-        AnnotationTarget.PROPERTY_GETTER,
-        AnnotationTarget.PROPERTY_SETTER
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER
 )
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CacheFlowEvict(
-        val key: String = "",
-        val tags: Array<String> = [],
-        val allEntries: Boolean = false,
-        val beforeInvocation: Boolean = false,
-        val condition: String = ""
+    val key: String = "",
+    val tags: Array<String> = [],
+    val allEntries: Boolean = false,
+    val beforeInvocation: Boolean = false,
+    val condition: String = ""
 )
 
 /** Alternative annotation name for compatibility */
 @Target(
-        AnnotationTarget.FUNCTION,
-        AnnotationTarget.PROPERTY_GETTER,
-        AnnotationTarget.PROPERTY_SETTER
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER
 )
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CacheFlowEvictAlternative(
-        val key: String = "",
-        val tags: Array<String> = [],
-        val allEntries: Boolean = false,
-        val beforeInvocation: Boolean = false,
-        val condition: String = ""
+    val key: String = "",
+    val tags: Array<String> = [],
+    val allEntries: Boolean = false,
+    val beforeInvocation: Boolean = false,
+    val condition: String = ""
 )
 
 /** Annotation to mark classes as cacheable entities */

@@ -62,7 +62,7 @@ jobs:
             ## Installation
             ```kotlin
             dependencies {
-                implementation("com.yourcompany.cacheflow:cacheflow-spring-boot-starter:${{ github.ref_name }}")
+                implementation("com.yourcompany:cacheflow-spring-boot-starter:${{ github.ref_name }}")
             }
             ```
           draft: false

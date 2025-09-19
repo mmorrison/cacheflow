@@ -5,6 +5,11 @@ plugins {
     kotlin("plugin.spring") version "1.9.20"
     kotlin("plugin.jpa") version "1.9.20"
     `maven-publish`
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.9.20"
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
+    // id("io.gitlab.arturbosch.detekt") version "1.23.0" // Temporarily disabled due to version conflicts
+    id("org.owasp.dependencycheck") version "8.4.3"
+    id("com.github.ben-manes.versions") version "0.49.0"
 }
 
 group = "com.yourcompany"
@@ -46,6 +51,44 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
+
+            pom {
+                name.set("CacheFlow Spring Boot Starter")
+                description.set("Multi-level caching solution for Spring Boot applications")
+                url.set("https://github.com/mmorrison/cacheflow")
+
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://opensource.org/licenses/MIT")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("mmorrison")
+                        name.set("Marcus Morrison")
+                        email.set("marcus@example.com")
+                    }
+                }
+
+                scm {
+                    connection.set("scm:git:git://github.com/mmorrison/cacheflow.git")
+                    developerConnection.set("scm:git:ssh://github.com:mmorrison/cacheflow.git")
+                    url.set("https://github.com/mmorrison/cacheflow")
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = project.findProperty("OSSRH_USERNAME")?.toString() ?: ""
+                password = project.findProperty("OSSRH_PASSWORD")?.toString() ?: ""
+            }
         }
     }
 }
