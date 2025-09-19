@@ -1,30 +1,31 @@
 package io.cacheflow.spring.service.impl
 
-import io.cacheflow.spring.config.CacheFlowProperties
 import io.cacheflow.spring.service.CacheFlowService
 import org.springframework.stereotype.Service
 import java.util.concurrent.ConcurrentHashMap
 
 /** Simple in-memory implementation of CacheFlowService. */
 @Service
-class CacheFlowServiceImpl(private val properties: CacheFlowProperties) : CacheFlowService {
+class CacheFlowServiceImpl : CacheFlowService {
 
     private val cache = ConcurrentHashMap<String, CacheEntry>()
+    private val millisecondsPerSecond = 1_000L
 
     override fun get(key: String): Any? {
         val entry = cache[key] ?: return null
 
-        // Check if expired
-        if (System.currentTimeMillis() > entry.expiresAt) {
+        return if (isExpired(entry)) {
             cache.remove(key)
-            return null
+            null
+        } else {
+            entry.value
         }
-
-        return entry.value
     }
 
+    private fun isExpired(entry: CacheEntry): Boolean = System.currentTimeMillis() > entry.expiresAt
+
     override fun put(key: String, value: Any, ttl: Long) {
-        val expiresAt = System.currentTimeMillis() + (ttl * 1000)
+        val expiresAt = System.currentTimeMillis() + ttl * millisecondsPerSecond
         cache[key] = CacheEntry(value, expiresAt)
     }
 

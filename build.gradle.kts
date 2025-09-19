@@ -48,7 +48,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     }
 }
 
-tasks.withType<Test> { 
+tasks.withType<Test> {
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
     testLogging {
@@ -72,7 +72,7 @@ tasks.detekt {
 
 // Dokka configuration
 tasks.dokkaHtml {
-    outputDirectory.set(file("${layout.buildDirectory}/dokka"))
+    outputDirectory.set(layout.buildDirectory.dir("dokka"))
     dokkaSourceSets {
         configureEach {
             includeNonPublic.set(false)

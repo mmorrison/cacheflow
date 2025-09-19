@@ -23,27 +23,38 @@ import org.springframework.context.annotation.Configuration
 @EnableConfigurationProperties(CacheFlowProperties::class)
 class CacheFlowAutoConfiguration {
 
+    /**
+     * Creates the CacheFlow service bean.
+     *
+     * @return The CacheFlow service implementation
+     */
     @Bean
     @ConditionalOnMissingBean
-    fun cacheFlowService(properties: CacheFlowProperties): CacheFlowService {
-        return CacheFlowServiceImpl(properties)
-    }
+    fun cacheFlowService(): CacheFlowService = CacheFlowServiceImpl()
 
+    /**
+     * Creates the CacheFlow aspect bean.
+     *
+     * @param cacheService The cache service
+     * @param applicationContext The Spring application context
+     * @return The CacheFlow aspect
+     */
     @Bean
     @ConditionalOnMissingBean
     fun cacheFlowAspect(
-        cacheService: CacheFlowService,
-        applicationContext: org.springframework.context.ApplicationContext
-    ): CacheFlowAspect {
-        return CacheFlowAspect(cacheService, applicationContext)
-    }
+        cacheService: CacheFlowService
+    ): CacheFlowAspect = CacheFlowAspect(cacheService)
 
+    /**
+     * Creates the CacheFlow management endpoint bean.
+     *
+     * @param cacheService The cache service
+     * @return The management endpoint
+     */
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnAvailableEndpoint
     fun cacheFlowManagementEndpoint(
         cacheService: CacheFlowService
-    ): CacheFlowManagementEndpoint {
-        return CacheFlowManagementEndpoint(cacheService)
-    }
+    ): CacheFlowManagementEndpoint = CacheFlowManagementEndpoint(cacheService)
 }

@@ -1,6 +1,5 @@
 package io.cacheflow.spring
 
-import io.cacheflow.spring.config.CacheFlowProperties
 import io.cacheflow.spring.service.impl.CacheFlowServiceImpl
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -9,9 +8,8 @@ import org.junit.jupiter.api.Test
 class CacheFlowTest {
 
     @Test
-    fun `should cache and retrieve values`() {
-        val properties = CacheFlowProperties()
-        val cacheService = CacheFlowServiceImpl(properties)
+    fun `should cache and retrieve`() {
+        val cacheService = CacheFlowServiceImpl()
 
         // Put a value
         cacheService.put("test-key", "test-value", 60)
@@ -23,8 +21,7 @@ class CacheFlowTest {
 
     @Test
     fun `should evict cached values`() {
-        val properties = CacheFlowProperties()
-        val cacheService = CacheFlowServiceImpl(properties)
+        val cacheService = CacheFlowServiceImpl()
 
         // Put a value
         cacheService.put("test-key", "test-value", 60)
@@ -42,18 +39,16 @@ class CacheFlowTest {
     }
 
     @Test
-    fun `should return null for non-existent keys`() {
-        val properties = CacheFlowProperties()
-        val cacheService = CacheFlowServiceImpl(properties)
+    fun `testReturnNull`() {
+        val cacheService = CacheFlowServiceImpl()
 
         val result = cacheService.get("non-existent-key")
         assertNull(result)
     }
 
     @Test
-    fun `should handle cache size and keys`() {
-        val properties = CacheFlowProperties()
-        val cacheService = CacheFlowServiceImpl(properties)
+    fun `should handle cache size`() {
+        val cacheService = CacheFlowServiceImpl()
 
         // Initially empty
         assertEquals(0L, cacheService.size())

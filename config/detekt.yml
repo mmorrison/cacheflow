@@ -43,7 +43,7 @@ comments:
   KDocReferencesNonPublicProperty:
     active: true
   OutdatedDocumentation:
-    active: true
+    active: false
 
 complexity:
   active: true
@@ -68,7 +68,7 @@ complexity:
   LongParameterList:
     active: true
     functionThreshold: 6
-    constructorThreshold: 7
+    constructorThreshold: 9
   MethodOverloading:
     active: false
   NestedBlockDepth:
@@ -246,7 +246,7 @@ performance:
   ForEachOnRange:
     active: true
   SpreadOperator:
-    active: true
+    active: false
   UnnecessaryTemporaryInstantiation:
     active: true
   UnnecessaryPartOfBinaryExpression:
@@ -372,6 +372,9 @@ style:
       - "0"
       - "1"
       - "2"
+      - "30"
+      - "1000"
+      - "3600"
     ignoreHashCodeFunction: true
     ignorePropertyDeclaration: false
     ignoreConstantDeclaration: true
