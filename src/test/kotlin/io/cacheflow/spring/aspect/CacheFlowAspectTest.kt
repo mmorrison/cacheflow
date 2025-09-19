@@ -3,17 +3,24 @@ package io.cacheflow.spring.aspect
 import io.cacheflow.spring.annotation.CacheFlow
 import io.cacheflow.spring.annotation.CacheFlowCached
 import io.cacheflow.spring.annotation.CacheFlowEvict
+import io.cacheflow.spring.dependency.DependencyResolver
 import io.cacheflow.spring.service.CacheFlowService
+import io.cacheflow.spring.versioning.CacheKeyVersioner
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.reflect.MethodSignature
 import org.junit.jupiter.api.Assertions.*
+
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 
+
 class CacheFlowAspectTest {
 
     private lateinit var cacheService: CacheFlowService
+private lateinit var dependencyResolver: DependencyResolver
+private lateinit var cacheKeyVersioner: CacheKeyVersioner
+
     private lateinit var aspect: CacheFlowAspect
     private lateinit var joinPoint: ProceedingJoinPoint
     private lateinit var methodSignature: MethodSignature
@@ -21,9 +28,19 @@ class CacheFlowAspectTest {
     @BeforeEach
     fun setUp() {
         cacheService = mock(CacheFlowService::class.java)
-        aspect = CacheFlowAspect(cacheService)
+dependencyResolver = mock(DependencyResolver::class.java)
+
+cacheKeyVersioner = mock(CacheKeyVersioner::class.java)
+
+aspect = CacheFlowAspect(cacheService, dependencyResolver, cacheKeyVersioner)
+
         joinPoint = mock(ProceedingJoinPoint::class.java)
         methodSignature = mock(MethodSignature::class.java)
+// Setup mock to return proper declaring type
+`when`(methodSignature.declaringType).thenReturn(TestClass::class.java)
+
+`when`(joinPoint.signature).thenReturn(methodSignature)
+
     }
 
     @Test

@@ -1,6 +1,8 @@
 package io.cacheflow.spring.config
 
+
 import org.junit.jupiter.api.Assertions.*
+
 import org.junit.jupiter.api.Test
 
 class CacheFlowPropertiesTest {

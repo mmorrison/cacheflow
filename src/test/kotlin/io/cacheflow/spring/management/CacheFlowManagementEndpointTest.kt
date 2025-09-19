@@ -2,10 +2,13 @@ package io.cacheflow.spring.management
 
 import io.cacheflow.spring.service.CacheFlowService
 import io.cacheflow.spring.service.impl.CacheFlowServiceImpl
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
+
 
 class CacheFlowManagementEndpointTest {
 
