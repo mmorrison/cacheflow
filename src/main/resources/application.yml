@@ -1,0 +1,19 @@
+cacheflow:
+  enabled: true
+  default-ttl: 3600
+  max-size: 10000
+  storage: redis # or in-memory, caffeine
+  redis:
+    key-prefix: "rd-cache:"
+    database: 0
+    timeout: 5000
+  metrics:
+    enabled: true
+    export-interval: 60
+
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    timeout: 5000ms

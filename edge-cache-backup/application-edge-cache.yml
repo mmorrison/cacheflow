@@ -1,0 +1,93 @@
+russian-doll-cache:
+  enabled: true
+  default-ttl: 1800 # 30 minutes
+  max-size: 10000
+  storage: REDIS
+
+  # Redis configuration
+  redis:
+    enabled: true
+    key-prefix: "rd-cache:"
+    database: 0
+    timeout: 5000
+    default-ttl: 1800 # 30 minutes
+
+  # Cloudflare edge cache configuration
+  cloudflare:
+    enabled: true
+    zone-id: "your-cloudflare-zone-id"
+    api-token: "your-cloudflare-api-token"
+    key-prefix: "rd-cache:"
+    default-ttl: 3600 # 1 hour
+    auto-purge: true
+    purge-on-evict: true
+    rate-limit:
+      requests-per-second: 10
+      burst-size: 20
+      window-size: 60
+    circuit-breaker:
+      failure-threshold: 5
+      recovery-timeout: 60
+      half-open-max-calls: 3
+
+  # AWS CloudFront edge cache configuration
+  aws-cloud-front:
+    enabled: false
+    distribution-id: "your-cloudfront-distribution-id"
+    key-prefix: "rd-cache:"
+    default-ttl: 3600 # 1 hour
+    auto-purge: true
+    purge-on-evict: true
+    rate-limit:
+      requests-per-second: 5
+      burst-size: 10
+      window-size: 60
+    circuit-breaker:
+      failure-threshold: 3
+      recovery-timeout: 120
+      half-open-max-calls: 2
+
+  # Fastly edge cache configuration
+  fastly:
+    enabled: false
+    service-id: "your-fastly-service-id"
+    api-token: "your-fastly-api-token"
+    key-prefix: "rd-cache:"
+    default-ttl: 3600 # 1 hour
+    auto-purge: true
+    purge-on-evict: true
+    rate-limit:
+      requests-per-second: 15
+      burst-size: 30
+      window-size: 60
+    circuit-breaker:
+      failure-threshold: 5
+      recovery-timeout: 60
+      half-open-max-calls: 3
+
+  # Metrics configuration
+  metrics:
+    enabled: true
+    export-interval: 60
+
+# Spring Boot Actuator configuration for monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,cacheflow
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Logging configuration for edge cache operations
+logging:
+  level:
+    com.yourcompany.cacheflow.edge: DEBUG
+    com.yourcompany.cacheflow.service: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

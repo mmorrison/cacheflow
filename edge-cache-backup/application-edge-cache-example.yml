@@ -1,0 +1,133 @@
+# Example configuration for Russian Doll Cache with Edge Caching
+# Copy this to your application.yml and customize as needed
+
+cacheflow:
+  enabled: true
+  base-url: "https://yourdomain.com"
+  default-ttl: 1800 # 30 minutes
+  max-size: 10000
+  storage: REDIS
+
+  # Redis configuration
+  redis:
+    enabled: true
+    key-prefix: "rd-cache:"
+    database: 0
+    timeout: 5000
+    default-ttl: 1800 # 30 minutes
+
+  # Cloudflare edge cache configuration
+  cloudflare:
+    enabled: true
+    zone-id: "your-cloudflare-zone-id"
+    api-token: "your-cloudflare-api-token"
+    key-prefix: "rd-cache:"
+    default-ttl: 3600 # 1 hour
+    auto-purge: true
+    purge-on-evict: true
+
+  # AWS CloudFront edge cache configuration
+  aws-cloud-front:
+    enabled: false
+    distribution-id: "your-cloudfront-distribution-id"
+    key-prefix: "rd-cache:"
+    default-ttl: 3600 # 1 hour
+    auto-purge: true
+    purge-on-evict: true
+
+  # Fastly edge cache configuration
+  fastly:
+    enabled: false
+    service-id: "your-fastly-service-id"
+    api-token: "your-fastly-api-token"
+    key-prefix: "rd-cache:"
+    default-ttl: 3600 # 1 hour
+    auto-purge: true
+    purge-on-evict: true
+
+  # Global edge cache settings
+  rate-limit:
+    requests-per-second: 10
+    burst-size: 20
+    window-size: 60 # seconds
+
+  circuit-breaker:
+    failure-threshold: 5
+    recovery-timeout: 60 # seconds
+    half-open-max-calls: 3
+
+  batching:
+    batch-size: 100
+    batch-timeout: 5 # seconds
+    max-concurrency: 10
+
+  monitoring:
+    enable-metrics: true
+    enable-tracing: true
+    log-level: "INFO"
+
+# Spring Boot Actuator configuration for monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,cacheflow,edgecache
+  endpoint:
+    health:
+      show-details: always
+    cacheflow:
+      enabled: true
+    edgecache:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: "russian-doll-cache"
+
+# Logging configuration for edge cache operations
+logging:
+  level:
+    com.yourcompany.cacheflow.edge: DEBUG
+    com.yourcompany.cacheflow.service: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Example for different environments
+---
+# Development environment
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+cacheflow:
+  base-url: "http://localhost:8080"
+  cloudflare:
+    enabled: false # Disable in development
+  rate-limit:
+    requests-per-second: 5 # More conservative in dev
+    burst-size: 10
+
+---
+# Production environment
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+cacheflow:
+  base-url: "https://api.yourdomain.com"
+  cloudflare:
+    enabled: true
+  rate-limit:
+    requests-per-second: 20 # Higher limits in production
+    burst-size: 50
+  circuit-breaker:
+    failure-threshold: 3 # More aggressive in production
+    recovery-timeout: 300 # 5 minutes
+
+logging:
+  level:
+    com.yourcompany.cacheflow.edge: INFO # Less verbose in production
