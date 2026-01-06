@@ -1,5 +1,6 @@
 package io.cacheflow.spring.autoconfigure
 
+import io.cacheflow.spring.annotation.CacheFlowConfigRegistry
 import io.cacheflow.spring.aspect.CacheFlowAspect
 import io.cacheflow.spring.autoconfigure.CacheFlowAspectConfiguration
 import io.cacheflow.spring.autoconfigure.CacheFlowCoreConfiguration
@@ -62,7 +63,8 @@ class CacheFlowAutoConfigurationTest {
         val mockService = mock(CacheFlowService::class.java)
         val mockDependencyResolver = mock(DependencyResolver::class.java)
         val mockCacheKeyVersioner = mock(CacheKeyVersioner::class.java)
-        val aspect = config.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner)
+        val mockConfigRegistry = mock(CacheFlowConfigRegistry::class.java)
+        val aspect = config.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner, mockConfigRegistry)
 
         assertNotNull(aspect)
         assertTrue(aspect is CacheFlowAspect)
@@ -96,7 +98,8 @@ class CacheFlowAutoConfigurationTest {
                         "cacheFlowAspect",
                         CacheFlowService::class.java,
                         DependencyResolver::class.java,
-                        CacheKeyVersioner::class.java
+                        CacheKeyVersioner::class.java,
+                        CacheFlowConfigRegistry::class.java
                 )
 
         // Check @Bean
@@ -132,11 +135,12 @@ class CacheFlowAutoConfigurationTest {
         val mockService = mock(CacheFlowService::class.java)
         val mockDependencyResolver = mock(DependencyResolver::class.java)
         val mockCacheKeyVersioner = mock(CacheKeyVersioner::class.java)
+        val mockConfigRegistry = mock(CacheFlowConfigRegistry::class.java)
 
         val service1 = coreConfig.cacheFlowService()
         val service2 = coreConfig.cacheFlowService()
-        val aspect1 = aspectConfig.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner)
-        val aspect2 = aspectConfig.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner)
+        val aspect1 = aspectConfig.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner, mockConfigRegistry)
+        val aspect2 = aspectConfig.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner, mockConfigRegistry)
         val endpoint1 = managementConfig.cacheFlowManagementEndpoint(mockService)
         val endpoint2 = managementConfig.cacheFlowManagementEndpoint(mockService)
 
@@ -152,10 +156,11 @@ class CacheFlowAutoConfigurationTest {
         val managementConfig = CacheFlowManagementConfiguration()
         val mockDependencyResolver = mock(DependencyResolver::class.java)
         val mockCacheKeyVersioner = mock(CacheKeyVersioner::class.java)
+        val mockConfigRegistry = mock(CacheFlowConfigRegistry::class.java)
 
         // These should not throw exceptions even with null service
         assertDoesNotThrow {
-            aspectConfig.cacheFlowAspect(mock(CacheFlowService::class.java), mockDependencyResolver, mockCacheKeyVersioner)
+            aspectConfig.cacheFlowAspect(mock(CacheFlowService::class.java), mockDependencyResolver, mockCacheKeyVersioner, mockConfigRegistry)
             managementConfig.cacheFlowManagementEndpoint(mock(CacheFlowService::class.java))
         }
     }

@@ -1,5 +1,6 @@
 package io.cacheflow.spring.autoconfigure
 
+import io.cacheflow.spring.annotation.CacheFlowConfigRegistry
 import io.cacheflow.spring.aspect.CacheFlowAspect
 import io.cacheflow.spring.aspect.CacheKeyGenerator
 import io.cacheflow.spring.aspect.DependencyManager
@@ -50,6 +51,7 @@ class CacheFlowAspectConfiguration {
      * @param cacheService The cache service
      * @param dependencyResolver The dependency resolver
      * @param cacheKeyVersioner The cache key versioner
+     * @param configRegistry The configuration registry
      * @return The CacheFlow aspect
      */
     @Bean
@@ -57,8 +59,9 @@ class CacheFlowAspectConfiguration {
     fun cacheFlowAspect(
             cacheService: CacheFlowService,
             dependencyResolver: DependencyResolver,
-            cacheKeyVersioner: CacheKeyVersioner
-    ): CacheFlowAspect = CacheFlowAspect(cacheService, dependencyResolver, cacheKeyVersioner)
+            cacheKeyVersioner: CacheKeyVersioner,
+            configRegistry: CacheFlowConfigRegistry
+    ): CacheFlowAspect = CacheFlowAspect(cacheService, dependencyResolver, cacheKeyVersioner, configRegistry)
 
     /**
      * Creates the fragment cache aspect bean.

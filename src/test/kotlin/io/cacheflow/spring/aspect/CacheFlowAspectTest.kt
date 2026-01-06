@@ -2,6 +2,8 @@ package io.cacheflow.spring.aspect
 
 import io.cacheflow.spring.annotation.CacheFlow
 import io.cacheflow.spring.annotation.CacheFlowCached
+import io.cacheflow.spring.annotation.CacheFlowConfig
+import io.cacheflow.spring.annotation.CacheFlowConfigRegistry
 import io.cacheflow.spring.annotation.CacheFlowEvict
 import io.cacheflow.spring.dependency.DependencyResolver
 import io.cacheflow.spring.service.CacheFlowService
@@ -18,8 +20,9 @@ import org.mockito.Mockito.*
 class CacheFlowAspectTest {
 
     private lateinit var cacheService: CacheFlowService
-private lateinit var dependencyResolver: DependencyResolver
-private lateinit var cacheKeyVersioner: CacheKeyVersioner
+    private lateinit var dependencyResolver: DependencyResolver
+    private lateinit var cacheKeyVersioner: CacheKeyVersioner
+    private lateinit var configRegistry: CacheFlowConfigRegistry
 
     private lateinit var aspect: CacheFlowAspect
     private lateinit var joinPoint: ProceedingJoinPoint
@@ -28,19 +31,23 @@ private lateinit var cacheKeyVersioner: CacheKeyVersioner
     @BeforeEach
     fun setUp() {
         cacheService = mock(CacheFlowService::class.java)
-dependencyResolver = mock(DependencyResolver::class.java)
+        dependencyResolver = mock(DependencyResolver::class.java)
+        cacheKeyVersioner = mock(CacheKeyVersioner::class.java)
+        configRegistry = mock(CacheFlowConfigRegistry::class.java)
 
-cacheKeyVersioner = mock(CacheKeyVersioner::class.java)
-
-aspect = CacheFlowAspect(cacheService, dependencyResolver, cacheKeyVersioner)
+        aspect = CacheFlowAspect(cacheService, dependencyResolver, cacheKeyVersioner, configRegistry)
 
         joinPoint = mock(ProceedingJoinPoint::class.java)
         methodSignature = mock(MethodSignature::class.java)
-// Setup mock to return proper declaring type
-`when`(methodSignature.declaringType).thenReturn(TestClass::class.java)
+        // Setup mock to return proper declaring type
+        `when`(methodSignature.declaringType).thenReturn(TestClass::class.java)
 
-`when`(joinPoint.signature).thenReturn(methodSignature)
+        `when`(joinPoint.signature).thenReturn(methodSignature)
 
+    }
+
+    private fun <T> safeEq(value: T): T {
+        return eq(value) ?: value
     }
 
     @Test
@@ -100,6 +107,62 @@ aspect = CacheFlowAspect(cacheService, dependencyResolver, cacheKeyVersioner)
 
         assertEquals("cached value", result)
         verify(joinPoint, never()).proceed()
+    }
+
+    @Test
+    fun `should use config from registry when config name provided`() {
+        val method =
+                TestClass::class.java.getDeclaredMethod(
+                        "methodWithCacheFlowConfig",
+                        String::class.java,
+                        String::class.java
+                )
+
+        val configName = "testConfig"
+        val config = CacheFlowConfig(key = "#arg1 + '_' + #arg2", ttl = 600L)
+        `when`(configRegistry.get(configName)).thenReturn(config)
+
+        `when`(joinPoint.signature).thenReturn(methodSignature)
+        `when`(methodSignature.method).thenReturn(method)
+        `when`(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
+        `when`(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
+        `when`(joinPoint.target).thenReturn(TestClass())
+        `when`(joinPoint.proceed()).thenReturn("result")
+        `when`(cacheService.get(anyString())).thenReturn(null)
+
+        val result = aspect.aroundCache(joinPoint)
+
+        assertEquals("result", result)
+        verify(configRegistry).get(configName)
+        verify(cacheService).put(anyString(), safeEq("result"), safeEq(600L))
+    }
+
+    @Test
+    fun `should use annotation when config name not found`() {
+        val method =
+                TestClass::class.java.getDeclaredMethod(
+                        "methodWithCacheFlowConfig",
+                        String::class.java,
+                        String::class.java
+                )
+
+        val configName = "testConfig"
+        `when`(configRegistry.get(configName)).thenReturn(null)
+
+        `when`(joinPoint.signature).thenReturn(methodSignature)
+        `when`(methodSignature.method).thenReturn(method)
+        `when`(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
+        `when`(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
+        `when`(joinPoint.target).thenReturn(TestClass())
+        `when`(joinPoint.proceed()).thenReturn("result")
+        `when`(cacheService.get(anyString())).thenReturn(null)
+
+        val result = aspect.aroundCache(joinPoint)
+
+        assertEquals("result", result)
+        verify(configRegistry).get(configName)
+        // Should use annotation values (ttl defaults to -1, which uses defaultTtlSeconds 3600L)
+        verify(cacheService).put(anyString(), safeEq("result"), safeEq(3600L))
     }
 
     @Test
@@ -298,6 +361,9 @@ aspect = CacheFlowAspect(cacheService, dependencyResolver, cacheKeyVersioner)
     class TestClass {
         @CacheFlow(key = "#arg1 + '_' + #arg2")
         fun methodWithCacheFlow(arg1: String, arg2: String): String = "result"
+
+        @CacheFlow(key = "#arg1 + '_' + #arg2", config = "testConfig")
+        fun methodWithCacheFlowConfig(arg1: String, arg2: String): String = "result"
 
         @CacheFlowCached(key = "#arg1 + '_' + #arg2")
         fun methodWithCacheFlowCached(arg1: String, arg2: String): String = "result"
