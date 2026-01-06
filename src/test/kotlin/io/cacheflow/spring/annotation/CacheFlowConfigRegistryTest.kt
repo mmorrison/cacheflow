@@ -1,6 +1,8 @@
 package io.cacheflow.spring.annotation
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -67,20 +69,20 @@ class CacheFlowConfigRegistryTest {
 
     @Test
     fun `should verify builder usage`() {
-         val builder = CacheFlowConfigBuilder.versioned("updatedAt")
-         builder.sync = true
-         builder.unless = "#result == null"
-         builder.condition = "#id > 10"
-         builder.keyGenerator = "customGen"
+        val builder = CacheFlowConfigBuilder.versioned("updatedAt")
+        builder.sync = true
+        builder.unless = "#result == null"
+        builder.condition = "#id > 10"
+        builder.keyGenerator = "customGen"
 
-         val config = builder.build()
+        val config = builder.build()
 
-         assertTrue(config.versioned)
-         assertEquals("updatedAt", config.timestampField)
-         assertTrue(config.sync)
-         assertEquals("#result == null", config.unless)
-         assertEquals("#id > 10", config.condition)
-         assertEquals("customGen", config.keyGenerator)
+        assertTrue(config.versioned)
+        assertEquals("updatedAt", config.timestampField)
+        assertTrue(config.sync)
+        assertEquals("#result == null", config.unless)
+        assertEquals("#id > 10", config.condition)
+        assertEquals("customGen", config.keyGenerator)
     }
 
     @Test
