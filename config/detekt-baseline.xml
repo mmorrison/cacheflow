@@ -1,0 +1,250 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>BracesOnIfStatements:CacheDependencyTracker.kt$CacheDependencyTracker.CycleDetector$else</ID>
+    <ID>BracesOnWhenStatements:CacheDependencyTracker.kt$CacheDependencyTracker.CycleDetector$when</ID>
+    <ID>CastToNullableType:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$as</ID>
+    <ID>ClassOrdering:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$Companion</ID>
+    <ID>ClassOrdering:RussianDollCachingExample.kt$RussianDollCachingExample$Companion</ID>
+    <ID>EmptyFunctionBlock:CacheFlowAnnotationsTest.kt$CacheFlowAnnotationsTest.TestClass${}</ID>
+    <ID>ExpressionBodySyntax:CacheFlowAutoConfigurationTest.kt$CacheFlowAutoConfigurationTest$return org.mockito.Mockito.mock(clazz)</ID>
+    <ID>ExpressionBodySyntax:DependencyManagementIntegrationTest.kt$DependencyManagementIntegrationTest.TestService$return "Profile for user $userId, profile $profileId"</ID>
+    <ID>ExpressionBodySyntax:DependencyManagementIntegrationTest.kt$DependencyManagementIntegrationTest.TestService$return "Settings for user $userId, settings $settingsId"</ID>
+    <ID>ExpressionBodySyntax:DependencyManagementIntegrationTest.kt$DependencyManagementIntegrationTest.TestService$return "Updated user $userId with name $name"</ID>
+    <ID>ExpressionBodySyntax:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest.RussianDollTestService$return "This should not be called"</ID>
+    <ID>ExpressionBodySyntax:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest.RussianDollTestService$return "Updated user $userId with name $name"</ID>
+    <ID>ExpressionBodySyntax:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest.RussianDollTestService$return "User $userId"</ID>
+    <ID>ExpressionBodySyntax:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest.RussianDollTestService$return "User Footer for user $userId"</ID>
+    <ID>ExpressionBodySyntax:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest.RussianDollTestService$return "User Header for user $userId"</ID>
+    <ID>ExpressionBodySyntax:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest.RussianDollTestService$return "User Profile Content for user $userId, profile $profileId"</ID>
+    <ID>ExpressionBodySyntax:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest.RussianDollTestService$return "User Settings Content for user $userId, settings $settingsId"</ID>
+    <ID>ExpressionBodySyntax:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest.RussianDollTestService$return "Versioned data for user $userId at timestamp $timestamp"</ID>
+    <ID>ForbiddenComment:CacheFlowAspect.kt$CacheFlowAspect$// TODO: Inject CacheFlowConfigRegistry to get complex configuration</ID>
+    <ID>FunctionMaxLength:CacheDependencyTrackerTest.kt$CacheDependencyTrackerTest$@Test fun `should clear all dependencies for cache key`()</ID>
+    <ID>FunctionMaxLength:CacheDependencyTrackerTest.kt$CacheDependencyTrackerTest$@Test fun `should detect circular dependencies`()</ID>
+    <ID>FunctionMaxLength:CacheDependencyTrackerTest.kt$CacheDependencyTrackerTest$@Test fun `should handle concurrent access safely`()</ID>
+    <ID>FunctionMaxLength:CacheDependencyTrackerTest.kt$CacheDependencyTrackerTest$@Test fun `should invalidate dependent caches correctly`()</ID>
+    <ID>FunctionMaxLength:CacheDependencyTrackerTest.kt$CacheDependencyTrackerTest$@Test fun `should not detect circular dependencies when none exist`()</ID>
+    <ID>FunctionMaxLength:CacheDependencyTrackerTest.kt$CacheDependencyTrackerTest$@Test fun `should not track self-dependency`()</ID>
+    <ID>FunctionMaxLength:CacheDependencyTrackerTest.kt$CacheDependencyTrackerTest$@Test fun `should provide correct statistics`()</ID>
+    <ID>FunctionMaxLength:CacheDependencyTrackerTest.kt$CacheDependencyTrackerTest$@Test fun `should remove specific dependency`()</ID>
+    <ID>FunctionMaxLength:CacheDependencyTrackerTest.kt$CacheDependencyTrackerTest$@Test fun `should return empty sets for non-existent keys`()</ID>
+    <ID>FunctionMaxLength:CacheDependencyTrackerTest.kt$CacheDependencyTrackerTest$@Test fun `should track dependency correctly`()</ID>
+    <ID>FunctionMaxLength:CacheDependencyTrackerTest.kt$CacheDependencyTrackerTest$@Test fun `should track multiple cache keys depending on same dependency`()</ID>
+    <ID>FunctionMaxLength:CacheDependencyTrackerTest.kt$CacheDependencyTrackerTest$@Test fun `should track multiple dependencies for same cache key`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAnnotationsTest.kt$CacheFlowAnnotationsTest$@Test fun `CacheEntity annotation should have correct target and retention`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAnnotationsTest.kt$CacheFlowAnnotationsTest$@Test fun `CacheEntity annotation should have default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAnnotationsTest.kt$CacheFlowAnnotationsTest$@Test fun `CacheFlow annotation should have correct target and retention`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAnnotationsTest.kt$CacheFlowAnnotationsTest$@Test fun `CacheFlow annotation should have default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAnnotationsTest.kt$CacheFlowAnnotationsTest$@Test fun `CacheFlowCached annotation should have correct target and retention`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAnnotationsTest.kt$CacheFlowAnnotationsTest$@Test fun `CacheFlowCached annotation should have default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAnnotationsTest.kt$CacheFlowAnnotationsTest$@Test fun `CacheFlowEvict annotation should have correct target and retention`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAnnotationsTest.kt$CacheFlowAnnotationsTest$@Test fun `CacheFlowEvict annotation should have default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAnnotationsTest.kt$CacheFlowAnnotationsTest$@Test fun `CacheFlowEvictAlternative annotation should have correct target and retention`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAnnotationsTest.kt$CacheFlowAnnotationsTest$@Test fun `CacheFlowEvictAlternative annotation should have default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAnnotationsTest.kt$CacheFlowAnnotationsTest$@Test fun `CacheKey annotation should have correct target and retention`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAnnotationsTest.kt$CacheFlowAnnotationsTest$@Test fun `CacheVersion annotation should have correct target and retention`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAspectTest.kt$CacheFlowAspectTest$@Test fun `should cache result when CacheFlow annotation present`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAspectTest.kt$CacheFlowAspectTest$@Test fun `should cache result when CacheFlowCached annotation present`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAspectTest.kt$CacheFlowAspectTest$@Test fun `should evict after method execution by default`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAspectTest.kt$CacheFlowAspectTest$@Test fun `should evict all when allEntries is true`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAspectTest.kt$CacheFlowAspectTest$@Test fun `should evict before method execution when beforeInvocation is true`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAspectTest.kt$CacheFlowAspectTest$@Test fun `should evict by tags when tags are provided`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAspectTest.kt$CacheFlowAspectTest$@Test fun `should generate default cache key when key expression is blank`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAspectTest.kt$CacheFlowAspectTest$@Test fun `should proceed when no CacheFlow annotation present`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAspectTest.kt$CacheFlowAspectTest$@Test fun `should proceed when no CacheFlowCached annotation present`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAspectTest.kt$CacheFlowAspectTest$@Test fun `should proceed when no CacheFlowEvict annotation present`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAspectTest.kt$CacheFlowAspectTest$@Test fun `should return cached value when present`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAspectTest.kt$CacheFlowAspectTest$@Test fun `should use custom TTL when specified`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAspectTest.kt$CacheFlowAspectTest.TestClass$@CacheFlowEvict(key = "#arg1 + '_' + #arg2", beforeInvocation = true) fun methodWithCacheFlowEvictBeforeInvocation(arg1: String, arg2: String): String</ID>
+    <ID>FunctionMaxLength:CacheFlowAutoConfigurationTest.kt$CacheFlowAutoConfigurationTest$@Test fun `cacheFlowAspect method should have correct annotations`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAutoConfigurationTest.kt$CacheFlowAutoConfigurationTest$@Test fun `cacheFlowManagementEndpoint method should have correct annotations`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAutoConfigurationTest.kt$CacheFlowAutoConfigurationTest$@Test fun `cacheFlowService method should have correct annotations`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAutoConfigurationTest.kt$CacheFlowAutoConfigurationTest$@Test fun `should create cacheFlowAspect bean`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAutoConfigurationTest.kt$CacheFlowAutoConfigurationTest$@Test fun `should create cacheFlowManagementEndpoint bean`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAutoConfigurationTest.kt$CacheFlowAutoConfigurationTest$@Test fun `should create cacheFlowService bean`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAutoConfigurationTest.kt$CacheFlowAutoConfigurationTest$@Test fun `should create different instances for each bean`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAutoConfigurationTest.kt$CacheFlowAutoConfigurationTest$@Test fun `should handle null service parameter gracefully`()</ID>
+    <ID>FunctionMaxLength:CacheFlowAutoConfigurationTest.kt$CacheFlowAutoConfigurationTest$@Test fun `should have correct annotations`()</ID>
+    <ID>FunctionMaxLength:CacheFlowConfigRegistryTest.kt$CacheFlowConfigRegistryTest$@Test fun `should register and retrieve config`()</ID>
+    <ID>FunctionMaxLength:CacheFlowConfigRegistryTest.kt$CacheFlowConfigRegistryTest$@Test fun `should return configuration names`()</ID>
+    <ID>FunctionMaxLength:CacheFlowConfigRegistryTest.kt$CacheFlowConfigRegistryTest$@Test fun `should return default when config not found`()</ID>
+    <ID>FunctionMaxLength:CacheFlowConfigRegistryTest.kt$CacheFlowConfigRegistryTest$@Test fun `should verify builder static methods`()</ID>
+    <ID>FunctionMaxLength:CacheFlowConfigTest.kt$CacheFlowConfigTest$@Test fun `should be equal when all properties match`()</ID>
+    <ID>FunctionMaxLength:CacheFlowConfigTest.kt$CacheFlowConfigTest$@Test fun `should create config with custom values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowConfigTest.kt$CacheFlowConfigTest$@Test fun `should create config with default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowConfigTest.kt$CacheFlowConfigTest$@Test fun `should have consistent hashCode`()</ID>
+    <ID>FunctionMaxLength:CacheFlowConfigTest.kt$CacheFlowConfigTest$@Test fun `should not be equal to different class`()</ID>
+    <ID>FunctionMaxLength:CacheFlowConfigTest.kt$CacheFlowConfigTest$@Test fun `should not be equal when dependsOn arrays differ`()</ID>
+    <ID>FunctionMaxLength:CacheFlowConfigTest.kt$CacheFlowConfigTest$@Test fun `should not be equal when properties differ`()</ID>
+    <ID>FunctionMaxLength:CacheFlowConfigTest.kt$CacheFlowConfigTest$@Test fun `should not be equal when tags arrays differ`()</ID>
+    <ID>FunctionMaxLength:CacheFlowManagementEndpointTest.kt$CacheFlowManagementEndpointTest$@Test fun `should evict by pattern with no matches`()</ID>
+    <ID>FunctionMaxLength:CacheFlowManagementEndpointTest.kt$CacheFlowManagementEndpointTest$@Test fun `should handle empty cache when evicting all`()</ID>
+    <ID>FunctionMaxLength:CacheFlowManagementEndpointTest.kt$CacheFlowManagementEndpointTest$@Test fun `should handle empty tags string`()</ID>
+    <ID>FunctionMaxLength:CacheFlowManagementEndpointTest.kt$CacheFlowManagementEndpointTest$@Test fun `should handle tags with extra whitespace`()</ID>
+    <ID>FunctionMaxLength:CacheFlowManagementEndpointTest.kt$CacheFlowManagementEndpointTest$@Test fun `should return cache info with size`()</ID>
+    <ID>FunctionMaxLength:CacheFlowManagementEndpointTest.kt$CacheFlowManagementEndpointTest$@Test fun `should return empty cache info when cache is empty`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `AwsCloudFrontProperties should accept custom values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `AwsCloudFrontProperties should have default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `CircuitBreakerConfig should accept custom values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `CircuitBreakerConfig should have default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `CloudflareProperties should accept custom values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `CloudflareProperties should have default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `FastlyProperties should accept custom values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `FastlyProperties should have default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `MetricsProperties should accept custom values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `MetricsProperties should have default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `RateLimit should accept custom values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `RateLimit should have default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `RedisProperties should accept custom values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `RedisProperties should have default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `StorageType enum should have correct values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `should create properties with custom values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowPropertiesTest.kt$CacheFlowPropertiesTest$@Test fun `should create properties with default values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should cache and retrieve value`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should expire entries after TTL`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should handle concurrent access`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should handle different value types`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should handle empty string values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should handle evict on empty cache`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should handle evictAll on empty cache`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should handle evictByTags method`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should handle evicting non-existent key`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should handle large number of entries`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should handle special characters in keys and values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should handle very long keys and values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should maintain keys set consistency`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should not expire entries before TTL`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should overwrite existing key`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should return correct cache size`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceImplTest.kt$CacheFlowServiceImplTest$@Test fun `should return null for non-existent key`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceTest.kt$CacheFlowServiceTest$@Test fun `should handle different value types`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceTest.kt$CacheFlowServiceTest$@Test fun `should handle empty string values`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceTest.kt$CacheFlowServiceTest$@Test fun `should handle evicting non-existent key`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceTest.kt$CacheFlowServiceTest$@Test fun `should overwrite existing key`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceTest.kt$CacheFlowServiceTest$@Test fun `should put and get value with custom TTL`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceTest.kt$CacheFlowServiceTest$@Test fun `should put and get value with default TTL`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceTest.kt$CacheFlowServiceTest$@Test fun `should return correct cache size`()</ID>
+    <ID>FunctionMaxLength:CacheFlowServiceTest.kt$CacheFlowServiceTest$@Test fun `should return null for non-existent key`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should extract base key from versioned key`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should extract timestamp from versioned key`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should generate versioned key with custom format`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should generate versioned key with list of objects`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should generate versioned key with multiple objects using latest timestamp`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should generate versioned key with specific timestamp`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should generate versioned key with timestamp`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should handle local date time objects`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should handle objects with updatedAt field`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should handle temporal accessor objects`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should identify versioned key correctly`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should return null when extracting timestamp from non-versioned key`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should return original key when extracting base key from non-versioned key`()</ID>
+    <ID>FunctionMaxLength:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$@Test fun `should return original key when no timestamp found`()</ID>
+    <ID>FunctionMaxLength:DependencyManagementIntegrationTest.kt$DependencyManagementIntegrationTest$@Test fun `should handle multiple dependencies correctly`()</ID>
+    <ID>FunctionMaxLength:DependencyManagementIntegrationTest.kt$DependencyManagementIntegrationTest$@Test fun `should not invalidate unrelated caches`()</ID>
+    <ID>FunctionMaxLength:DependencyManagementIntegrationTest.kt$DependencyManagementIntegrationTest$@Test fun `should track and invalidate dependencies correctly`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `AwsCloudFrontEdgeCacheProperties should accept custom values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `AwsCloudFrontEdgeCacheProperties should have default values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `CloudflareEdgeCacheProperties should accept custom values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `CloudflareEdgeCacheProperties should have default values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `EdgeCacheBatchingProperties should accept custom values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `EdgeCacheBatchingProperties should have default values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `EdgeCacheCircuitBreakerProperties should accept custom values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `EdgeCacheCircuitBreakerProperties should have default values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `EdgeCacheMonitoringProperties should accept custom values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `EdgeCacheMonitoringProperties should have default values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `EdgeCacheRateLimitProperties should accept custom values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `EdgeCacheRateLimitProperties should have default values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `FastlyEdgeCacheProperties should accept custom values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `FastlyEdgeCacheProperties should have default values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `should create properties with custom values`()</ID>
+    <ID>FunctionMaxLength:EdgeCachePropertiesTest.kt$EdgeCachePropertiesTest$@Test fun `should create properties with default values`()</ID>
+    <ID>FunctionMaxLength:FragmentCacheServiceTest.kt$FragmentCacheServiceTest$@Test fun `should cache fragment correctly`()</ID>
+    <ID>FunctionMaxLength:FragmentCacheServiceTest.kt$FragmentCacheServiceTest$@Test fun `should check fragment existence correctly`()</ID>
+    <ID>FunctionMaxLength:FragmentCacheServiceTest.kt$FragmentCacheServiceTest$@Test fun `should compose fragments by keys correctly`()</ID>
+    <ID>FunctionMaxLength:FragmentCacheServiceTest.kt$FragmentCacheServiceTest$@Test fun `should compose fragments correctly`()</ID>
+    <ID>FunctionMaxLength:FragmentCacheServiceTest.kt$FragmentCacheServiceTest$@Test fun `should get fragment count correctly`()</ID>
+    <ID>FunctionMaxLength:FragmentCacheServiceTest.kt$FragmentCacheServiceTest$@Test fun `should get fragment keys correctly`()</ID>
+    <ID>FunctionMaxLength:FragmentCacheServiceTest.kt$FragmentCacheServiceTest$@Test fun `should handle missing fragments in composition`()</ID>
+    <ID>FunctionMaxLength:FragmentCacheServiceTest.kt$FragmentCacheServiceTest$@Test fun `should handle tag operations correctly`()</ID>
+    <ID>FunctionMaxLength:FragmentCacheServiceTest.kt$FragmentCacheServiceTest$@Test fun `should invalidate all fragments correctly`()</ID>
+    <ID>FunctionMaxLength:FragmentCacheServiceTest.kt$FragmentCacheServiceTest$@Test fun `should invalidate fragment correctly`()</ID>
+    <ID>FunctionMaxLength:FragmentCacheServiceTest.kt$FragmentCacheServiceTest$@Test fun `should retrieve fragment correctly`()</ID>
+    <ID>FunctionMaxLength:FragmentCacheServiceTest.kt$FragmentCacheServiceTest$@Test fun `should return null for non-existent fragment`()</ID>
+    <ID>FunctionMaxLength:FragmentComposerTest.kt$FragmentComposerTest$@Test fun `should find missing placeholders`()</ID>
+    <ID>FunctionMaxLength:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest$@Test fun `should handle dependency invalidation correctly`()</ID>
+    <ID>FunctionMaxLength:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest$@Test fun `should handle fragment composition with templates`()</ID>
+    <ID>FunctionMaxLength:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest$@Test fun `should handle tag-based invalidation`()</ID>
+    <ID>FunctionMaxLength:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest$@Test fun `should handle versioned cache keys correctly`()</ID>
+    <ID>FunctionMaxLength:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest$@Test fun `should implement complete russian doll caching pattern`()</ID>
+    <ID>FunctionOnlyReturningConstant:CacheFlowAspectTest.kt$CacheFlowAspectTest.TestClass$@CacheFlow(key = "") fun methodWithBlankKey(): String</ID>
+    <ID>FunctionOnlyReturningConstant:CacheFlowAspectTest.kt$CacheFlowAspectTest.TestClass$@CacheFlow(key = "#arg1 + '_' + #arg2") fun methodWithCacheFlow(arg1: String, arg2: String): String</ID>
+    <ID>FunctionOnlyReturningConstant:CacheFlowAspectTest.kt$CacheFlowAspectTest.TestClass$@CacheFlow(key = "#arg1 + '_' + #arg2", ttl = 1800L) fun methodWithCustomTtl(arg1: String, arg2: String): String</ID>
+    <ID>FunctionOnlyReturningConstant:CacheFlowAspectTest.kt$CacheFlowAspectTest.TestClass$@CacheFlowCached(key = "#arg1 + '_' + #arg2") fun methodWithCacheFlowCached(arg1: String, arg2: String): String</ID>
+    <ID>FunctionOnlyReturningConstant:CacheFlowAspectTest.kt$CacheFlowAspectTest.TestClass$@CacheFlowEvict(allEntries = true) fun methodWithCacheFlowEvictAll(): String</ID>
+    <ID>FunctionOnlyReturningConstant:CacheFlowAspectTest.kt$CacheFlowAspectTest.TestClass$@CacheFlowEvict(key = "#arg1 + '_' + #arg2") fun methodWithCacheFlowEvict(arg1: String, arg2: String): String</ID>
+    <ID>FunctionOnlyReturningConstant:CacheFlowAspectTest.kt$CacheFlowAspectTest.TestClass$@CacheFlowEvict(key = "#arg1 + '_' + #arg2", beforeInvocation = true) fun methodWithCacheFlowEvictBeforeInvocation(arg1: String, arg2: String): String</ID>
+    <ID>FunctionOnlyReturningConstant:CacheFlowAspectTest.kt$CacheFlowAspectTest.TestClass$@CacheFlowEvict(tags = ["tag1", "tag2"]) fun methodWithCacheFlowEvictTags(): String</ID>
+    <ID>FunctionOnlyReturningConstant:CacheFlowAspectTest.kt$CacheFlowAspectTest.TestClass$fun methodWithoutAnnotation(): String</ID>
+    <ID>FunctionOnlyReturningConstant:RussianDollCachingExample.kt$RussianDollCachingExample$@CacheFlowComposition( key = "user:#{userId}:page", template = """ &lt;!DOCTYPE html> &lt;html> &lt;head> &lt;title>User Dashboard&lt;/title> &lt;style> body { font-family: Arial, sans-serif; margin: 0; padding: 20px; } .container { max-width: 800px; margin: 0 auto; } .user-profile, .user-settings { margin: 20px 0; padding: 15px; border: 1px solid #ddd; } &lt;/style> &lt;/head> &lt;body> &lt;div class="container"> {{header}} &lt;main> {{profile}} {{settings}} &lt;/main> {{footer}} &lt;/div> &lt;/body> &lt;/html> """, fragments = [ "user:#{userId}:header", "user:#{userId}:profile", "user:#{userId}:settings", "user:#{userId}:footer"], ttl = SHORT_TTL_SECONDS ) @Suppress("UNUSED_PARAMETER") fun getUserDashboard(userId: Long): String</ID>
+    <ID>FunctionOnlyReturningConstant:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest.RussianDollTestService$@CacheFlowComposition( key = "'user:' + #userId + ':page:' + #profileId + ':' + #settingsId", template = "&lt;div>{{header}}&lt;/div>&lt;div>{{profile}}&lt;/div>&lt;div>{{settings}}&lt;/div>&lt;div>{{footer}}&lt;/div>", fragments = [ "'user:' + #userId + ':header'", "'user:' + #userId + ':profile:' + #profileId", "'user:' + #userId + ':settings:' + #settingsId", "'user:' + #userId + ':footer'"], ttl = 1800 ) fun getCompleteUserPage(userId: Long, profileId: Long, settingsId: Long): String</ID>
+    <ID>MaxLineLength:CacheFlowAutoConfigurationTest.kt$CacheFlowAutoConfigurationTest$aspectConfig.cacheFlowAspect(mock(CacheFlowService::class.java), mockDependencyResolver, mockCacheKeyVersioner)</ID>
+    <ID>MaxLineLength:FragmentCacheAspect.kt$FragmentCacheAspect$private</ID>
+    <ID>MaxLineLength:TestConfiguration.kt$TestConfiguration$fun</ID>
+    <ID>NestedBlockDepth:FragmentComposer.kt$FragmentComposer$fun composeFragmentsByKeys( template: String, fragmentKeys: List&lt;String>, fragmentRetriever: (String) -> String? ): String</ID>
+    <ID>SpacingBetweenPackageAndImports:CacheFlowAnnotationsTest.kt$ </ID>
+    <ID>SpacingBetweenPackageAndImports:CacheFlowAspectTest.kt$ </ID>
+    <ID>SpacingBetweenPackageAndImports:CacheFlowAutoConfiguration.kt$ </ID>
+    <ID>SpacingBetweenPackageAndImports:CacheFlowConfigTest.kt$ </ID>
+    <ID>SpacingBetweenPackageAndImports:CacheFlowPropertiesTest.kt$ </ID>
+    <ID>SpacingBetweenPackageAndImports:CacheFlowServiceImplTest.kt$ </ID>
+    <ID>SpacingBetweenPackageAndImports:CacheKeyVersionerTest.kt$ </ID>
+    <ID>SpacingBetweenPackageAndImports:EdgeCachePropertiesTest.kt$ </ID>
+    <ID>SpacingBetweenPackageAndImports:FragmentCacheServiceTest.kt$ </ID>
+    <ID>StringLiteralDuplication:FragmentComposer.kt$FragmentComposer$"\\{\\{([^}]+)\\}\\}"</ID>
+    <ID>StringShouldBeRawString:FragmentComposer.kt$FragmentComposer$"\\{\\{$placeholder\\}\\}"</ID>
+    <ID>StringShouldBeRawString:FragmentComposer.kt$FragmentComposer$"\\{\\{([^}]+)\\}\\}"</ID>
+    <ID>SwallowedException:CacheKeyGenerator.kt$CacheKeyGenerator$e: org.springframework.expression.EvaluationException</ID>
+    <ID>SwallowedException:CacheKeyVersioner.kt$CacheKeyVersioner$e: DateTimeException</ID>
+    <ID>SwallowedException:DefaultTimestampExtractor.kt$DefaultTimestampExtractor$e: DateTimeException</ID>
+    <ID>SwallowedException:DefaultTimestampExtractor.kt$DefaultTimestampExtractor$e: java.lang.Exception</ID>
+    <ID>SwallowedException:DefaultTimestampExtractor.kt$DefaultTimestampExtractor$e: java.lang.IllegalAccessException</ID>
+    <ID>SwallowedException:DefaultTimestampExtractor.kt$DefaultTimestampExtractor$e: java.lang.SecurityException</ID>
+    <ID>TooGenericExceptionCaught:FragmentCacheAspect.kt$FragmentCacheAspect$e: Exception</ID>
+    <ID>TooManyFunctions:FragmentCacheAspect.kt$FragmentCacheAspect</ID>
+    <ID>TooManyFunctions:FragmentCacheServiceImpl.kt$FragmentCacheServiceImpl : FragmentCacheService</ID>
+    <ID>TrailingWhitespace:FragmentComposer.kt$io.cacheflow.spring.fragment.FragmentComposer.kt</ID>
+    <ID>UnderscoresInNumericLiterals:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$1640995200000L</ID>
+    <ID>UnderscoresInNumericLiterals:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$1641038400000L</ID>
+    <ID>UnderscoresInNumericLiterals:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$1641081600000L</ID>
+    <ID>UnderscoresInNumericLiterals:CacheKeyVersionerTest.kt$CacheKeyVersionerTest$1641168000000L</ID>
+    <ID>UnderscoresInNumericLiterals:CacheKeyVersionerTest.kt$CacheKeyVersionerTest.&lt;no name provided>$1640995200000L</ID>
+    <ID>UnusedImports:CacheFlowAutoConfigurationTest.kt$import io.cacheflow.spring.autoconfigure.CacheFlowAspectConfiguration</ID>
+    <ID>UnusedImports:CacheFlowAutoConfigurationTest.kt$import io.cacheflow.spring.autoconfigure.CacheFlowCoreConfiguration</ID>
+    <ID>UnusedImports:CacheFlowAutoConfigurationTest.kt$import io.cacheflow.spring.autoconfigure.CacheFlowManagementConfiguration</ID>
+    <ID>UnusedParameter:CacheFlowAspectTest.kt$CacheFlowAspectTest.TestClass$arg1: String</ID>
+    <ID>UnusedParameter:CacheFlowAspectTest.kt$CacheFlowAspectTest.TestClass$arg2: String</ID>
+    <ID>UnusedParameter:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest.RussianDollTestService$profileId: Long</ID>
+    <ID>UnusedParameter:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest.RussianDollTestService$settingsId: Long</ID>
+    <ID>UnusedParameter:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest.RussianDollTestService$userId: Long</ID>
+    <ID>UnusedPrivateProperty:CacheKeyVersionerTest.kt$CacheKeyVersionerTest.Companion$private const val TEST_TIMESTAMP_1 = 1_640_995_200_000L // 2022-01-01 00:00:00 UTC</ID>
+    <ID>UnusedPrivateProperty:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest$@Autowired private lateinit var cacheKeyVersioner: CacheKeyVersioner</ID>
+    <ID>UnusedPrivateProperty:RussianDollCachingIntegrationTest.kt$RussianDollCachingIntegrationTest$@Autowired private lateinit var dependencyResolver: DependencyResolver</ID>
+    <ID>WildcardImport:CacheDependencyTrackerTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:CacheFlowAnnotationsTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:CacheFlowAspectTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:CacheFlowAspectTest.kt$import org.mockito.Mockito.*</ID>
+    <ID>WildcardImport:CacheFlowAutoConfigurationTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:CacheFlowConfigTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:CacheFlowPropertiesTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:CacheFlowServiceImplTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:CacheFlowServiceTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:CacheKeyVersionerTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:DependencyManagementIntegrationTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:EdgeCachePropertiesTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:FragmentCacheServiceTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:FragmentCacheServiceTest.kt$import org.mockito.Mockito.*</ID>
+    <ID>WildcardImport:RussianDollCachingIntegrationTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+  </CurrentIssues>
+</SmellBaseline>

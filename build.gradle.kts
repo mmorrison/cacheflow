@@ -64,9 +64,14 @@ detekt {
     parallel = true
     autoCorrect = false
     ignoreFailures = false
+    baseline = file("$projectDir/config/detekt-baseline.xml")
 }
 
 tasks.detekt {
+    jvmTarget = "17"
+}
+
+tasks.withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>().configureEach {
     jvmTarget = "17"
 }
 
