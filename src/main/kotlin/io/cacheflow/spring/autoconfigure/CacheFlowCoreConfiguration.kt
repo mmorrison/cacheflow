@@ -56,5 +56,5 @@ class CacheFlowCoreConfiguration {
     @Bean
     @ConditionalOnMissingBean
     fun cacheKeyVersioner(timestampExtractor: TimestampExtractor): CacheKeyVersioner =
-            CacheKeyVersioner(timestampExtractor)
+        CacheKeyVersioner(timestampExtractor)
 }

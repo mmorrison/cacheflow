@@ -2,21 +2,19 @@ package io.cacheflow.spring.autoconfigure
 
 import io.cacheflow.spring.annotation.CacheFlowConfigRegistry
 import io.cacheflow.spring.aspect.CacheFlowAspect
-import io.cacheflow.spring.autoconfigure.CacheFlowAspectConfiguration
-import io.cacheflow.spring.autoconfigure.CacheFlowCoreConfiguration
-import io.cacheflow.spring.autoconfigure.CacheFlowManagementConfiguration
 import io.cacheflow.spring.dependency.DependencyResolver
 import io.cacheflow.spring.management.CacheFlowManagementEndpoint
 import io.cacheflow.spring.service.CacheFlowService
 import io.cacheflow.spring.service.impl.CacheFlowServiceImpl
 import io.cacheflow.spring.versioning.CacheKeyVersioner
-import org.mockito.Mockito.mock
-
-
-
-
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNotSame
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -94,13 +92,13 @@ class CacheFlowAutoConfigurationTest {
     @Test
     fun `cacheFlowAspect method should have correct annotations`() {
         val method =
-                CacheFlowAspectConfiguration::class.java.getDeclaredMethod(
-                        "cacheFlowAspect",
-                        CacheFlowService::class.java,
-                        DependencyResolver::class.java,
-                        CacheKeyVersioner::class.java,
-                        CacheFlowConfigRegistry::class.java
-                )
+            CacheFlowAspectConfiguration::class.java.getDeclaredMethod(
+                "cacheFlowAspect",
+                CacheFlowService::class.java,
+                DependencyResolver::class.java,
+                CacheKeyVersioner::class.java,
+                CacheFlowConfigRegistry::class.java
+            )
 
         // Check @Bean
         assertTrue(method.isAnnotationPresent(Bean::class.java))
@@ -112,10 +110,10 @@ class CacheFlowAutoConfigurationTest {
     @Test
     fun `cacheFlowManagementEndpoint method should have correct annotations`() {
         val method =
-                CacheFlowManagementConfiguration::class.java.getDeclaredMethod(
-                        "cacheFlowManagementEndpoint",
-                        CacheFlowService::class.java
-                )
+            CacheFlowManagementConfiguration::class.java.getDeclaredMethod(
+                "cacheFlowManagementEndpoint",
+                CacheFlowService::class.java
+            )
 
         // Check @Bean
         assertTrue(method.isAnnotationPresent(Bean::class.java))

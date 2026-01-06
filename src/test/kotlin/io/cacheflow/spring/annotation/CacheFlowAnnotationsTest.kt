@@ -1,11 +1,6 @@
 package io.cacheflow.spring.annotation
 
-
-
-
-
 import org.junit.jupiter.api.Assertions.*
-
 import org.junit.jupiter.api.Test
 
 class CacheFlowAnnotationsTest {
@@ -94,17 +89,16 @@ class CacheFlowAnnotationsTest {
         val cacheFlow = method.getAnnotation(annotation)
 
         assertNotNull(cacheFlow)
-assertEquals("", cacheFlow.key)
+        assertEquals("", cacheFlow.key)
 
         assertEquals(-1L, cacheFlow.ttl)
         assertTrue(cacheFlow.dependsOn.isEmpty())
         assertTrue(cacheFlow.tags.isEmpty())
-assertFalse(cacheFlow.versioned)
+        assertFalse(cacheFlow.versioned)
 
-assertEquals("updatedAt", cacheFlow.timestampField)
+        assertEquals("updatedAt", cacheFlow.timestampField)
 
-assertEquals("", cacheFlow.config)
-
+        assertEquals("", cacheFlow.config)
     }
 
     @Test
@@ -114,17 +108,16 @@ assertEquals("", cacheFlow.config)
         val cacheFlowCached = method.getAnnotation(annotation)
 
         assertNotNull(cacheFlowCached)
-assertEquals("", cacheFlowCached.key)
+        assertEquals("", cacheFlowCached.key)
 
         assertEquals(-1L, cacheFlowCached.ttl)
         assertTrue(cacheFlowCached.dependsOn.isEmpty())
         assertTrue(cacheFlowCached.tags.isEmpty())
-assertFalse(cacheFlowCached.versioned)
+        assertFalse(cacheFlowCached.versioned)
 
-assertEquals("updatedAt", cacheFlowCached.timestampField)
+        assertEquals("updatedAt", cacheFlowCached.timestampField)
 
-assertEquals("", cacheFlowCached.config)
-
+        assertEquals("", cacheFlowCached.config)
     }
 
     @Test

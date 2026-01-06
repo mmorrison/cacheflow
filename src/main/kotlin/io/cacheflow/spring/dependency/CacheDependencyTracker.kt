@@ -1,10 +1,10 @@
 package io.cacheflow.spring.dependency
 
+import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
-import org.springframework.stereotype.Component
 
 /**
  * Thread-safe implementation of DependencyResolver for tracking cache dependencies.
@@ -33,24 +33,24 @@ class CacheDependencyTracker : DependencyResolver {
         lock.write {
             // Add to dependency graph
             dependencyGraph
-                    .computeIfAbsent(cacheKey) { ConcurrentHashMap.newKeySet() }
-                    .add(dependencyKey)
+                .computeIfAbsent(cacheKey) { ConcurrentHashMap.newKeySet() }
+                .add(dependencyKey)
 
             // Add to reverse dependency graph
             reverseDependencyGraph
-                    .computeIfAbsent(dependencyKey) { ConcurrentHashMap.newKeySet() }
-                    .add(cacheKey)
+                .computeIfAbsent(dependencyKey) { ConcurrentHashMap.newKeySet() }
+                .add(cacheKey)
         }
     }
 
     override fun invalidateDependentCaches(dependencyKey: String): Set<String> =
-            lock.read { reverseDependencyGraph[dependencyKey]?.toSet() ?: emptySet() }
+        lock.read { reverseDependencyGraph[dependencyKey]?.toSet() ?: emptySet() }
 
     override fun getDependencies(cacheKey: String): Set<String> =
-            lock.read { dependencyGraph[cacheKey]?.toSet() ?: emptySet() }
+        lock.read { dependencyGraph[cacheKey]?.toSet() ?: emptySet() }
 
     override fun getDependentCaches(dependencyKey: String): Set<String> =
-            lock.read { reverseDependencyGraph[dependencyKey]?.toSet() ?: emptySet() }
+        lock.read { reverseDependencyGraph[dependencyKey]?.toSet() ?: emptySet() }
 
     override fun removeDependency(cacheKey: String, dependencyKey: String) {
         lock.write {
@@ -94,13 +94,13 @@ class CacheDependencyTracker : DependencyResolver {
     fun getStatistics(): Map<String, Any> {
         return lock.read {
             mapOf(
-                    "totalDependencies" to dependencyGraph.values.sumOf { it.size },
-                    "totalCacheKeys" to dependencyGraph.size,
-                    "totalDependencyKeys" to reverseDependencyGraph.size,
-                    "maxDependenciesPerKey" to
-                            (dependencyGraph.values.maxOfOrNull { it.size } ?: 0),
-                    "maxDependentsPerKey" to
-                            (reverseDependencyGraph.values.maxOfOrNull { it.size } ?: 0)
+                "totalDependencies" to dependencyGraph.values.sumOf { it.size },
+                "totalCacheKeys" to dependencyGraph.size,
+                "totalDependencyKeys" to reverseDependencyGraph.size,
+                "maxDependenciesPerKey" to
+                    (dependencyGraph.values.maxOfOrNull { it.size } ?: 0),
+                "maxDependentsPerKey" to
+                    (reverseDependencyGraph.values.maxOfOrNull { it.size } ?: 0)
             )
         }
     }
@@ -129,7 +129,9 @@ class CacheDependencyTracker : DependencyResolver {
             return dependencyGraph.keys.any { key ->
                 if (!visited.contains(key)) {
                     hasCycleFromNode(key)
-                } else false
+                } else {
+                    false
+                }
             }
         }
 

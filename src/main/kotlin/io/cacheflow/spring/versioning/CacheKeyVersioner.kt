@@ -1,7 +1,7 @@
 package io.cacheflow.spring.versioning
 
-import java.time.DateTimeException
 import org.springframework.stereotype.Component
+import java.time.DateTimeException
 
 /**
  * Service for generating versioned cache keys based on timestamps.
@@ -135,7 +135,7 @@ class CacheKeyVersioner(private val timestampExtractor: TimestampExtractor) {
         return try {
             val instant = java.time.Instant.ofEpochMilli(timestamp)
             val dateTime =
-                    java.time.LocalDateTime.ofInstant(instant, java.time.ZoneId.systemDefault())
+                java.time.LocalDateTime.ofInstant(instant, java.time.ZoneId.systemDefault())
             val formatter = java.time.format.DateTimeFormatter.ofPattern(format)
             dateTime.format(formatter)
         } catch (e: DateTimeException) {

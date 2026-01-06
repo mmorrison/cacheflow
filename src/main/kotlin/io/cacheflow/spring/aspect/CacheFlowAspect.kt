@@ -65,8 +65,8 @@ class CacheFlowAspect(
 
     private fun resolveConfig(cached: CacheFlow): CacheFlowConfig {
         if (cached.config.isNotBlank()) {
-             val config = configRegistry.get(cached.config)
-             if (config != null) return config
+            val config = configRegistry.get(cached.config)
+            if (config != null) return config
         }
         return CacheFlowConfig(
             key = cached.key,
@@ -126,8 +126,8 @@ class CacheFlowAspect(
 
     private fun resolveConfig(cached: CacheFlowCached): CacheFlowConfig {
         if (cached.config.isNotBlank()) {
-             val config = configRegistry.get(cached.config)
-             if (config != null) return config
+            val config = configRegistry.get(cached.config)
+            if (config != null) return config
         }
         return CacheFlowConfig(
             key = cached.key,
@@ -165,7 +165,6 @@ class CacheFlowAspect(
         return result
     }
 
-
     private fun evictCacheEntries(evict: CacheFlowEvict, joinPoint: ProceedingJoinPoint) {
         when {
             evict.allEntries -> {
@@ -182,5 +181,4 @@ class CacheFlowAspect(
             }
         }
     }
-
 }

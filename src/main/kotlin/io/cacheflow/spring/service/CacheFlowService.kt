@@ -10,14 +10,15 @@ interface CacheFlowService {
      */
 
     fun get(key: String): Any?
+
 /**
- * Stores a value in the cache.
- *
- * @param key The cache key
- * @param value The value to cache
- * @param ttl Time to live in seconds
- */
-fun put(key: String, value: Any, ttl: Long = 3_600)
+     * Stores a value in the cache.
+     *
+     * @param key The cache key
+     * @param value The value to cache
+     * @param ttl Time to live in seconds
+     */
+    fun put(key: String, value: Any, ttl: Long = 3_600)
 
     /**
      * Evicts a specific cache entry.
@@ -26,9 +27,11 @@ fun put(key: String, value: Any, ttl: Long = 3_600)
      */
 
     fun evict(key: String)
+
     /** Evicts all cache entries. */
 
     fun evictAll()
+
     /**
      * Evicts cache entries by tags.
      *
@@ -36,6 +39,7 @@ fun put(key: String, value: Any, ttl: Long = 3_600)
      */
 
     fun evictByTags(vararg tags: String)
+
     /**
      * Gets the current cache size.
      *
@@ -43,6 +47,7 @@ fun put(key: String, value: Any, ttl: Long = 3_600)
      */
 
     fun size(): Long
+
     /**
      * Gets all cache keys.
      *

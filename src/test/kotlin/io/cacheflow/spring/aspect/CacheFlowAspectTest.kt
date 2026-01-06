@@ -10,12 +10,17 @@ import io.cacheflow.spring.service.CacheFlowService
 import io.cacheflow.spring.versioning.CacheKeyVersioner
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.reflect.MethodSignature
-import org.junit.jupiter.api.Assertions.*
-
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.*
-
+import org.mockito.Mockito.anyString
+import org.mockito.Mockito.eq
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.verifyNoInteractions
+import org.mockito.Mockito.`when`
 
 class CacheFlowAspectTest {
 
@@ -43,7 +48,6 @@ class CacheFlowAspectTest {
         `when`(methodSignature.declaringType).thenReturn(TestClass::class.java)
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
-
     }
 
     private fun <T> safeEq(value: T): T {
@@ -67,11 +71,11 @@ class CacheFlowAspectTest {
     @Test
     fun `should cache result when CacheFlow annotation present`() {
         val method =
-                TestClass::class.java.getDeclaredMethod(
-                        "methodWithCacheFlow",
-                        String::class.java,
-                        String::class.java
-                )
+            TestClass::class.java.getDeclaredMethod(
+                "methodWithCacheFlow",
+                String::class.java,
+                String::class.java
+            )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
         `when`(methodSignature.method).thenReturn(method)
@@ -90,11 +94,11 @@ class CacheFlowAspectTest {
     @Test
     fun `should return cached value when present`() {
         val method =
-                TestClass::class.java.getDeclaredMethod(
-                        "methodWithCacheFlow",
-                        String::class.java,
-                        String::class.java
-                )
+            TestClass::class.java.getDeclaredMethod(
+                "methodWithCacheFlow",
+                String::class.java,
+                String::class.java
+            )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
         `when`(methodSignature.method).thenReturn(method)
@@ -112,11 +116,11 @@ class CacheFlowAspectTest {
     @Test
     fun `should use config from registry when config name provided`() {
         val method =
-                TestClass::class.java.getDeclaredMethod(
-                        "methodWithCacheFlowConfig",
-                        String::class.java,
-                        String::class.java
-                )
+            TestClass::class.java.getDeclaredMethod(
+                "methodWithCacheFlowConfig",
+                String::class.java,
+                String::class.java
+            )
 
         val configName = "testConfig"
         val config = CacheFlowConfig(key = "#arg1 + '_' + #arg2", ttl = 600L)
@@ -140,11 +144,11 @@ class CacheFlowAspectTest {
     @Test
     fun `should use annotation when config name not found`() {
         val method =
-                TestClass::class.java.getDeclaredMethod(
-                        "methodWithCacheFlowConfig",
-                        String::class.java,
-                        String::class.java
-                )
+            TestClass::class.java.getDeclaredMethod(
+                "methodWithCacheFlowConfig",
+                String::class.java,
+                String::class.java
+            )
 
         val configName = "testConfig"
         `when`(configRegistry.get(configName)).thenReturn(null)
@@ -182,11 +186,11 @@ class CacheFlowAspectTest {
     @Test
     fun `should cache result when CacheFlowCached annotation present`() {
         val method =
-                TestClass::class.java.getDeclaredMethod(
-                        "methodWithCacheFlowCached",
-                        String::class.java,
-                        String::class.java
-                )
+            TestClass::class.java.getDeclaredMethod(
+                "methodWithCacheFlowCached",
+                String::class.java,
+                String::class.java
+            )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
         `when`(methodSignature.method).thenReturn(method)
@@ -219,11 +223,11 @@ class CacheFlowAspectTest {
     @Test
     fun `should evict after method execution by default`() {
         val method =
-                TestClass::class.java.getDeclaredMethod(
-                        "methodWithCacheFlowEvict",
-                        String::class.java,
-                        String::class.java
-                )
+            TestClass::class.java.getDeclaredMethod(
+                "methodWithCacheFlowEvict",
+                String::class.java,
+                String::class.java
+            )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
         `when`(methodSignature.method).thenReturn(method)
@@ -242,11 +246,11 @@ class CacheFlowAspectTest {
     @Test
     fun `should evict before method execution when beforeInvocation is true`() {
         val method =
-                TestClass::class.java.getDeclaredMethod(
-                        "methodWithCacheFlowEvictBeforeInvocation",
-                        String::class.java,
-                        String::class.java
-                )
+            TestClass::class.java.getDeclaredMethod(
+                "methodWithCacheFlowEvictBeforeInvocation",
+                String::class.java,
+                String::class.java
+            )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
         `when`(methodSignature.method).thenReturn(method)
@@ -313,11 +317,11 @@ class CacheFlowAspectTest {
     @Test
     fun `should not cache null result`() {
         val method =
-                TestClass::class.java.getDeclaredMethod(
-                        "methodWithCacheFlow",
-                        String::class.java,
-                        String::class.java
-                )
+            TestClass::class.java.getDeclaredMethod(
+                "methodWithCacheFlow",
+                String::class.java,
+                String::class.java
+            )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
         `when`(methodSignature.method).thenReturn(method)
@@ -337,11 +341,11 @@ class CacheFlowAspectTest {
     @Test
     fun `should use custom TTL when specified`() {
         val method =
-                TestClass::class.java.getDeclaredMethod(
-                        "methodWithCustomTtl",
-                        String::class.java,
-                        String::class.java
-                )
+            TestClass::class.java.getDeclaredMethod(
+                "methodWithCustomTtl",
+                String::class.java,
+                String::class.java
+            )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
         `when`(methodSignature.method).thenReturn(method)
@@ -374,12 +378,14 @@ class CacheFlowAspectTest {
         @CacheFlowEvict(key = "#arg1 + '_' + #arg2", beforeInvocation = true)
         fun methodWithCacheFlowEvictBeforeInvocation(arg1: String, arg2: String): String = "result"
 
-        @CacheFlowEvict(allEntries = true) fun methodWithCacheFlowEvictAll(): String = "result"
+        @CacheFlowEvict(allEntries = true)
+        fun methodWithCacheFlowEvictAll(): String = "result"
 
         @CacheFlowEvict(tags = ["tag1", "tag2"])
         fun methodWithCacheFlowEvictTags(): String = "result"
 
-        @CacheFlow(key = "") fun methodWithBlankKey(): String = "result"
+        @CacheFlow(key = "")
+        fun methodWithBlankKey(): String = "result"
 
         @CacheFlow(key = "#arg1 + '_' + #arg2", ttl = 1800L)
         fun methodWithCustomTtl(arg1: String, arg2: String): String = "result"

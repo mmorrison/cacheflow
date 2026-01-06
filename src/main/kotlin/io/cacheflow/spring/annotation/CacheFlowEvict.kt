@@ -64,15 +64,13 @@ annotation class CacheFlowEvictAlternative(
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CacheEntity(
-        /** Key prefix for cache entries. */
-        val keyPrefix: String = "",
-        /** Version field name for cache invalidation. */
-        val versionField: String = "updatedAt"
+    /** Key prefix for cache entries. */
+    val keyPrefix: String = "",
+    /** Version field name for cache invalidation. */
+    val versionField: String = "updatedAt"
 )
 
 /** Annotation to mark properties as cache keys. */
-
-
 
 @Target(AnnotationTarget.PROPERTY, AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.RUNTIME)

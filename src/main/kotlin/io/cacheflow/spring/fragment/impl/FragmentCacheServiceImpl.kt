@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service
  */
 @Service
 class FragmentCacheServiceImpl(
-        private val cacheService: CacheFlowService,
-        private val tagManager: FragmentTagManager,
-        private val composer: FragmentComposer
+    private val cacheService: CacheFlowService,
+    private val tagManager: FragmentTagManager,
+    private val composer: FragmentComposer
 ) : FragmentCacheService {
 
     private val fragmentPrefix = "fragment:"
@@ -32,10 +32,10 @@ class FragmentCacheServiceImpl(
     }
 
     override fun composeFragments(template: String, fragments: Map<String, String>): String =
-            composer.composeFragments(template, fragments)
+        composer.composeFragments(template, fragments)
 
     override fun composeFragmentsByKeys(template: String, fragmentKeys: List<String>): String =
-            composer.composeFragmentsByKeys(template, fragmentKeys) { key -> getFragment(key) }
+        composer.composeFragmentsByKeys(template, fragmentKeys) { key -> getFragment(key) }
 
     override fun invalidateFragment(key: String) {
         val fragmentKey = buildFragmentKey(key)
@@ -55,14 +55,14 @@ class FragmentCacheServiceImpl(
     }
 
     override fun getFragmentCount(): Long =
-            cacheService.keys().count { it.startsWith(fragmentPrefix) }.toLong()
+        cacheService.keys().count { it.startsWith(fragmentPrefix) }.toLong()
 
     override fun getFragmentKeys(): Set<String> {
         return cacheService
-                .keys()
-                .filter { it.startsWith(fragmentPrefix) }
-                .map { it.removePrefix(fragmentPrefix) }
-                .toSet()
+            .keys()
+            .filter { it.startsWith(fragmentPrefix) }
+            .map { it.removePrefix(fragmentPrefix) }
+            .toSet()
     }
 
     override fun hasFragment(key: String): Boolean {

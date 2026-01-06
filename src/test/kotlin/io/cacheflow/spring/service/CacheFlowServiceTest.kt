@@ -1,14 +1,8 @@
 package io.cacheflow.spring.service
 
 import io.cacheflow.spring.service.impl.CacheFlowServiceImpl
-
-
-
-
-
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Assertions.*
-
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class CacheFlowServiceTest {

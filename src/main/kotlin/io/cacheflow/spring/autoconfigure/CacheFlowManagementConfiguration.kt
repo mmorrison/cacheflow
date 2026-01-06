@@ -25,5 +25,5 @@ class CacheFlowManagementConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnAvailableEndpoint
     fun cacheFlowManagementEndpoint(cacheService: CacheFlowService): CacheFlowManagementEndpoint =
-            CacheFlowManagementEndpoint(cacheService)
+        CacheFlowManagementEndpoint(cacheService)
 }
