@@ -40,13 +40,9 @@ class CacheFlowAspect(
 
     private fun processCacheFlow(joinPoint: ProceedingJoinPoint, cached: CacheFlow): Any? {
         // Get configuration - use config registry if config name is provided
-        val config = if (cached.config.isNotBlank()) {
-            // TODO: Inject CacheFlowConfigRegistry to get complex configuration
-            // For now, use the annotation parameters directly
-            cached
-        } else {
-            cached
-        }
+        val config = cached.takeIf { it.config.isNotBlank() } ?: cached
+        // TODO: Inject CacheFlowConfigRegistry to get complex configuration
+        // For now, use the annotation parameters directly
 
         // Generate cache key
         val baseKey = cacheKeyGenerator.generateCacheKeyFromExpression(config.key, joinPoint)
@@ -68,11 +64,9 @@ class CacheFlowAspect(
     }
 
     private fun executeAndCache(joinPoint: ProceedingJoinPoint, key: String, cached: CacheFlow): Any? {
-        val result = joinPoint.proceed()
-        if (result != null) {
-            val ttl = if (cached.ttl > 0) cached.ttl else defaultTtlSeconds
-            cacheService.put(key, result, ttl)
-        }
+        val result = joinPoint.proceed() ?: return null
+        val ttl = if (cached.ttl > 0) cached.ttl else defaultTtlSeconds
+        cacheService.put(key, result, ttl)
         return result
     }
 
@@ -92,13 +86,9 @@ class CacheFlowAspect(
 
     private fun processCacheFlowCached(joinPoint: ProceedingJoinPoint, cached: CacheFlowCached): Any? {
         // Get configuration - use config registry if config name is provided
-        val config = if (cached.config.isNotBlank()) {
-            // TODO: Inject CacheFlowConfigRegistry to get complex configuration
-            // For now, use the annotation parameters directly
-            cached
-        } else {
-            cached
-        }
+        val config = cached.takeIf { it.config.isNotBlank() } ?: cached
+        // TODO: Inject CacheFlowConfigRegistry to get complex configuration
+        // For now, use the annotation parameters directly
 
         // Generate cache key
         val baseKey = cacheKeyGenerator.generateCacheKeyFromExpression(config.key, joinPoint)
@@ -120,11 +110,9 @@ class CacheFlowAspect(
     }
 
     private fun executeAndCacheCached(joinPoint: ProceedingJoinPoint, key: String, cached: CacheFlowCached): Any? {
-        val result = joinPoint.proceed()
-        if (result != null) {
-            val ttl = if (cached.ttl > 0) cached.ttl else defaultTtlSeconds
-            cacheService.put(key, result, ttl)
-        }
+        val result = joinPoint.proceed() ?: return null
+        val ttl = if (cached.ttl > 0) cached.ttl else defaultTtlSeconds
+        cacheService.put(key, result, ttl)
         return result
     }
 

@@ -10,7 +10,7 @@ import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.expression.spel.standard.SpelExpressionParser
-import org.springframework.expression.spel.support.StandardEvaluationContext
+import org.springframework.expression.spel.support.SimpleEvaluationContext
 import org.springframework.stereotype.Component
 
 /**
@@ -174,7 +174,7 @@ fragment.tags.forEach { tag ->
         }
 
         return try {
-            val context = StandardEvaluationContext()
+            val context = SimpleEvaluationContext.forReadOnlyDataBinding().build()
             val method = joinPoint.signature as MethodSignature
             val parameterNames = method.parameterNames
 
@@ -208,7 +208,7 @@ fragment.tags.forEach { tag ->
         }
 
         return try {
-            val context = StandardEvaluationContext()
+            val context = SimpleEvaluationContext.forReadOnlyDataBinding().build()
             val method = joinPoint.signature as MethodSignature
             val parameterNames = method.parameterNames
 

@@ -21,7 +21,7 @@ class CacheFlowManagementEndpoint(private val cacheService: CacheFlowService) {
      */
 
     @ReadOperation
-fun getCacheInfo() = mapOf("size" to cacheService.size(), "keys" to cacheService.keys())
+fun getCacheInfo() = mapOf("size" to cacheService.size())
 
 
     /**

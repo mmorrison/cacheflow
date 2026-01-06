@@ -261,8 +261,8 @@ class CacheKeyVersionerTest {
     fun `should generate versioned key with custom format`() {
         // Given
         val baseKey = "user:123"
-val timestamp =
-        1641081600000L // 2022-01-01 12:00:00 UTC (to ensure it's 2022-01-01 in most timezones)
+        // 1641038400000L is 2022-01-01 12:00:00 UTC. This ensures it's 2022-01-01 in both UTC-12 and UTC+12.
+        val timestamp = 1641038400000L
 
         val obj = timestamp
         val format = "yyyyMMdd"

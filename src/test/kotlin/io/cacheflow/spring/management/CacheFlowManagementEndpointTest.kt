@@ -22,7 +22,7 @@ class CacheFlowManagementEndpointTest {
     }
 
     @Test
-    fun `should return cache info with size and keys`() {
+    fun `should return cache info with size`() {
         // Add some test data
         cacheService.put("key1", "value1", 60)
         cacheService.put("key2", "value2", 60)
@@ -31,11 +31,6 @@ class CacheFlowManagementEndpointTest {
 
         assertNotNull(result)
         assertEquals(2L, result["size"])
-        assertTrue(result["keys"] is Set<*>)
-        val keys = result["keys"] as Set<*>
-        assertEquals(2, keys.size)
-        assertTrue(keys.contains("key1"))
-        assertTrue(keys.contains("key2"))
     }
 
     @Test
@@ -44,9 +39,6 @@ class CacheFlowManagementEndpointTest {
 
         assertNotNull(result)
         assertEquals(0L, result["size"])
-        assertTrue(result["keys"] is Set<*>)
-        val keys = result["keys"] as Set<*>
-        assertTrue(keys.isEmpty())
     }
 
     @Test
