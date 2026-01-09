@@ -1,6 +1,9 @@
 package io.cacheflow.spring.annotation
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class CacheFlowAnnotationsTest {
@@ -161,12 +164,12 @@ class CacheFlowAnnotationsTest {
     // Test class with annotated methods
     @CacheEntity(keyPrefix = "test:", versionField = "version")
     class TestClass {
-        @CacheFlow fun testMethod() {}
+        @CacheFlow fun testMethod() = Unit
 
-        @CacheFlowCached fun testCachedMethod() {}
+        @CacheFlowCached fun testCachedMethod() = Unit
 
-        @CacheFlowEvict fun testEvictMethod() {}
+        @CacheFlowEvict fun testEvictMethod() = Unit
 
-        @CacheFlowEvictAlternative fun testEvictAlternativeMethod() {}
+        @CacheFlowEvictAlternative fun testEvictAlternativeMethod() = Unit
     }
 }
