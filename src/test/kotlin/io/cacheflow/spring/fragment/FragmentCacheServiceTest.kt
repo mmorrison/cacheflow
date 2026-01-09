@@ -1,40 +1,32 @@
 package io.cacheflow.spring.fragment
 
-
-
-
-
-
-
 import io.cacheflow.spring.fragment.impl.FragmentCacheServiceImpl
 import io.cacheflow.spring.service.CacheFlowService
-import org.junit.jupiter.api.Assertions.*
-
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.Mockito.never
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import org.mockito.Mockito.*
-
-
-
-
 
 class FragmentCacheServiceTest {
 
     @Mock private lateinit var cacheService: CacheFlowService
-@Mock private lateinit var tagManager: FragmentTagManager
-private val composer: FragmentComposer = FragmentComposer()
 
-
+    @Mock private lateinit var tagManager: FragmentTagManager
+    private val composer: FragmentComposer = FragmentComposer()
 
     private lateinit var fragmentCacheService: FragmentCacheService
 
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-fragmentCacheService = FragmentCacheServiceImpl(cacheService, tagManager, composer)
-
+        fragmentCacheService = FragmentCacheServiceImpl(cacheService, tagManager, composer)
     }
 
     @Test
@@ -56,8 +48,7 @@ fragmentCacheService = FragmentCacheServiceImpl(cacheService, tagManager, compos
         // Given
         val key = "user:123:profile"
         val fragment = "<div>User Profile</div>"
-`when`(cacheService.get("fragment:$key")).thenReturn(fragment)
-
+        `when`(cacheService.get("fragment:$key")).thenReturn(fragment)
 
         // When
         val result = fragmentCacheService.getFragment(key)
@@ -71,8 +62,7 @@ fragmentCacheService = FragmentCacheServiceImpl(cacheService, tagManager, compos
     fun `should return null for non-existent fragment`() {
         // Given
         val key = "non-existent"
-`when`(cacheService.get("fragment:$key")).thenReturn(null)
-
+        `when`(cacheService.get("fragment:$key")).thenReturn(null)
 
         // When
         val result = fragmentCacheService.getFragment(key)
@@ -102,17 +92,15 @@ fragmentCacheService = FragmentCacheServiceImpl(cacheService, tagManager, compos
         val headerFragment = "<h1>Title</h1>"
         val contentFragment = "<p>Content</p>"
 
-`when`(cacheService.get("fragment:header")).thenReturn(headerFragment)
+        `when`(cacheService.get("fragment:header")).thenReturn(headerFragment)
 
-`when`(cacheService.get("fragment:content")).thenReturn(contentFragment)
-
-
+        `when`(cacheService.get("fragment:content")).thenReturn(contentFragment)
 
         // When
         val result = fragmentCacheService.composeFragmentsByKeys(template, fragmentKeys)
 
         // Then
-println("Result: $result")
+        println("Result: $result")
 
         assertEquals("<div><h1>Title</h1></div><div><p>Content</p></div>", result)
     }
@@ -124,13 +112,11 @@ println("Result: $result")
         val fragmentKeys = listOf("header", "content", "missing")
         val headerFragment = "<h1>Title</h1>"
 
-`when`(cacheService.get("fragment:header")).thenReturn(headerFragment)
+        `when`(cacheService.get("fragment:header")).thenReturn(headerFragment)
 
-`when`(cacheService.get("fragment:content")).thenReturn(null)
+        `when`(cacheService.get("fragment:content")).thenReturn(null)
 
-`when`(cacheService.get("fragment:missing")).thenReturn(null)
-
-
+        `when`(cacheService.get("fragment:missing")).thenReturn(null)
 
         // When
         val result = fragmentCacheService.composeFragmentsByKeys(template, fragmentKeys)
@@ -155,8 +141,7 @@ println("Result: $result")
     fun `should invalidate all fragments correctly`() {
         // Given
         val allKeys = setOf("fragment:key1", "fragment:key2", "regular:key3")
-`when`(cacheService.keys()).thenReturn(allKeys)
-
+        `when`(cacheService.keys()).thenReturn(allKeys)
 
         // When
         fragmentCacheService.invalidateAllFragments()
@@ -171,8 +156,7 @@ println("Result: $result")
     fun `should get fragment count correctly`() {
         // Given
         val allKeys = setOf("fragment:key1", "fragment:key2", "regular:key3")
-`when`(cacheService.keys()).thenReturn(allKeys)
-
+        `when`(cacheService.keys()).thenReturn(allKeys)
 
         // When
         val count = fragmentCacheService.getFragmentCount()
@@ -185,8 +169,7 @@ println("Result: $result")
     fun `should get fragment keys correctly`() {
         // Given
         val allKeys = setOf("fragment:key1", "fragment:key2", "regular:key3")
-`when`(cacheService.keys()).thenReturn(allKeys)
-
+        `when`(cacheService.keys()).thenReturn(allKeys)
 
         // When
         val fragmentKeys = fragmentCacheService.getFragmentKeys()
@@ -199,8 +182,7 @@ println("Result: $result")
     fun `should check fragment existence correctly`() {
         // Given
         val key = "user:123:profile"
-`when`(cacheService.get("fragment:$key")).thenReturn("<div>Profile</div>")
-
+        `when`(cacheService.get("fragment:$key")).thenReturn("<div>Profile</div>")
 
         // When
         val exists = fragmentCacheService.hasFragment(key)
@@ -218,31 +200,26 @@ println("Result: $result")
         val tag = "user-fragments"
 
 // Mock the tag manager behavior
-`when`(tagManager.getFragmentsByTag(tag)).thenReturn(setOf(key))
+        `when`(tagManager.getFragmentsByTag(tag)).thenReturn(setOf(key))
 
-`when`(tagManager.getFragmentTags(key)).thenReturn(setOf(tag))
+        `when`(tagManager.getFragmentTags(key)).thenReturn(setOf(tag))
 
         // When
 
-val fragmentsByTag = tagManager.getFragmentsByTag(tag)
-val tagsByFragment = tagManager.getFragmentTags(key)
-
-
+        val fragmentsByTag = tagManager.getFragmentsByTag(tag)
+        val tagsByFragment = tagManager.getFragmentTags(key)
 
         // Then
         assertTrue(fragmentsByTag.contains(key))
         assertTrue(tagsByFragment.contains(tag))
 
 // When - after removal
-`when`(tagManager.getFragmentsByTag(tag)).thenReturn(emptySet())
+        `when`(tagManager.getFragmentsByTag(tag)).thenReturn(emptySet())
 
-`when`(tagManager.getFragmentTags(key)).thenReturn(emptySet())
+        `when`(tagManager.getFragmentTags(key)).thenReturn(emptySet())
 
-
-val fragmentsByTagAfter = tagManager.getFragmentsByTag(tag)
-val tagsByFragmentAfter = tagManager.getFragmentTags(key)
-
-
+        val fragmentsByTagAfter = tagManager.getFragmentsByTag(tag)
+        val tagsByFragmentAfter = tagManager.getFragmentTags(key)
 
         // Then
         assertFalse(fragmentsByTagAfter.contains(key))

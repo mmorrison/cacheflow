@@ -1,17 +1,17 @@
 package io.cacheflow.spring.versioning
 
 import io.cacheflow.spring.versioning.impl.DefaultTimestampExtractor
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.temporal.TemporalAccessor
 import java.util.Date
-import org.junit.jupiter.api.Assertions.*
-
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-
-
 
 class CacheKeyVersionerTest {
 
@@ -222,9 +222,9 @@ class CacheKeyVersionerTest {
         // Given
         val baseKey = "user:123"
         val obj =
-                object : HasUpdatedAt {
-                    override val updatedAt: TemporalAccessor? = Instant.ofEpochMilli(1640995200000L)
-                }
+            object : HasUpdatedAt {
+                override val updatedAt: TemporalAccessor? = Instant.ofEpochMilli(1640995200000L)
+            }
 
         // When
         val versionedKey = cacheKeyVersioner.generateVersionedKey(baseKey, obj)

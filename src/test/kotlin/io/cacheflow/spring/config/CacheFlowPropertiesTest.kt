@@ -1,8 +1,10 @@
 package io.cacheflow.spring.config
 
-
-import org.junit.jupiter.api.Assertions.*
-
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class CacheFlowPropertiesTest {
@@ -26,13 +28,13 @@ class CacheFlowPropertiesTest {
     @Test
     fun `should create properties with custom values`() {
         val properties =
-                CacheFlowProperties(
-                        enabled = false,
-                        defaultTtl = 1800L,
-                        maxSize = 5000L,
-                        storage = CacheFlowProperties.StorageType.REDIS,
-                        baseUrl = "https://custom.com"
-                )
+            CacheFlowProperties(
+                enabled = false,
+                defaultTtl = 1800L,
+                maxSize = 5000L,
+                storage = CacheFlowProperties.StorageType.REDIS,
+                baseUrl = "https://custom.com"
+            )
 
         assertFalse(properties.enabled)
         assertEquals(1800L, properties.defaultTtl)
@@ -63,11 +65,11 @@ class CacheFlowPropertiesTest {
     @Test
     fun `RedisProperties should accept custom values`() {
         val redisProps =
-                CacheFlowProperties.RedisProperties(
-                        keyPrefix = "custom:",
-                        database = 1,
-                        timeout = 10_000L
-                )
+            CacheFlowProperties.RedisProperties(
+                keyPrefix = "custom:",
+                database = 1,
+                timeout = 10_000L
+            )
 
         assertEquals("custom:", redisProps.keyPrefix)
         assertEquals(1, redisProps.database)
@@ -95,17 +97,17 @@ class CacheFlowPropertiesTest {
         val circuitBreaker = CacheFlowProperties.CircuitBreakerConfig(10, 120, 5)
 
         val cloudflareProps =
-                CacheFlowProperties.CloudflareProperties(
-                        enabled = true,
-                        zoneId = "zone123",
-                        apiToken = "token123",
-                        keyPrefix = "cf:",
-                        defaultTtl = 7200L,
-                        autoPurge = false,
-                        purgeOnEvict = false,
-                        rateLimit = rateLimit,
-                        circuitBreaker = circuitBreaker
-                )
+            CacheFlowProperties.CloudflareProperties(
+                enabled = true,
+                zoneId = "zone123",
+                apiToken = "token123",
+                keyPrefix = "cf:",
+                defaultTtl = 7200L,
+                autoPurge = false,
+                purgeOnEvict = false,
+                rateLimit = rateLimit,
+                circuitBreaker = circuitBreaker
+            )
 
         assertTrue(cloudflareProps.enabled)
         assertEquals("zone123", cloudflareProps.zoneId)
@@ -138,16 +140,16 @@ class CacheFlowPropertiesTest {
         val circuitBreaker = CacheFlowProperties.CircuitBreakerConfig(8, 90, 4)
 
         val awsProps =
-                CacheFlowProperties.AwsCloudFrontProperties(
-                        enabled = true,
-                        distributionId = "dist123",
-                        keyPrefix = "aws:",
-                        defaultTtl = 1800L,
-                        autoPurge = false,
-                        purgeOnEvict = false,
-                        rateLimit = rateLimit,
-                        circuitBreaker = circuitBreaker
-                )
+            CacheFlowProperties.AwsCloudFrontProperties(
+                enabled = true,
+                distributionId = "dist123",
+                keyPrefix = "aws:",
+                defaultTtl = 1800L,
+                autoPurge = false,
+                purgeOnEvict = false,
+                rateLimit = rateLimit,
+                circuitBreaker = circuitBreaker
+            )
 
         assertTrue(awsProps.enabled)
         assertEquals("dist123", awsProps.distributionId)
@@ -180,17 +182,17 @@ class CacheFlowPropertiesTest {
         val circuitBreaker = CacheFlowProperties.CircuitBreakerConfig(12, 180, 6)
 
         val fastlyProps =
-                CacheFlowProperties.FastlyProperties(
-                        enabled = true,
-                        serviceId = "service123",
-                        apiToken = "token123",
-                        keyPrefix = "fastly:",
-                        defaultTtl = 900L,
-                        autoPurge = false,
-                        purgeOnEvict = false,
-                        rateLimit = rateLimit,
-                        circuitBreaker = circuitBreaker
-                )
+            CacheFlowProperties.FastlyProperties(
+                enabled = true,
+                serviceId = "service123",
+                apiToken = "token123",
+                keyPrefix = "fastly:",
+                defaultTtl = 900L,
+                autoPurge = false,
+                purgeOnEvict = false,
+                rateLimit = rateLimit,
+                circuitBreaker = circuitBreaker
+            )
 
         assertTrue(fastlyProps.enabled)
         assertEquals("service123", fastlyProps.serviceId)

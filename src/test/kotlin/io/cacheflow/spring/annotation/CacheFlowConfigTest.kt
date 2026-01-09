@@ -1,11 +1,9 @@
 package io.cacheflow.spring.annotation
 
-
-
-
-
-import org.junit.jupiter.api.Assertions.*
-
+import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class CacheFlowConfigTest {
@@ -27,16 +25,16 @@ class CacheFlowConfigTest {
     @Test
     fun `should create config with custom values`() {
         val config =
-                CacheFlowConfig(
-                        key = "test-key",
-                        keyGenerator = "customGenerator",
-                        ttl = 3600L,
-                        dependsOn = arrayOf("param1", "param2"),
-                        tags = arrayOf("tag1", "tag2"),
-                        condition = "true",
-                        unless = "false",
-                        sync = true
-                )
+            CacheFlowConfig(
+                key = "test-key",
+                keyGenerator = "customGenerator",
+                ttl = 3600L,
+                dependsOn = arrayOf("param1", "param2"),
+                tags = arrayOf("tag1", "tag2"),
+                condition = "true",
+                unless = "false",
+                sync = true
+            )
 
         assertEquals("test-key", config.key)
         assertEquals("customGenerator", config.keyGenerator)
@@ -51,28 +49,28 @@ class CacheFlowConfigTest {
     @Test
     fun `should be equal when all properties match`() {
         val config1 =
-                CacheFlowConfig(
-                        key = "test-key",
-                        keyGenerator = "customGenerator",
-                        ttl = 3600L,
-                        dependsOn = arrayOf("param1", "param2"),
-                        tags = arrayOf("tag1", "tag2"),
-                        condition = "true",
-                        unless = "false",
-                        sync = true
-                )
+            CacheFlowConfig(
+                key = "test-key",
+                keyGenerator = "customGenerator",
+                ttl = 3600L,
+                dependsOn = arrayOf("param1", "param2"),
+                tags = arrayOf("tag1", "tag2"),
+                condition = "true",
+                unless = "false",
+                sync = true
+            )
 
         val config2 =
-                CacheFlowConfig(
-                        key = "test-key",
-                        keyGenerator = "customGenerator",
-                        ttl = 3600L,
-                        dependsOn = arrayOf("param1", "param2"),
-                        tags = arrayOf("tag1", "tag2"),
-                        condition = "true",
-                        unless = "false",
-                        sync = true
-                )
+            CacheFlowConfig(
+                key = "test-key",
+                keyGenerator = "customGenerator",
+                ttl = 3600L,
+                dependsOn = arrayOf("param1", "param2"),
+                tags = arrayOf("tag1", "tag2"),
+                condition = "true",
+                unless = "false",
+                sync = true
+            )
 
         assertEquals(config1, config2)
         assertEquals(config1.hashCode(), config2.hashCode())
@@ -124,16 +122,16 @@ class CacheFlowConfigTest {
     @Test
     fun `should have consistent hashCode`() {
         val config =
-                CacheFlowConfig(
-                        key = "test-key",
-                        keyGenerator = "customGenerator",
-                        ttl = 3600L,
-                        dependsOn = arrayOf("param1", "param2"),
-                        tags = arrayOf("tag1", "tag2"),
-                        condition = "true",
-                        unless = "false",
-                        sync = true
-                )
+            CacheFlowConfig(
+                key = "test-key",
+                keyGenerator = "customGenerator",
+                ttl = 3600L,
+                dependsOn = arrayOf("param1", "param2"),
+                tags = arrayOf("tag1", "tag2"),
+                condition = "true",
+                unless = "false",
+                sync = true
+            )
 
         val hashCode1 = config.hashCode()
         val hashCode2 = config.hashCode()
