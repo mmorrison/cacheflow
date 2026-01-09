@@ -15,11 +15,11 @@ import org.springframework.context.annotation.Import
 @Import(CacheFlowAutoConfiguration::class)
 class TestConfiguration {
 
-        @Bean
-        fun testService(): DependencyManagementIntegrationTest.TestService =
-                DependencyManagementIntegrationTest.TestService()
+    @Bean
+    fun testService(): DependencyManagementIntegrationTest.TestService =
+        DependencyManagementIntegrationTest.TestService()
 
-        @Bean
-        fun russianDollTestService(@Autowired fragmentCacheService: FragmentCacheService): RussianDollCachingIntegrationTest.RussianDollTestService =
-                RussianDollCachingIntegrationTest.RussianDollTestService(fragmentCacheService)
+    @Bean
+    fun russianDollTestService(@Autowired fragmentCacheService: FragmentCacheService): RussianDollCachingIntegrationTest.RussianDollTestService =
+        RussianDollCachingIntegrationTest.RussianDollTestService(fragmentCacheService)
 }

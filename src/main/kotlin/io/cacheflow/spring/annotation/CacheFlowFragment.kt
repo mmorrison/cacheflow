@@ -14,27 +14,27 @@ package io.cacheflow.spring.annotation
  * @param ttl Time to live for the fragment in seconds
  */
 @Target(
-        AnnotationTarget.FUNCTION,
-        AnnotationTarget.PROPERTY_GETTER,
-        AnnotationTarget.PROPERTY_SETTER
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER
 )
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CacheFlowFragment(
-        /** The cache key expression (SpEL supported). */
-        val key: String = "",
+    /** The cache key expression (SpEL supported). */
+    val key: String = "",
 
-        /** The template string for fragment composition. */
-        val template: String = "",
+    /** The template string for fragment composition. */
+    val template: String = "",
 
-        /** Whether to use versioned cache keys based on timestamps. */
-        val versioned: Boolean = false,
+    /** Whether to use versioned cache keys based on timestamps. */
+    val versioned: Boolean = false,
 
-        /** Array of parameter names that this fragment depends on. */
-        val dependsOn: Array<String> = [],
+    /** Array of parameter names that this fragment depends on. */
+    val dependsOn: Array<String> = [],
 
-        /** Array of tags for group-based eviction. */
-        val tags: Array<String> = [],
+    /** Array of tags for group-based eviction. */
+    val tags: Array<String> = [],
 
-        /** Time to live for the fragment in seconds. */
-        val ttl: Long = -1
+    /** Time to live for the fragment in seconds. */
+    val ttl: Long = -1
 )

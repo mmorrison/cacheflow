@@ -141,7 +141,6 @@ class CacheFlowAspect(
         return result
     }
 
-
     private fun evictCacheEntries(evict: CacheFlowEvict, joinPoint: ProceedingJoinPoint) {
         when {
             evict.allEntries -> {
@@ -158,5 +157,4 @@ class CacheFlowAspect(
             }
         }
     }
-
 }

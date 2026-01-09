@@ -1,7 +1,7 @@
 package io.cacheflow.spring.fragment
 
-import java.util.concurrent.ConcurrentHashMap
 import org.springframework.stereotype.Component
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Manages fragment tags for group-based operations in Russian Doll caching.
@@ -53,10 +53,10 @@ class FragmentTagManager {
      */
     fun getFragmentTags(key: String): Set<String> {
         return fragmentTags
-                .entries
-                .filter { (_, keys) -> keys.contains(key) }
-                .map { (tag, _) -> tag }
-                .toSet()
+            .entries
+            .filter { (_, keys) -> keys.contains(key) }
+            .map { (tag, _) -> tag }
+            .toSet()
     }
 
     /**

@@ -31,7 +31,7 @@ class CacheFlowAspectConfiguration {
     @Bean
     @ConditionalOnMissingBean
     fun cacheKeyGenerator(cacheKeyVersioner: CacheKeyVersioner): CacheKeyGenerator =
-            CacheKeyGenerator(cacheKeyVersioner)
+        CacheKeyGenerator(cacheKeyVersioner)
 
     /**
      * Creates the dependency manager bean.
@@ -42,7 +42,7 @@ class CacheFlowAspectConfiguration {
     @Bean
     @ConditionalOnMissingBean
     fun dependencyManager(dependencyResolver: DependencyResolver): DependencyManager =
-            DependencyManager(dependencyResolver)
+        DependencyManager(dependencyResolver)
 
     /**
      * Creates the CacheFlow aspect bean.
@@ -55,9 +55,9 @@ class CacheFlowAspectConfiguration {
     @Bean
     @ConditionalOnMissingBean
     fun cacheFlowAspect(
-            cacheService: CacheFlowService,
-            dependencyResolver: DependencyResolver,
-            cacheKeyVersioner: CacheKeyVersioner
+        cacheService: CacheFlowService,
+        dependencyResolver: DependencyResolver,
+        cacheKeyVersioner: CacheKeyVersioner
     ): CacheFlowAspect = CacheFlowAspect(cacheService, dependencyResolver, cacheKeyVersioner)
 
     /**
@@ -71,9 +71,9 @@ class CacheFlowAspectConfiguration {
     @Bean
     @ConditionalOnMissingBean
     fun fragmentCacheAspect(
-            fragmentCacheService: FragmentCacheService,
-            dependencyResolver: DependencyResolver,
-            tagManager: FragmentTagManager
+        fragmentCacheService: FragmentCacheService,
+        dependencyResolver: DependencyResolver,
+        tagManager: FragmentTagManager
     ): FragmentCacheAspect =
-            FragmentCacheAspect(fragmentCacheService, dependencyResolver, tagManager)
+        FragmentCacheAspect(fragmentCacheService, dependencyResolver, tagManager)
 }

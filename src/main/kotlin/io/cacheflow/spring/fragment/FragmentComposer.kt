@@ -38,24 +38,24 @@ class FragmentComposer {
      * @return The composed result
      */
     fun composeFragmentsByKeys(
-            template: String,
-            fragmentKeys: List<String>,
-            fragmentRetriever: (String) -> String?
+        template: String,
+        fragmentKeys: List<String>,
+        fragmentRetriever: (String) -> String?
     ): String {
         // Extract placeholder names from template
         val placeholderPattern = "\\{\\{([^}]+)\\}\\}".toRegex()
         val placeholders = placeholderPattern.findAll(template).map { it.groupValues[1] }.toSet()
-        
+
         // Map fragment keys to placeholder names
         val fragments = mutableMapOf<String, String>()
-        
+
         for (fragmentKey in fragmentKeys) {
             val fragmentContent = fragmentRetriever(fragmentKey)
             if (fragmentContent != null) {
                 // Try to find matching placeholder by extracting the last part of the key
                 val keyParts = fragmentKey.split(":")
                 val lastPart = keyParts.lastOrNull()
-                
+
                 // Check if this matches any placeholder
                 for (placeholder in placeholders) {
                     if (lastPart == placeholder || fragmentKey.contains(placeholder)) {

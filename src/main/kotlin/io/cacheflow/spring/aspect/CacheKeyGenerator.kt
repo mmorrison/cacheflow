@@ -26,8 +26,8 @@ class CacheKeyGenerator(private val cacheKeyVersioner: CacheKeyVersioner) {
      * @return The generated cache key, or empty string if expression is invalid
      */
     fun generateCacheKeyFromExpression(
-            keyExpression: String,
-            joinPoint: ProceedingJoinPoint
+        keyExpression: String,
+        joinPoint: ProceedingJoinPoint
     ): String {
         if (keyExpression.isBlank()) return ""
 
@@ -56,9 +56,9 @@ class CacheKeyGenerator(private val cacheKeyVersioner: CacheKeyVersioner) {
      * @return The versioned cache key
      */
     fun generateVersionedKey(
-            baseKey: String,
-            cached: CacheFlow,
-            joinPoint: ProceedingJoinPoint
+        baseKey: String,
+        cached: CacheFlow,
+        joinPoint: ProceedingJoinPoint
     ): String {
         val method = joinPoint.signature as MethodSignature
         val parameterNames = method.parameterNames
@@ -85,9 +85,9 @@ class CacheKeyGenerator(private val cacheKeyVersioner: CacheKeyVersioner) {
      * @return The versioned cache key
      */
     fun generateVersionedKey(
-            baseKey: String,
-            cached: CacheFlowCached,
-            joinPoint: ProceedingJoinPoint
+        baseKey: String,
+        cached: CacheFlowCached,
+        joinPoint: ProceedingJoinPoint
     ): String {
         val method = joinPoint.signature as MethodSignature
         val parameterNames = method.parameterNames
