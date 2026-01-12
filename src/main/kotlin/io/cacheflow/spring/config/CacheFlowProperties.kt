@@ -29,6 +29,7 @@ data class CacheFlowProperties(
     val awsCloudFront: AwsCloudFrontProperties = AwsCloudFrontProperties(),
     val fastly: FastlyProperties = FastlyProperties(),
     val metrics: MetricsProperties = MetricsProperties(),
+    val warming: WarmingProperties = WarmingProperties(),
     val baseUrl: String = "https://yourdomain.com",
 ) {
     /**
@@ -162,5 +163,14 @@ data class CacheFlowProperties(
     data class MetricsProperties(
         val enabled: Boolean = true,
         val exportInterval: Long = 60,
+    )
+
+    /**
+     * Cache warming configuration.
+     *
+     * @property enabled Whether cache warming is enabled
+     */
+    data class WarmingProperties(
+        val enabled: Boolean = true,
     )
 }

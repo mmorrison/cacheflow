@@ -28,4 +28,46 @@ class CacheFlowRedisConfiguration {
         template.afterPropertiesSet()
         return template
     }
+
+    @Bean
+    @ConditionalOnMissingBean
+    fun redisCacheInvalidator(
+        properties: io.cacheflow.spring.config.CacheFlowProperties,
+        redisTemplate: org.springframework.data.redis.core.StringRedisTemplate,
+        @org.springframework.context.annotation.Lazy cacheFlowService: io.cacheflow.spring.service.CacheFlowService,
+        objectMapper: ObjectMapper,
+    ): io.cacheflow.spring.messaging.RedisCacheInvalidator {
+        return io.cacheflow.spring.messaging.RedisCacheInvalidator(
+            properties,
+            redisTemplate,
+            cacheFlowService,
+            objectMapper
+        )
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    fun cacheInvalidationListenerAdapter(
+        redisCacheInvalidator: io.cacheflow.spring.messaging.RedisCacheInvalidator
+    ): org.springframework.data.redis.listener.adapter.MessageListenerAdapter {
+        return org.springframework.data.redis.listener.adapter.MessageListenerAdapter(
+            redisCacheInvalidator,
+            "handleMessage"
+        )
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    fun redisMessageListenerContainer(
+        connectionFactory: RedisConnectionFactory,
+        cacheInvalidationListenerAdapter: org.springframework.data.redis.listener.adapter.MessageListenerAdapter
+    ): org.springframework.data.redis.listener.RedisMessageListenerContainer {
+        val container = org.springframework.data.redis.listener.RedisMessageListenerContainer()
+        container.setConnectionFactory(connectionFactory)
+        container.addMessageListener(
+            cacheInvalidationListenerAdapter,
+            org.springframework.data.redis.listener.ChannelTopic("cacheflow:invalidation")
+        )
+        return container
+    }
 }
