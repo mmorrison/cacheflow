@@ -1,8 +1,13 @@
 package io.cacheflow.spring.edge.management
 
-import io.cacheflow.spring.edge.*
+import io.cacheflow.spring.edge.EdgeCacheManager
+import io.cacheflow.spring.edge.EdgeCacheStatistics
 import kotlinx.coroutines.flow.toList
-import org.springframework.boot.actuate.endpoint.annotation.*
+import org.springframework.boot.actuate.endpoint.annotation.DeleteOperation
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation
+import org.springframework.boot.actuate.endpoint.annotation.Selector
+import org.springframework.boot.actuate.endpoint.annotation.WriteOperation
 import org.springframework.stereotype.Component
 
 /** Management endpoint for edge cache operations */

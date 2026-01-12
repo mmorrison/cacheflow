@@ -1,6 +1,12 @@
 package io.cacheflow.spring.edge.config
 
-import io.cacheflow.spring.edge.*
+import io.cacheflow.spring.edge.BatchingConfig
+import io.cacheflow.spring.edge.CircuitBreakerConfig
+import io.cacheflow.spring.edge.EdgeCacheConfiguration
+import io.cacheflow.spring.edge.EdgeCacheManager
+import io.cacheflow.spring.edge.EdgeCacheProvider
+import io.cacheflow.spring.edge.MonitoringConfig
+import io.cacheflow.spring.edge.RateLimit
 import io.cacheflow.spring.edge.impl.AwsCloudFrontEdgeCacheProvider
 import io.cacheflow.spring.edge.impl.CloudflareEdgeCacheProvider
 import io.cacheflow.spring.edge.impl.FastlyEdgeCacheProvider
