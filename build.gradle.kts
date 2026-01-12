@@ -16,7 +16,7 @@ plugins {
     id("org.sonarqube") version "7.2.2.6593"
     id("org.jetbrains.dokka") version "1.9.10"
     // JaCoCo temporarily disabled due to Java 25 compatibility issues
-    // jacoco
+    jacoco
 }
 
 group = "io.cacheflow"
@@ -67,8 +67,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-    // JaCoCo temporarily disabled due to Java 25 compatibility issues
-    // finalizedBy(tasks.jacocoTestReport)
+    finalizedBy(tasks.jacocoTestReport)
     testLogging {
         events("passed", "skipped", "failed")
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
@@ -134,50 +133,52 @@ tasks.dokkaHtml {
     }
 }
 
-// JaCoCo configuration - temporarily disabled due to Java 25 compatibility issues
-// jacoco {
-//     toolVersion = "0.8.12" // Updated for Java 21+ support
-// }
-//
-// tasks.jacocoTestReport {
-//     dependsOn(tasks.test)
-//     reports {
-//         xml.required.set(true)
-//         html.required.set(true)
-//         csv.required.set(false)
-//     }
-//     finalizedBy(tasks.jacocoTestCoverageVerification)
-// }
-//
-// tasks.jacocoTestCoverageVerification {
-//     dependsOn(tasks.jacocoTestReport)
-//     violationRules {
-//         rule {
-//             limit {
-//                 minimum = "0.25".toBigDecimal()
-//             }
-//         }
-//         rule {
-//             element = "CLASS"
-//             excludes =
-//                 listOf(
-//                     "*.dto.*",
-//                     "*.config.*",
-//                     "*.exception.*",
-//                     "*.example.*",
-//                     "*.management.*",
-//                     "*.aspect.*",
-//                     "*.autoconfigure.*",
-//                     "*DefaultImpls*",
-//                 )
-//             limit {
-//                 counter = "LINE"
-//                 value = "COVEREDRATIO"
-//                 minimum = "0.30".toBigDecimal()
-//             }
-//         }
-//     }
-// }
+
+// JaCoCo configuration
+jacoco {
+    toolVersion = "0.8.12" // Updated for Java 21+ support
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+    finalizedBy(tasks.jacocoTestCoverageVerification)
+}
+
+tasks.jacocoTestCoverageVerification {
+    dependsOn(tasks.jacocoTestReport)
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.25".toBigDecimal()
+            }
+        }
+        rule {
+            element = "CLASS"
+            excludes =
+                listOf(
+                    "*.dto.*",
+                    "*.config.*",
+                    "*.exception.*",
+                    "*.example.*",
+                    "*.management.*",
+                    "*.aspect.*",
+                    "*.autoconfigure.*",
+                    "*DefaultImpls*",
+                )
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = "0.30".toBigDecimal()
+            }
+        }
+    }
+}
+
 
 // SonarQube configuration
 sonar {
