@@ -10,14 +10,11 @@ import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.expression.spel.standard.SpelExpressionParser
-import org.springframework.expression.spel.support.StandardEvaluationContext
+import org.springframework.expression.spel.support.SimpleEvaluationContext
 import org.springframework.stereotype.Component
 
 /**
  * AOP Aspect for handling fragment caching annotations.
- *
- * This aspect provides support for caching fragments and composing them in the Russian Doll caching
- * pattern.
  */
 @Aspect
 @Component
@@ -188,13 +185,15 @@ class FragmentCacheAspect(
         }
 
         return try {
-            val context = StandardEvaluationContext()
+            val context = SimpleEvaluationContext.forReadOnlyDataBinding().build()
             val method = joinPoint.signature as MethodSignature
             val parameterNames = method.parameterNames
 
             // Add method parameters to context
             joinPoint.args.forEachIndexed { index, arg ->
-                context.setVariable(parameterNames[index], arg)
+                if (index < parameterNames.size) {
+                    context.setVariable(parameterNames[index], arg)
+                }
             }
 
             // Add method target to context
@@ -222,13 +221,15 @@ class FragmentCacheAspect(
         }
 
         return try {
-            val context = StandardEvaluationContext()
+            val context = SimpleEvaluationContext.forReadOnlyDataBinding().build()
             val method = joinPoint.signature as MethodSignature
             val parameterNames = method.parameterNames
 
             // Add method parameters to context
             joinPoint.args.forEachIndexed { index, arg ->
-                context.setVariable(parameterNames[index], arg)
+                if (index < parameterNames.size) {
+                    context.setVariable(parameterNames[index], arg)
+                }
             }
 
             // Add method target to context

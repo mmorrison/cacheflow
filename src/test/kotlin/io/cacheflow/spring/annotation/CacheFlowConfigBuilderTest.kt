@@ -195,12 +195,14 @@ class CacheFlowConfigBuilderTest {
     @Test
     fun `should support method chaining with apply block`() {
         val config =
-            CacheFlowConfigBuilder.withKey("test-key").apply {
-                ttl = 3600L
-                sync = true
-                versioned = true
-                timestampField = "modifiedAt"
-            }.build()
+            CacheFlowConfigBuilder
+                .withKey("test-key")
+                .apply {
+                    ttl = 3600L
+                    sync = true
+                    versioned = true
+                    timestampField = "modifiedAt"
+                }.build()
 
         assertEquals("test-key", config.key)
         assertEquals(3600L, config.ttl)
@@ -295,12 +297,14 @@ class CacheFlowConfigBuilderTest {
     @Test
     fun `should combine multiple factory methods`() {
         val config =
-            CacheFlowConfigBuilder.withKey("combined-key").apply {
-                dependsOn = arrayOf("dep1", "dep2")
-                tags = arrayOf("tag1")
-                versioned = true
-                timestampField = "updatedAt"
-            }.build()
+            CacheFlowConfigBuilder
+                .withKey("combined-key")
+                .apply {
+                    dependsOn = arrayOf("dep1", "dep2")
+                    tags = arrayOf("tag1")
+                    versioned = true
+                    timestampField = "updatedAt"
+                }.build()
 
         assertEquals("combined-key", config.key)
         assertArrayEquals(arrayOf("dep1", "dep2"), config.dependsOn)

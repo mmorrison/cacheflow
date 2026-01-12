@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.cacheflow.spring.autoconfigure.CacheFlowAutoConfiguration
+io.cacheflow.spring.autoconfigure.CacheFlowAutoConfiguration,\
+io.cacheflow.spring.edge.config.EdgeCacheAutoConfiguration
