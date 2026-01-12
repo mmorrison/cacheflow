@@ -4,6 +4,7 @@ import io.cacheflow.spring.edge.BatchingConfig
 import io.cacheflow.spring.edge.CircuitBreakerConfig
 import io.cacheflow.spring.edge.EdgeCacheOperation
 import io.cacheflow.spring.edge.EdgeCacheResult
+import io.cacheflow.spring.edge.EdgeCacheStatistics
 import io.cacheflow.spring.edge.MonitoringConfig
 import io.cacheflow.spring.edge.RateLimit
 import software.amazon.awssdk.services.cloudfront.CloudFrontClient
@@ -180,6 +181,21 @@ class AwsCloudFrontEdgeCacheProvider(
             )
         }
     }
+
+    /**
+     * CloudFront doesn't provide detailed statistics via API, so we return default values.
+     * In a production environment, you would integrate with CloudWatch metrics.
+     */
+    override suspend fun getStatisticsFromProvider(): EdgeCacheStatistics =
+        EdgeCacheStatistics(
+            provider = providerName,
+            totalRequests = 0, // CloudFront doesn't expose this via SDK
+            successfulRequests = 0,
+            failedRequests = 0,
+            averageLatency = Duration.ZERO,
+            totalCost = 0.0,
+            cacheHitRate = null, // Would need CloudWatch integration
+        )
 
     override fun createRateLimit(): RateLimit =
         RateLimit(

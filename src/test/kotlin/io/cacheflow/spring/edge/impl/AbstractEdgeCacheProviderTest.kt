@@ -291,4 +291,22 @@ class AbstractEdgeCacheProviderTest {
             // Then
             assertEquals("test-provider", result.provider)
         }
+
+    @Test
+    fun `should use default getStatisticsFromProvider when not overridden`() =
+        runTest {
+            // Given - provider that doesn't override getStatisticsFromProvider
+            val provider = TestEdgeCacheProvider()
+
+            // When - call the protected method through getStatistics
+            val stats = provider.getStatistics()
+
+            // Then - should get default values
+            assertEquals("test-provider", stats.provider)
+            assertEquals(0L, stats.totalRequests)
+            assertEquals(0L, stats.successfulRequests)
+            assertEquals(0L, stats.failedRequests)
+            assertEquals(Duration.ZERO, stats.averageLatency)
+            assertEquals(0.0, stats.totalCost)
+        }
 }

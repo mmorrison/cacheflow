@@ -12,6 +12,7 @@ import org.mockito.Mockito.*
 import org.mockito.kotlin.whenever
 import software.amazon.awssdk.services.cloudfront.CloudFrontClient
 import software.amazon.awssdk.services.cloudfront.model.*
+import java.time.Duration
 
 class AwsCloudFrontEdgeCacheProviderTest {
     private lateinit var cloudFrontClient: CloudFrontClient
@@ -190,6 +191,22 @@ class AwsCloudFrontEdgeCacheProviderTest {
 
             // Then
             assertFalse(isHealthy)
+        }
+
+    @Test
+    fun `should get statistics successfully`() =
+        runTest {
+            // When - CloudFront doesn't provide stats through SDK
+            val stats = provider.getStatistics()
+
+            // Then - should return default values
+            assertEquals("aws-cloudfront", stats.provider)
+            assertEquals(0L, stats.totalRequests)
+            assertEquals(0L, stats.successfulRequests)
+            assertEquals(0L, stats.failedRequests)
+            assertEquals(Duration.ZERO, stats.averageLatency)
+            assertEquals(0.0, stats.totalCost)
+            assertNull(stats.cacheHitRate) // Not available without CloudWatch
         }
 
     @Test
