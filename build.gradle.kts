@@ -13,7 +13,7 @@ plugins {
     // id("io.gitlab.arturbosch.detekt") version "2.0.0-alpha.1"
     id("org.owasp.dependencycheck") version "8.4.3"
     id("com.github.ben-manes.versions") version "0.51.0"
-    id("org.sonarqube") version "4.4.1.3373"
+    id("org.sonarqube") version "7.2.2.6593"
     id("org.jetbrains.dokka") version "1.9.10"
     // JaCoCo temporarily disabled due to Java 25 compatibility issues
     // jacoco
