@@ -1,5 +1,6 @@
 package io.cacheflow.spring.service.impl
 
+import io.cacheflow.spring.config.CacheFlowProperties
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -14,7 +15,7 @@ class CacheFlowServiceImplTest {
 
     @BeforeEach
     fun setUp() {
-        cacheService = CacheFlowServiceImpl()
+        cacheService = CacheFlowServiceImpl(CacheFlowProperties())
     }
 
     @Test

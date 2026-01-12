@@ -91,7 +91,7 @@ class CacheFlowAspect(
         val result = joinPoint.proceed()
         if (result != null) {
             val ttl = if (config.ttl > 0) config.ttl else defaultTtlSeconds
-            cacheService.put(key, result, ttl)
+            cacheService.put(key, result, ttl, config.tags.toSet())
         }
         return result
     }

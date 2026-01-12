@@ -13,11 +13,13 @@ interface FragmentStorageService {
      * @param key The fragment cache key
      * @param fragment The fragment content to cache
      * @param ttl Time to live in seconds
+     * @param tags Tags associated with this fragment
      */
     fun cacheFragment(
         key: String,
         fragment: String,
         ttl: Long,
+        tags: Set<String> = emptySet(),
     )
 
     /**

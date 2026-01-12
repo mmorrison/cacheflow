@@ -7,10 +7,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Kotlin](https://img.shields.io/badge/Kotlin-1.9.20-blue.svg)](https://kotlinlang.org)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![Alpha](https://img.shields.io/badge/Status-Alpha-orange.svg)](https://github.com/mmorrison/cacheflow)
+[![Beta](https://img.shields.io/badge/Status-Beta-blue.svg)](https://github.com/mmorrison/cacheflow)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-> ⚠️ **Alpha Release** - This is an early alpha version. Features and APIs may change before the stable release.
+> ⚠️ **Beta Release** - This project is now in Beta. Core features are implemented and stable, but we are looking for community feedback.
 
 **CacheFlow** makes multi-level caching effortless. Data flows seamlessly through Local → Redis → Edge layers with automatic invalidation and monitoring.
 
@@ -20,7 +20,7 @@
 - ⚡ **Blazing Fast** - 10x faster than traditional caching
 - 🔄 **Auto-Invalidation** - Smart cache invalidation across all layers
 - 📊 **Rich Metrics** - Built-in monitoring and observability
-- 🌐 **Edge Ready** - Cloudflare, AWS CloudFront, Fastly support (coming soon)
+- 🌐 **Edge Ready** - Cloudflare, AWS CloudFront, Fastly support
 - 🛡️ **Production Ready** - Rate limiting, circuit breakers, batching
 
 ## 🚀 Quick Start
@@ -150,28 +150,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🗺️ Roadmap
 
-### Alpha (Current)
+### Beta (Current)
 
-- [x] Basic in-memory caching
-- [x] AOP annotations (@CacheFlow, @CacheFlowEvict)
-- [x] SpEL support
-- [x] Management endpoints
-- [x] Spring Boot auto-configuration
-
-### Beta (Planned)
-
-- [ ] Redis integration
-- [ ] Advanced metrics and monitoring
-- [ ] Circuit breaker pattern
-- [ ] Rate limiting
+- [x] Redis integration
+- [x] Advanced metrics and monitoring
+- [x] Circuit breaker pattern (Edge)
+- [x] Rate limiting (Edge)
+- [x] Russian Doll Caching logic
 
 ### 1.0 (Future)
 
-- [ ] Edge cache providers (Cloudflare, AWS CloudFront, Fastly)
-- [ ] Batch operations
-- [ ] Cost tracking
+- [ ] Batch operations (Core)
+- [ ] Cost tracking (Extended)
 - [ ] Web UI for cache management
 - [ ] Performance optimizations
+- [ ] Comprehensive documentation
 
 ---
 

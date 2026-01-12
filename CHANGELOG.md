@@ -7,24 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned for Beta
+## [0.2.0-beta] - 2026-01-12
 
-- Redis integration
-- Edge cache providers (Cloudflare, AWS CloudFront, Fastly)
-- Advanced metrics and monitoring
-- Circuit breaker pattern
-- Rate limiting
-- Batch operations
-- Cost tracking
-- Web UI for cache management
+### Added
+- **Redis Integration**: Distributed caching support via `CacheFlowRedisConfiguration`.
+- **Edge Cache Orchestration**: Automatic purging of Cloudflare, AWS CloudFront, and Fastly caches.
+- **Russian Doll Pattern**: Local → Redis → Edge multi-level cache flow.
+- **Advanced Metrics**: Micrometer integration for tracking hits, misses, and evictions per layer.
+- **Async Operations**: Non-blocking Edge Cache purges using Kotlin Coroutines.
 
-### Planned for 1.0
+### Changed
+- Refactored `CacheFlowServiceImpl` to support tiered storage.
+- Updated `CacheFlowCoreConfiguration` to inject optional Redis and Edge dependencies.
 
-- Performance optimizations
-- Enterprise features
-- Advanced configuration options
-- Comprehensive documentation
-- Migration tools
+### Fixed
+- Improved test stability and added mock-based verification for distributed paths.
 
 ## [0.1.0-alpha] - 2024-12-19
 

@@ -7,6 +7,7 @@ import io.cacheflow.spring.annotation.CacheFlowConfigRegistry
 import io.cacheflow.spring.annotation.CacheFlowEvict
 import io.cacheflow.spring.dependency.DependencyResolver
 import io.cacheflow.spring.service.CacheFlowService
+import io.cacheflow.spring.service.impl.CacheFlowServiceImpl
 import io.cacheflow.spring.versioning.CacheKeyVersioner
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.reflect.MethodSignature
@@ -14,13 +15,13 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.anyString
-import org.mockito.Mockito.eq
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.never
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.verifyNoInteractions
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 
 class CacheFlowAspectTest {
     private lateinit var cacheService: CacheFlowService
@@ -44,19 +45,17 @@ class CacheFlowAspectTest {
         joinPoint = mock(ProceedingJoinPoint::class.java)
         methodSignature = mock(MethodSignature::class.java)
         // Setup mock to return proper declaring type
-        `when`(methodSignature.declaringType).thenReturn(TestClass::class.java)
+        whenever(methodSignature.declaringType).thenReturn(TestClass::class.java)
 
-        `when`(joinPoint.signature).thenReturn(methodSignature)
+        whenever(joinPoint.signature).thenReturn(methodSignature)
     }
-
-    private fun <T> safeEq(value: T): T = eq(value) ?: value
 
     @Test
     fun `should proceed when no CacheFlow annotation present`() {
         val method = TestClass::class.java.getDeclaredMethod("methodWithoutAnnotation")
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(joinPoint.proceed()).thenReturn("result")
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(joinPoint.proceed()).thenReturn("result")
 
         val result = aspect.aroundCache(joinPoint)
 
@@ -74,13 +73,13 @@ class CacheFlowAspectTest {
                 String::class.java,
             )
 
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.target).thenReturn(TestClass())
-        `when`(joinPoint.proceed()).thenReturn("cached result")
-        `when`(cacheService.get(anyString())).thenReturn(null)
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.target).thenReturn(TestClass())
+        whenever(joinPoint.proceed()).thenReturn("cached result")
+        whenever(cacheService.get(any())).thenReturn(null)
 
         val result = aspect.aroundCache(joinPoint)
 
@@ -97,12 +96,12 @@ class CacheFlowAspectTest {
                 String::class.java,
             )
 
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.target).thenReturn(TestClass())
-        `when`(cacheService.get(anyString())).thenReturn("cached value")
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.target).thenReturn(TestClass())
+        whenever(cacheService.get(any())).thenReturn("cached value")
 
         val result = aspect.aroundCache(joinPoint)
 
@@ -121,21 +120,21 @@ class CacheFlowAspectTest {
 
         val configName = "testConfig"
         val config = CacheFlowConfig(key = "#arg1 + '_' + #arg2", ttl = 600L)
-        `when`(configRegistry.get(configName)).thenReturn(config)
+        whenever(configRegistry.get(configName)).thenReturn(config)
 
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.target).thenReturn(TestClass())
-        `when`(joinPoint.proceed()).thenReturn("result")
-        `when`(cacheService.get(anyString())).thenReturn(null)
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.target).thenReturn(TestClass())
+        whenever(joinPoint.proceed()).thenReturn("result")
+        whenever(cacheService.get(any())).thenReturn(null)
 
         val result = aspect.aroundCache(joinPoint)
 
         assertEquals("result", result)
         verify(configRegistry).get(configName)
-        verify(cacheService).put(anyString(), safeEq("result"), safeEq(600L))
+        verify(cacheService).put(any<String>(), eq("result"), eq(600L), any<Set<String>>())
     }
 
     @Test
@@ -148,30 +147,30 @@ class CacheFlowAspectTest {
             )
 
         val configName = "testConfig"
-        `when`(configRegistry.get(configName)).thenReturn(null)
+        whenever(configRegistry.get(configName)).thenReturn(null)
 
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.target).thenReturn(TestClass())
-        `when`(joinPoint.proceed()).thenReturn("result")
-        `when`(cacheService.get(anyString())).thenReturn(null)
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.target).thenReturn(TestClass())
+        whenever(joinPoint.proceed()).thenReturn("result")
+        whenever(cacheService.get(any())).thenReturn(null)
 
         val result = aspect.aroundCache(joinPoint)
 
         assertEquals("result", result)
         verify(configRegistry).get(configName)
         // Should use annotation values (ttl defaults to -1, which uses defaultTtlSeconds 3600L)
-        verify(cacheService).put(anyString(), safeEq("result"), safeEq(3600L))
+        verify(cacheService).put(any<String>(), eq("result"), eq(3600L), any<Set<String>>())
     }
 
     @Test
     fun `should proceed when no CacheFlowCached annotation present`() {
         val method = TestClass::class.java.getDeclaredMethod("methodWithoutAnnotation")
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(joinPoint.proceed()).thenReturn("result")
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(joinPoint.proceed()).thenReturn("result")
 
         val result = aspect.aroundCached(joinPoint)
 
@@ -189,13 +188,13 @@ class CacheFlowAspectTest {
                 String::class.java,
             )
 
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.target).thenReturn(TestClass())
-        `when`(joinPoint.proceed()).thenReturn("cached result")
-        `when`(cacheService.get(anyString())).thenReturn(null)
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.target).thenReturn(TestClass())
+        whenever(joinPoint.proceed()).thenReturn("cached result")
+        whenever(cacheService.get(any())).thenReturn(null)
 
         val result = aspect.aroundCached(joinPoint)
 
@@ -206,9 +205,9 @@ class CacheFlowAspectTest {
     @Test
     fun `should proceed when no CacheFlowEvict annotation present`() {
         val method = TestClass::class.java.getDeclaredMethod("methodWithoutAnnotation")
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(joinPoint.proceed()).thenReturn("result")
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(joinPoint.proceed()).thenReturn("result")
 
         val result = aspect.aroundEvict(joinPoint)
 
@@ -226,18 +225,18 @@ class CacheFlowAspectTest {
                 String::class.java,
             )
 
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.target).thenReturn(TestClass())
-        `when`(joinPoint.proceed()).thenReturn("result")
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.target).thenReturn(TestClass())
+        whenever(joinPoint.proceed()).thenReturn("result")
 
         val result = aspect.aroundEvict(joinPoint)
 
         assertEquals("result", result)
         verify(joinPoint).proceed()
-        verify(cacheService).evict(anyString())
+        verify(cacheService).evict(any())
     }
 
     @Test
@@ -249,17 +248,17 @@ class CacheFlowAspectTest {
                 String::class.java,
             )
 
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.target).thenReturn(TestClass())
-        `when`(joinPoint.proceed()).thenReturn("result")
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.target).thenReturn(TestClass())
+        whenever(joinPoint.proceed()).thenReturn("result")
 
         val result = aspect.aroundEvict(joinPoint)
 
         assertEquals("result", result)
-        verify(cacheService).evict(anyString())
+        verify(cacheService).evict(any())
         verify(joinPoint).proceed()
     }
 
@@ -267,9 +266,9 @@ class CacheFlowAspectTest {
     fun `should evict all when allEntries is true`() {
         val method = TestClass::class.java.getDeclaredMethod("methodWithCacheFlowEvictAll")
 
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(joinPoint.proceed()).thenReturn("result")
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(joinPoint.proceed()).thenReturn("result")
 
         val result = aspect.aroundEvict(joinPoint)
 
@@ -282,28 +281,28 @@ class CacheFlowAspectTest {
     fun `should evict by tags when tags are provided`() {
         val method = TestClass::class.java.getDeclaredMethod("methodWithCacheFlowEvictTags")
 
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(joinPoint.proceed()).thenReturn("result")
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(joinPoint.proceed()).thenReturn("result")
 
         val result = aspect.aroundEvict(joinPoint)
 
         assertEquals("result", result)
         verify(joinPoint).proceed()
-        verify(cacheService).evictByTags("tag1", "tag2")
+        verify(cacheService).evictByTags(eq("tag1"), eq("tag2"))
     }
 
     @Test
     fun `should generate default cache key when key expression is blank`() {
         val method = TestClass::class.java.getDeclaredMethod("methodWithBlankKey")
 
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(methodSignature.declaringType).thenReturn(TestClass::class.java)
-        `when`(methodSignature.name).thenReturn("methodWithBlankKey")
-        `when`(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.proceed()).thenReturn("result")
-        `when`(cacheService.get(anyString())).thenReturn(null)
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(methodSignature.declaringType).thenReturn(TestClass::class.java)
+        whenever(methodSignature.name).thenReturn("methodWithBlankKey")
+        whenever(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.proceed()).thenReturn("result")
+        whenever(cacheService.get(any())).thenReturn(null)
 
         val result = aspect.aroundCache(joinPoint)
 
@@ -320,19 +319,19 @@ class CacheFlowAspectTest {
                 String::class.java,
             )
 
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.target).thenReturn(TestClass())
-        `when`(joinPoint.proceed()).thenReturn(null)
-        `when`(cacheService.get(anyString())).thenReturn(null)
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.target).thenReturn(TestClass())
+        whenever(joinPoint.proceed()).thenReturn(null)
+        whenever(cacheService.get(any())).thenReturn(null)
 
         val result = aspect.aroundCache(joinPoint)
 
         assertNull(result)
         verify(joinPoint).proceed()
-        verify(cacheService).get(anyString())
+        verify(cacheService).get(any())
     }
 
     @Test
@@ -344,13 +343,13 @@ class CacheFlowAspectTest {
                 String::class.java,
             )
 
-        `when`(joinPoint.signature).thenReturn(methodSignature)
-        `when`(methodSignature.method).thenReturn(method)
-        `when`(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
-        `when`(joinPoint.target).thenReturn(TestClass())
-        `when`(joinPoint.proceed()).thenReturn("result")
-        `when`(cacheService.get(anyString())).thenReturn(null)
+        whenever(joinPoint.signature).thenReturn(methodSignature)
+        whenever(methodSignature.method).thenReturn(method)
+        whenever(methodSignature.parameterNames).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.args).thenReturn(arrayOf("arg1", "arg2"))
+        whenever(joinPoint.target).thenReturn(TestClass())
+        whenever(joinPoint.proceed()).thenReturn("result")
+        whenever(cacheService.get(any())).thenReturn(null)
 
         val result = aspect.aroundCache(joinPoint)
 

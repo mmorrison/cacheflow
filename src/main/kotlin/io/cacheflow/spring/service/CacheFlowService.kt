@@ -16,11 +16,13 @@ interface CacheFlowService {
      * @param key The cache key
      * @param value The value to cache
      * @param ttl Time to live in seconds
+     * @param tags Tags associated with this cache entry
      */
     fun put(
         key: String,
         value: Any,
         ttl: Long = 3_600,
+        tags: Set<String> = emptySet(),
     )
 
     /**
