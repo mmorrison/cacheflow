@@ -19,7 +19,6 @@ import java.time.Instant
 
 @SpringBootTest(classes = [TestConfiguration::class])
 class RussianDollCachingIntegrationTest {
-
     @Autowired private lateinit var cacheService: CacheFlowService
 
     @Autowired private lateinit var fragmentCacheService: FragmentCacheService
@@ -175,63 +174,64 @@ class RussianDollCachingIntegrationTest {
 
     @Service
     class RussianDollTestService(
-        private val fragmentCacheService: FragmentCacheService
+        private val fragmentCacheService: FragmentCacheService,
     ) {
-
         @CacheFlowFragment(
             key = "'user:' + #userId + ':profile:' + #profileId",
             dependsOn = ["userId"],
             tags = ["'user-' + #userId"],
-            ttl = 3600
+            ttl = 3600,
         )
-        fun getUserProfile(userId: Long, profileId: Long): String {
-            return "User Profile Content for user $userId, profile $profileId"
-        }
+        fun getUserProfile(
+            userId: Long,
+            profileId: Long,
+        ): String = "User Profile Content for user $userId, profile $profileId"
 
         @CacheFlowFragment(
             key = "'user:' + #userId + ':settings:' + #settingsId",
             dependsOn = ["userId"],
             tags = ["'user-' + #userId"],
-            ttl = 3600
+            ttl = 3600,
         )
-        fun getUserSettings(userId: Long, settingsId: Long): String {
-            return "User Settings Content for user $userId, settings $settingsId"
-        }
+        fun getUserSettings(
+            userId: Long,
+            settingsId: Long,
+        ): String = "User Settings Content for user $userId, settings $settingsId"
 
         @CacheFlowFragment(
             key = "'user:' + #userId + ':header'",
             dependsOn = ["userId"],
             tags = ["'user-' + #userId"],
-            ttl = 3600
+            ttl = 3600,
         )
-        fun getUserHeader(userId: Long): String {
-            return "User Header for user $userId"
-        }
+        fun getUserHeader(userId: Long): String = "User Header for user $userId"
 
         @CacheFlowFragment(
             key = "'user:' + #userId + ':footer'",
             dependsOn = ["userId"],
             tags = ["'user-' + #userId"],
-            ttl = 3600
+            ttl = 3600,
         )
-        fun getUserFooter(userId: Long): String {
-            return "User Footer for user $userId"
-        }
+        fun getUserFooter(userId: Long): String = "User Footer for user $userId"
 
         @CacheFlowComposition(
             key = "'user:' + #userId + ':page:' + #profileId + ':' + #settingsId",
             template =
-            "<div>{{header}}</div><div>{{profile}}</div><div>{{settings}}</div><div>{{footer}}</div>",
+                "<div>{{header}}</div><div>{{profile}}</div><div>{{settings}}</div><div>{{footer}}</div>",
             fragments =
-            [
-                "'user:' + #userId + ':header'",
-                "'user:' + #userId + ':profile:' + #profileId",
-                "'user:' + #userId + ':settings:' + #settingsId",
-                "'user:' + #userId + ':footer'"
-            ],
-            ttl = 1800
+                [
+                    "'user:' + #userId + ':header'",
+                    "'user:' + #userId + ':profile:' + #profileId",
+                    "'user:' + #userId + ':settings:' + #settingsId",
+                    "'user:' + #userId + ':footer'",
+                ],
+            ttl = 1800,
         )
-        fun getCompleteUserPage(userId: Long, profileId: Long, settingsId: Long): String {
+        fun getCompleteUserPage(
+            userId: Long,
+            profileId: Long,
+            settingsId: Long,
+        ): String {
             // This method should not be called due to composition
             return "This should not be called"
         }
@@ -240,32 +240,36 @@ class RussianDollCachingIntegrationTest {
             key = "'user:' + #userId + ':versioned'",
             versioned = true,
             timestampField = "timestamp",
-            ttl = 3600
+            ttl = 3600,
         )
-        fun getVersionedUserData(userId: Long, timestamp: Long): String {
-            return "Versioned data for user $userId at timestamp $timestamp"
-        }
+        fun getVersionedUserData(
+            userId: Long,
+            timestamp: Long,
+        ): String = "Versioned data for user $userId at timestamp $timestamp"
 
         @CacheFlow(key = "'user:' + #userId", dependsOn = ["userId"], ttl = 3600)
-        fun getUser(userId: Long): String {
-            return "User $userId"
-        }
+        fun getUser(userId: Long): String = "User $userId"
 
         @CacheFlowEvict(key = "'userId:' + #userId")
-        fun updateUser(userId: Long, name: String): String {
-            return "Updated user $userId with name $name"
-        }
+        fun updateUser(
+            userId: Long,
+            name: String,
+        ): String = "Updated user $userId with name $name"
 
-        fun composeUserPageWithTemplate(userId: Long, profileId: Long): String {
+        fun composeUserPageWithTemplate(
+            userId: Long,
+            profileId: Long,
+        ): String {
             val template =
                 "<html><head><title>User Page</title></head><body>{{header}}{{profile}}{{footer}}</body></html>"
             val fragments =
                 mapOf(
                     "header" to getUserHeader(userId),
                     "profile" to getUserProfile(userId, profileId),
-                    "footer" to getUserFooter(userId)
+                    "footer" to getUserFooter(userId),
                 )
-            return template.replace("{{header}}", fragments["header"]!!)
+            return template
+                .replace("{{header}}", fragments["header"]!!)
                 .replace("{{profile}}", fragments["profile"]!!)
                 .replace("{{footer}}", fragments["footer"]!!)
         }

@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap
 /** Simple in-memory implementation of CacheFlowService. */
 @Service
 class CacheFlowServiceImpl : CacheFlowService {
-
     private val cache = ConcurrentHashMap<String, CacheEntry>()
     private val millisecondsPerSecond = 1_000L
 
@@ -24,7 +23,11 @@ class CacheFlowServiceImpl : CacheFlowService {
 
     private fun isExpired(entry: CacheEntry): Boolean = System.currentTimeMillis() > entry.expiresAt
 
-    override fun put(key: String, value: Any, ttl: Long) {
+    override fun put(
+        key: String,
+        value: Any,
+        ttl: Long,
+    ) {
         val expiresAt = System.currentTimeMillis() + ttl * millisecondsPerSecond
         cache[key] = CacheEntry(value, expiresAt)
     }
@@ -47,5 +50,8 @@ class CacheFlowServiceImpl : CacheFlowService {
 
     override fun keys(): Set<String> = cache.keys.toSet()
 
-    private data class CacheEntry(val value: Any, val expiresAt: Long)
+    private data class CacheEntry(
+        val value: Any,
+        val expiresAt: Long,
+    )
 }

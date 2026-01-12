@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service
 
 @SpringBootTest(classes = [TestConfiguration::class])
 class DependencyManagementIntegrationTest {
-
     @Autowired private lateinit var cacheService: CacheFlowService
 
     @Autowired private lateinit var dependencyResolver: DependencyResolver
@@ -103,24 +102,26 @@ class DependencyManagementIntegrationTest {
 
     @Service
     class TestService {
-
         @CacheFlow(key = "'user:' + #userId + ':profile:' + #profileId", dependsOn = ["userId"], ttl = 3600)
-        fun getUserProfile(userId: Long, profileId: Long): String {
-            return "Profile for user $userId, profile $profileId"
-        }
+        fun getUserProfile(
+            userId: Long,
+            profileId: Long,
+        ): String = "Profile for user $userId, profile $profileId"
 
         @CacheFlow(
             key = "'user:' + #userId + ':settings:' + #settingsId",
             dependsOn = ["userId"],
-            ttl = 3600
+            ttl = 3600,
         )
-        fun getUserSettings(userId: Long, settingsId: Long): String {
-            return "Settings for user $userId, settings $settingsId"
-        }
+        fun getUserSettings(
+            userId: Long,
+            settingsId: Long,
+        ): String = "Settings for user $userId, settings $settingsId"
 
         @CacheFlowEvict(key = "'userId:' + #userId")
-        fun updateUser(userId: Long, name: String): String {
-            return "Updated user $userId with name $name"
-        }
+        fun updateUser(
+            userId: Long,
+            name: String,
+        ): String = "Updated user $userId with name $name"
     }
 }

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class CacheFlowAnnotationsTest {
-
     @Test
     fun `CacheFlow annotation should have correct target and retention`() {
         val annotation = CacheFlow::class.java

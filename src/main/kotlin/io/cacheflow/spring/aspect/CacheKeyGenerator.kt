@@ -14,7 +14,9 @@ import org.springframework.expression.spel.support.StandardEvaluationContext
  * Service for generating cache keys from SpEL expressions and method parameters. Extracted from
  * CacheFlowAspect to reduce complexity.
  */
-class CacheKeyGenerator(private val cacheKeyVersioner: CacheKeyVersioner) {
+class CacheKeyGenerator(
+    private val cacheKeyVersioner: CacheKeyVersioner,
+) {
     private val parser: ExpressionParser = SpelExpressionParser()
 
     /**
@@ -26,7 +28,7 @@ class CacheKeyGenerator(private val cacheKeyVersioner: CacheKeyVersioner) {
      */
     fun generateCacheKeyFromExpression(
         keyExpression: String,
-        joinPoint: ProceedingJoinPoint
+        joinPoint: ProceedingJoinPoint,
     ): String {
         if (keyExpression.isBlank()) return ""
 
@@ -57,7 +59,7 @@ class CacheKeyGenerator(private val cacheKeyVersioner: CacheKeyVersioner) {
     fun generateVersionedKey(
         baseKey: String,
         config: CacheFlowConfig,
-        joinPoint: ProceedingJoinPoint
+        joinPoint: ProceedingJoinPoint,
     ): String {
         val method = joinPoint.signature as MethodSignature
         val parameterNames = method.parameterNames

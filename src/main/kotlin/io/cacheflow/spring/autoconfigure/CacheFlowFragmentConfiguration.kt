@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 class CacheFlowFragmentConfiguration {
-
     /**
      * Creates the fragment tag manager bean.
      *
@@ -48,6 +47,6 @@ class CacheFlowFragmentConfiguration {
     fun fragmentCacheService(
         cacheService: CacheFlowService,
         tagManager: FragmentTagManager,
-        composer: FragmentComposer
+        composer: FragmentComposer,
     ): FragmentCacheService = FragmentCacheServiceImpl(cacheService, tagManager, composer)
 }

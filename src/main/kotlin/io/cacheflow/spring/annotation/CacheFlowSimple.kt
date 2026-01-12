@@ -7,7 +7,7 @@ package io.cacheflow.spring.annotation
 @Target(
     AnnotationTarget.FUNCTION,
     AnnotationTarget.PROPERTY_GETTER,
-    AnnotationTarget.PROPERTY_SETTER
+    AnnotationTarget.PROPERTY_SETTER,
 )
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CacheFlowSimple(
@@ -20,7 +20,7 @@ annotation class CacheFlowSimple(
     /** Array of parameter names that this cache depends on. */
     val dependsOn: Array<String> = [],
     /** Array of tags for group-based eviction. */
-    val tags: Array<String> = []
+    val tags: Array<String> = [],
 )
 
 /**
@@ -30,7 +30,7 @@ annotation class CacheFlowSimple(
 @Target(
     AnnotationTarget.FUNCTION,
     AnnotationTarget.PROPERTY_GETTER,
-    AnnotationTarget.PROPERTY_SETTER
+    AnnotationTarget.PROPERTY_SETTER,
 )
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CacheFlowAdvanced(
@@ -39,5 +39,5 @@ annotation class CacheFlowAdvanced(
     /** The cache key expression (SpEL supported). */
     val key: String = "",
     /** Time to live for the cache entry in seconds. */
-    val ttl: Long = -1
+    val ttl: Long = -1,
 )

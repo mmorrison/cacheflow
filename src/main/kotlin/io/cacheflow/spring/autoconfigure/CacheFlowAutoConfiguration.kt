@@ -18,13 +18,13 @@ import org.springframework.context.annotation.Import
     prefix = "cacheflow",
     name = ["enabled"],
     havingValue = "true",
-    matchIfMissing = true
+    matchIfMissing = true,
 )
 @EnableConfigurationProperties(CacheFlowProperties::class)
 @Import(
     CacheFlowCoreConfiguration::class,
     CacheFlowFragmentConfiguration::class,
     CacheFlowAspectConfiguration::class,
-    CacheFlowManagementConfiguration::class
+    CacheFlowManagementConfiguration::class,
 )
 class CacheFlowAutoConfiguration

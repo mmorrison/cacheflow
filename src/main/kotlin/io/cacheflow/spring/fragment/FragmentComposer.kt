@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component
  */
 @Component
 class FragmentComposer {
-
     /**
      * Composes multiple fragments into a single result using a template.
      *
@@ -18,7 +17,10 @@ class FragmentComposer {
      * @param fragments Map of placeholder names to fragment content
      * @return The composed result
      */
-    fun composeFragments(template: String, fragments: Map<String, String>): String {
+    fun composeFragments(
+        template: String,
+        fragments: Map<String, String>,
+    ): String {
         var result = template
 
         fragments.forEach { (placeholder, fragment) ->
@@ -40,7 +42,7 @@ class FragmentComposer {
     fun composeFragmentsByKeys(
         template: String,
         fragmentKeys: List<String>,
-        fragmentRetriever: (String) -> String?
+        fragmentRetriever: (String) -> String?,
     ): String {
         // Extract placeholder names from template
         val placeholderPattern = "\\{\\{([^}]+)\\}\\}".toRegex()
@@ -76,7 +78,10 @@ class FragmentComposer {
      * @param fragments Map of available fragments
      * @return Set of missing placeholder names
      */
-    fun findMissingPlaceholders(template: String, fragments: Map<String, String>): Set<String> {
+    fun findMissingPlaceholders(
+        template: String,
+        fragments: Map<String, String>,
+    ): Set<String> {
         val placeholderPattern = "\\{\\{([^}]+)\\}\\}".toRegex()
         val placeholders = placeholderPattern.findAll(template).map { it.groupValues[1] }.toSet()
 

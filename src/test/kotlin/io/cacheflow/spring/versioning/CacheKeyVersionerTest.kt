@@ -14,7 +14,6 @@ import java.time.temporal.TemporalAccessor
 import java.util.Date
 
 class CacheKeyVersionerTest {
-
     companion object {
         private const val TEST_TIMESTAMP_1 = 1_640_995_200_000L // 2022-01-01 00:00:00 UTC
         private const val TEST_TIMESTAMP_2 = 1_640_995_230_000L // 2022-01-01 00:00:30 UTC

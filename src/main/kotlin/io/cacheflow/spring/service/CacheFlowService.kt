@@ -18,7 +18,11 @@ interface CacheFlowService {
      * @param value The value to cache
      * @param ttl Time to live in seconds
      */
-    fun put(key: String, value: Any, ttl: Long = 3_600)
+    fun put(
+        key: String,
+        value: Any,
+        ttl: Long = 3_600,
+    )
 
     /**
      * Evicts a specific cache entry.

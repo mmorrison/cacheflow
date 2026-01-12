@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class CacheFlowPropertiesTest {
-
     @Test
     fun `should create properties with default values`() {
         val properties = CacheFlowProperties()
@@ -33,7 +32,7 @@ class CacheFlowPropertiesTest {
                 defaultTtl = 1800L,
                 maxSize = 5000L,
                 storage = CacheFlowProperties.StorageType.REDIS,
-                baseUrl = "https://custom.com"
+                baseUrl = "https://custom.com",
             )
 
         assertFalse(properties.enabled)
@@ -68,7 +67,7 @@ class CacheFlowPropertiesTest {
             CacheFlowProperties.RedisProperties(
                 keyPrefix = "custom:",
                 database = 1,
-                timeout = 10_000L
+                timeout = 10_000L,
             )
 
         assertEquals("custom:", redisProps.keyPrefix)
@@ -106,7 +105,7 @@ class CacheFlowPropertiesTest {
                 autoPurge = false,
                 purgeOnEvict = false,
                 rateLimit = rateLimit,
-                circuitBreaker = circuitBreaker
+                circuitBreaker = circuitBreaker,
             )
 
         assertTrue(cloudflareProps.enabled)
@@ -148,7 +147,7 @@ class CacheFlowPropertiesTest {
                 autoPurge = false,
                 purgeOnEvict = false,
                 rateLimit = rateLimit,
-                circuitBreaker = circuitBreaker
+                circuitBreaker = circuitBreaker,
             )
 
         assertTrue(awsProps.enabled)
@@ -191,7 +190,7 @@ class CacheFlowPropertiesTest {
                 autoPurge = false,
                 purgeOnEvict = false,
                 rateLimit = rateLimit,
-                circuitBreaker = circuitBreaker
+                circuitBreaker = circuitBreaker,
             )
 
         assertTrue(fastlyProps.enabled)

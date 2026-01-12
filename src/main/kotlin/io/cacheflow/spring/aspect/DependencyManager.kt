@@ -5,8 +5,9 @@ import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.reflect.MethodSignature
 
 /** Service for managing cache dependencies. Extracted from CacheFlowAspect to reduce complexity. */
-class DependencyManager(private val dependencyResolver: DependencyResolver) {
-
+class DependencyManager(
+    private val dependencyResolver: DependencyResolver,
+) {
     /**
      * Tracks dependencies for a cache key based on the dependsOn parameter names.
      *
@@ -17,7 +18,7 @@ class DependencyManager(private val dependencyResolver: DependencyResolver) {
     fun trackDependencies(
         cacheKey: String,
         dependsOn: Array<String>,
-        joinPoint: ProceedingJoinPoint
+        joinPoint: ProceedingJoinPoint,
     ) {
         if (dependsOn.isEmpty()) return
 
@@ -42,7 +43,7 @@ class DependencyManager(private val dependencyResolver: DependencyResolver) {
      */
     fun evictWithDependencies(
         key: String,
-        cacheService: io.cacheflow.spring.service.CacheFlowService
+        cacheService: io.cacheflow.spring.service.CacheFlowService,
     ) {
         // Evict the main key
         cacheService.evict(key)
@@ -55,7 +56,10 @@ class DependencyManager(private val dependencyResolver: DependencyResolver) {
         dependencyResolver.clearDependencies(key)
     }
 
-    private fun buildDependencyKey(paramName: String, paramValue: Any?): String {
+    private fun buildDependencyKey(
+        paramName: String,
+        paramValue: Any?,
+    ): String {
         val prefix = "$paramName:"
         return when (paramValue) {
             null -> "${prefix}null"
@@ -64,5 +68,8 @@ class DependencyManager(private val dependencyResolver: DependencyResolver) {
         }
     }
 
-    private fun createDependencyKey(prefix: String, value: Any): String = "$prefix$value"
+    private fun createDependencyKey(
+        prefix: String,
+        value: Any,
+    ): String = "$prefix$value"
 }

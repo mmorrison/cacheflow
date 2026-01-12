@@ -12,8 +12,9 @@ private const val EVICTED_KEY = "evicted"
 /** Management endpoint for CacheFlow operations. */
 @Component
 @Endpoint(id = "cacheflow")
-class CacheFlowManagementEndpoint(private val cacheService: CacheFlowService) {
-
+class CacheFlowManagementEndpoint(
+    private val cacheService: CacheFlowService,
+) {
     /**
      * Gets cache information.
      *
@@ -31,7 +32,9 @@ class CacheFlowManagementEndpoint(private val cacheService: CacheFlowService) {
      */
 
     @WriteOperation
-    fun evictByPattern(@Selector pattern: String): Map<String, Any> {
+    fun evictByPattern(
+        @Selector pattern: String,
+    ): Map<String, Any> {
         // Simple pattern matching - in a real implementation, you'd use regex
         val keys = cacheService.keys().filter { it.contains(pattern) }
         keys.forEach { cacheService.evict(it) }
@@ -46,7 +49,9 @@ class CacheFlowManagementEndpoint(private val cacheService: CacheFlowService) {
      */
 
     @WriteOperation
-    fun evictByTags(@Selector tags: String): Map<String, Any> {
+    fun evictByTags(
+        @Selector tags: String,
+    ): Map<String, Any> {
         val tagArray = tags.split(",").map { it.trim() }.toTypedArray()
         cacheService.evictByTags(*tagArray)
         return mapOf(EVICTED_KEY to "all", "tags" to tagArray)

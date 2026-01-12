@@ -48,7 +48,7 @@ class CacheFlowConfigBuilder {
             sync = sync,
             versioned = versioned,
             timestampField = timestampField,
-            config = ""
+            config = "",
         )
 
     companion object {
@@ -58,13 +58,10 @@ class CacheFlowConfigBuilder {
         fun builder(): CacheFlowConfigBuilder = CacheFlowConfigBuilder()
 
         /** Creates a builder with a specific cache key. */
-        fun withKey(key: String): CacheFlowConfigBuilder =
-            CacheFlowConfigBuilder().apply { this.key = key }
+        fun withKey(key: String): CacheFlowConfigBuilder = CacheFlowConfigBuilder().apply { this.key = key }
 
         /** Creates a builder for versioned caching. */
-        fun versioned(
-            timestampField: String = DEFAULT_TIMESTAMP_FIELD
-        ): CacheFlowConfigBuilder =
+        fun versioned(timestampField: String = DEFAULT_TIMESTAMP_FIELD): CacheFlowConfigBuilder =
             CacheFlowConfigBuilder().apply {
                 this.versioned = true
                 this.timestampField = timestampField
@@ -75,7 +72,6 @@ class CacheFlowConfigBuilder {
             CacheFlowConfigBuilder().apply { this.dependsOn = dependsOn }
 
         /** Creates a builder with tags. */
-        fun withTags(vararg tags: String): CacheFlowConfigBuilder =
-            CacheFlowConfigBuilder().apply { this.tags = tags }
+        fun withTags(vararg tags: String): CacheFlowConfigBuilder = CacheFlowConfigBuilder().apply { this.tags = tags }
     }
 }

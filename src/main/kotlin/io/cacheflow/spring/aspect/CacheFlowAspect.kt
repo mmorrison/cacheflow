@@ -21,7 +21,7 @@ class CacheFlowAspect(
     private val cacheService: CacheFlowService,
     private val dependencyResolver: DependencyResolver,
     private val cacheKeyVersioner: CacheKeyVersioner,
-    private val configRegistry: CacheFlowConfigRegistry
+    private val configRegistry: CacheFlowConfigRegistry,
 ) {
     private val cacheKeyGenerator = CacheKeyGenerator(cacheKeyVersioner)
     private val dependencyManager = DependencyManager(dependencyResolver)
@@ -41,7 +41,10 @@ class CacheFlowAspect(
         return processCacheFlow(joinPoint, cached)
     }
 
-    private fun processCacheFlow(joinPoint: ProceedingJoinPoint, cached: CacheFlow): Any? {
+    private fun processCacheFlow(
+        joinPoint: ProceedingJoinPoint,
+        cached: CacheFlow,
+    ): Any? {
         val config = resolveConfig(cached)
 
         // Generate cache key
@@ -49,11 +52,12 @@ class CacheFlowAspect(
         if (baseKey.isBlank()) return joinPoint.proceed()
 
         // Apply versioning if enabled
-        val key = if (config.versioned) {
-            cacheKeyGenerator.generateVersionedKey(baseKey, config, joinPoint)
-        } else {
-            baseKey
-        }
+        val key =
+            if (config.versioned) {
+                cacheKeyGenerator.generateVersionedKey(baseKey, config, joinPoint)
+            } else {
+                baseKey
+            }
 
         // Track dependencies if specified
         dependencyManager.trackDependencies(key, config.dependsOn, joinPoint)
@@ -75,11 +79,15 @@ class CacheFlowAspect(
             tags = cached.tags,
             versioned = cached.versioned,
             timestampField = cached.timestampField,
-            config = cached.config
+            config = cached.config,
         )
     }
 
-    private fun executeAndCache(joinPoint: ProceedingJoinPoint, key: String, config: CacheFlowConfig): Any? {
+    private fun executeAndCache(
+        joinPoint: ProceedingJoinPoint,
+        key: String,
+        config: CacheFlowConfig,
+    ): Any? {
         val result = joinPoint.proceed()
         if (result != null) {
             val ttl = if (config.ttl > 0) config.ttl else defaultTtlSeconds
@@ -102,7 +110,10 @@ class CacheFlowAspect(
         return processCacheFlowCached(joinPoint, cached)
     }
 
-    private fun processCacheFlowCached(joinPoint: ProceedingJoinPoint, cached: CacheFlowCached): Any? {
+    private fun processCacheFlowCached(
+        joinPoint: ProceedingJoinPoint,
+        cached: CacheFlowCached,
+    ): Any? {
         val config = resolveConfig(cached)
 
         // Generate cache key
@@ -110,11 +121,12 @@ class CacheFlowAspect(
         if (baseKey.isBlank()) return joinPoint.proceed()
 
         // Apply versioning if enabled
-        val key = if (config.versioned) {
-            cacheKeyGenerator.generateVersionedKey(baseKey, config, joinPoint)
-        } else {
-            baseKey
-        }
+        val key =
+            if (config.versioned) {
+                cacheKeyGenerator.generateVersionedKey(baseKey, config, joinPoint)
+            } else {
+                baseKey
+            }
 
         // Track dependencies if specified
         dependencyManager.trackDependencies(key, config.dependsOn, joinPoint)
@@ -136,7 +148,7 @@ class CacheFlowAspect(
             tags = cached.tags,
             versioned = cached.versioned,
             timestampField = cached.timestampField,
-            config = cached.config
+            config = cached.config,
         )
     }
 
@@ -165,7 +177,10 @@ class CacheFlowAspect(
         return result
     }
 
-    private fun evictCacheEntries(evict: CacheFlowEvict, joinPoint: ProceedingJoinPoint) {
+    private fun evictCacheEntries(
+        evict: CacheFlowEvict,
+        joinPoint: ProceedingJoinPoint,
+    ) {
         when {
             evict.allEntries -> {
                 cacheService.evictAll()

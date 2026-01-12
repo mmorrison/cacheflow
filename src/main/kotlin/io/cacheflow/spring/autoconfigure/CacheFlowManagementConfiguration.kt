@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 class CacheFlowManagementConfiguration {
-
     /**
      * Creates the CacheFlow management endpoint bean.
      *
@@ -24,6 +23,5 @@ class CacheFlowManagementConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnAvailableEndpoint
-    fun cacheFlowManagementEndpoint(cacheService: CacheFlowService): CacheFlowManagementEndpoint =
-        CacheFlowManagementEndpoint(cacheService)
+    fun cacheFlowManagementEndpoint(cacheService: CacheFlowService): CacheFlowManagementEndpoint = CacheFlowManagementEndpoint(cacheService)
 }

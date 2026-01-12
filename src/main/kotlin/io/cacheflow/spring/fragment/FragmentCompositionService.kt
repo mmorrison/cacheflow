@@ -7,7 +7,6 @@ package io.cacheflow.spring.fragment
  * template-based placeholders.
  */
 interface FragmentCompositionService {
-
     /**
      * Composes multiple fragments into a single result using a template.
      *
@@ -15,7 +14,10 @@ interface FragmentCompositionService {
      * @param fragments Map of placeholder names to fragment content
      * @return The composed result
      */
-    fun composeFragments(template: String, fragments: Map<String, String>): String
+    fun composeFragments(
+        template: String,
+        fragments: Map<String, String>,
+    ): String
 
     /**
      * Composes fragments by their keys using a template.
@@ -24,5 +26,8 @@ interface FragmentCompositionService {
      * @param fragmentKeys List of fragment keys to retrieve and compose
      * @return The composed result
      */
-    fun composeFragmentsByKeys(template: String, fragmentKeys: List<String>): String
+    fun composeFragmentsByKeys(
+        template: String,
+        fragmentKeys: List<String>,
+    ): String
 }

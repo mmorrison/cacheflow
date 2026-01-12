@@ -14,7 +14,6 @@ import kotlin.concurrent.write
  */
 @Component
 class CacheDependencyTracker : DependencyResolver {
-
     // Maps cache key -> set of dependency keys
     private val dependencyGraph = ConcurrentHashMap<String, MutableSet<String>>()
 
@@ -24,7 +23,10 @@ class CacheDependencyTracker : DependencyResolver {
     // Lock for atomic operations on both graphs
     private val lock = ReentrantReadWriteLock()
 
-    override fun trackDependency(cacheKey: String, dependencyKey: String) {
+    override fun trackDependency(
+        cacheKey: String,
+        dependencyKey: String,
+    ) {
         if (cacheKey == dependencyKey) {
             // Prevent self-dependency
             return
@@ -46,13 +48,15 @@ class CacheDependencyTracker : DependencyResolver {
     override fun invalidateDependentCaches(dependencyKey: String): Set<String> =
         lock.read { reverseDependencyGraph[dependencyKey]?.toSet() ?: emptySet() }
 
-    override fun getDependencies(cacheKey: String): Set<String> =
-        lock.read { dependencyGraph[cacheKey]?.toSet() ?: emptySet() }
+    override fun getDependencies(cacheKey: String): Set<String> = lock.read { dependencyGraph[cacheKey]?.toSet() ?: emptySet() }
 
     override fun getDependentCaches(dependencyKey: String): Set<String> =
         lock.read { reverseDependencyGraph[dependencyKey]?.toSet() ?: emptySet() }
 
-    override fun removeDependency(cacheKey: String, dependencyKey: String) {
+    override fun removeDependency(
+        cacheKey: String,
+        dependencyKey: String,
+    ) {
         lock.write {
             // Remove from dependency graph
             dependencyGraph[cacheKey]?.remove(dependencyKey)
@@ -91,8 +95,8 @@ class CacheDependencyTracker : DependencyResolver {
      *
      * @return Map containing various statistics
      */
-    fun getStatistics(): Map<String, Any> {
-        return lock.read {
+    fun getStatistics(): Map<String, Any> =
+        lock.read {
             mapOf(
                 "totalDependencies" to dependencyGraph.values.sumOf { it.size },
                 "totalCacheKeys" to dependencyGraph.size,
@@ -100,43 +104,42 @@ class CacheDependencyTracker : DependencyResolver {
                 "maxDependenciesPerKey" to
                     (dependencyGraph.values.maxOfOrNull { it.size } ?: 0),
                 "maxDependentsPerKey" to
-                    (reverseDependencyGraph.values.maxOfOrNull { it.size } ?: 0)
+                    (reverseDependencyGraph.values.maxOfOrNull { it.size } ?: 0),
             )
         }
-    }
 
     /**
      * Checks if there are any circular dependencies in the graph.
      *
      * @return true if circular dependencies exist, false otherwise
      */
-    fun hasCircularDependencies(): Boolean {
-        return lock.read {
+    fun hasCircularDependencies(): Boolean =
+        lock.read {
             val cycleDetector = CycleDetector(dependencyGraph)
             cycleDetector.hasCircularDependencies()
         }
-    }
 
     /**
      * Internal class to handle cycle detection logic. Separated to reduce complexity of the main
      * class.
      */
-    private class CycleDetector(private val dependencyGraph: Map<String, Set<String>>) {
+    private class CycleDetector(
+        private val dependencyGraph: Map<String, Set<String>>,
+    ) {
         private val visited = mutableSetOf<String>()
         private val recursionStack = mutableSetOf<String>()
 
-        fun hasCircularDependencies(): Boolean {
-            return dependencyGraph.keys.any { key ->
+        fun hasCircularDependencies(): Boolean =
+            dependencyGraph.keys.any { key ->
                 if (!visited.contains(key)) {
                     hasCycleFromNode(key)
                 } else {
                     false
                 }
             }
-        }
 
-        private fun hasCycleFromNode(node: String): Boolean {
-            return when {
+        private fun hasCycleFromNode(node: String): Boolean =
+            when {
                 isInRecursionStack(node) -> true
                 isAlreadyVisited(node) -> false
                 else -> {
@@ -147,7 +150,6 @@ class CacheDependencyTracker : DependencyResolver {
                     hasCycle
                 }
             }
-        }
 
         private fun isInRecursionStack(node: String): Boolean = recursionStack.contains(node)
 

@@ -15,7 +15,6 @@ import java.time.Instant
  */
 @Service
 class RussianDollCachingExample {
-
     companion object {
         private const val DEFAULT_TTL_SECONDS = 3600L
         private const val SHORT_TTL_SECONDS = 1800L
@@ -34,7 +33,7 @@ class RussianDollCachingExample {
         key = "user:#{userId}:profile",
         dependsOn = ["userId"],
         tags = ["user-#{userId}", "profile"],
-        ttl = DEFAULT_TTL_SECONDS
+        ttl = DEFAULT_TTL_SECONDS,
     )
     fun getUserProfile(userId: Long): String {
         // Simulate expensive database operation
@@ -45,7 +44,7 @@ class RussianDollCachingExample {
                 <p>User ID: $userId</p>
                 <p>Last updated: ${Instant.now()}</p>
             </div>
-        """.trimIndent()
+            """.trimIndent()
     }
 
     /** Example of fragment caching for user settings. */
@@ -53,7 +52,7 @@ class RussianDollCachingExample {
         key = "user:#{userId}:settings",
         dependsOn = ["userId"],
         tags = ["user-#{userId}", "settings"],
-        ttl = SHORT_TTL_SECONDS
+        ttl = SHORT_TTL_SECONDS,
     )
     @Suppress("UNUSED_PARAMETER")
     fun getUserSettings(userId: Long): String {
@@ -68,7 +67,7 @@ class RussianDollCachingExample {
                     <li>Notifications: Enabled</li>
                 </ul>
             </div>
-        """.trimIndent()
+            """.trimIndent()
     }
 
     /** Example of fragment caching for user header. */
@@ -76,7 +75,7 @@ class RussianDollCachingExample {
         key = "user:#{userId}:header",
         dependsOn = ["userId"],
         tags = ["user-#{userId}", "header"],
-        ttl = 7200
+        ttl = 7200,
     )
     fun getUserHeader(userId: Long): String {
         // Simulate expensive database operation
@@ -90,7 +89,7 @@ class RussianDollCachingExample {
                     <a href="/logout">Logout</a>
                 </nav>
             </header>
-        """.trimIndent()
+            """.trimIndent()
     }
 
     /** Example of fragment caching for user footer. */
@@ -98,7 +97,7 @@ class RussianDollCachingExample {
         key = "user:#{userId}:footer",
         dependsOn = ["userId"],
         tags = ["user-#{userId}", "footer"],
-        ttl = 7200
+        ttl = 7200,
     )
     fun getUserFooter(userId: Long): String {
         // Simulate expensive database operation
@@ -108,7 +107,7 @@ class RussianDollCachingExample {
                 <p>&copy; 2024 User $userId. All rights reserved.</p>
                 <p>Last login: ${Instant.now()}</p>
             </footer>
-        """.trimIndent()
+            """.trimIndent()
     }
 
     /**
@@ -118,7 +117,7 @@ class RussianDollCachingExample {
     @CacheFlowComposition(
         key = "user:#{userId}:page",
         template =
-        """
+            """
             <!DOCTYPE html>
             <html>
             <head>
@@ -142,13 +141,13 @@ class RussianDollCachingExample {
             </html>
         """,
         fragments =
-        [
-            "user:#{userId}:header",
-            "user:#{userId}:profile",
-            "user:#{userId}:settings",
-            "user:#{userId}:footer"
-        ],
-        ttl = SHORT_TTL_SECONDS
+            [
+                "user:#{userId}:header",
+                "user:#{userId}:profile",
+                "user:#{userId}:settings",
+                "user:#{userId}:footer",
+            ],
+        ttl = SHORT_TTL_SECONDS,
     )
     @Suppress("UNUSED_PARAMETER")
     fun getUserDashboard(userId: Long): String =
@@ -164,9 +163,12 @@ class RussianDollCachingExample {
         key = "user:#{userId}:data",
         versioned = true,
         timestampField = "lastModified",
-        ttl = DEFAULT_TTL_SECONDS
+        ttl = DEFAULT_TTL_SECONDS,
     )
-    fun getUserData(userId: Long, lastModified: Long): String {
+    fun getUserData(
+        userId: Long,
+        lastModified: Long,
+    ): String {
         // Simulate expensive database operation
         Thread.sleep(SIMULATION_DELAY_MS * 2)
         return """
@@ -177,7 +179,7 @@ class RussianDollCachingExample {
                 "lastModified": $lastModified,
                 "data": "Some user data that changes over time"
             }
-        """.trimIndent()
+            """.trimIndent()
     }
 
     /**
@@ -188,7 +190,7 @@ class RussianDollCachingExample {
         key = "user:#{userId}:summary",
         dependsOn = ["userId"],
         tags = ["user-#{userId}", "summary"],
-        ttl = SHORT_TTL_SECONDS
+        ttl = SHORT_TTL_SECONDS,
     )
     fun getUserSummary(userId: Long): String {
         // Simulate expensive database operation
@@ -200,12 +202,16 @@ class RussianDollCachingExample {
                 <p>Status: Active</p>
                 <p>Member since: 2024-01-01</p>
             </div>
-        """.trimIndent()
+            """.trimIndent()
     }
 
     /** Example of cache eviction. This method will invalidate all caches related to the user. */
     @CacheFlowEvict(key = "user:#{userId}")
-    fun updateUser(userId: Long, name: String, email: String): String {
+    fun updateUser(
+        userId: Long,
+        name: String,
+        email: String,
+    ): String {
         // Simulate database update
         Thread.sleep(SIMULATION_DELAY_MS)
         return "Updated user $userId with name '$name' and email '$email'"
@@ -222,8 +228,8 @@ class RussianDollCachingExample {
     }
 
     /** Example of getting cache statistics. This method demonstrates how to check cache status. */
-    fun getCacheStatistics(): Map<String, Any> {
-        return mapOf(
+    fun getCacheStatistics(): Map<String, Any> =
+        mapOf(
             "message" to "Cache statistics would be available through the CacheFlowService",
             "features" to
                 listOf(
@@ -231,8 +237,7 @@ class RussianDollCachingExample {
                     "Dependency tracking",
                     "Versioned cache keys",
                     "Composition",
-                    "Tag-based eviction"
-                )
+                    "Tag-based eviction",
+                ),
         )
-    }
 }

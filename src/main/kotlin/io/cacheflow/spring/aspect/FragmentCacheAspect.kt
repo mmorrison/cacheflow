@@ -24,9 +24,8 @@ import org.springframework.stereotype.Component
 class FragmentCacheAspect(
     private val fragmentCacheService: FragmentCacheService,
     private val dependencyResolver: DependencyResolver,
-    private val tagManager: FragmentTagManager
+    private val tagManager: FragmentTagManager,
 ) {
-
     private val expressionParser = SpelExpressionParser()
     private val defaultTtlSeconds = 3_600L
 
@@ -60,7 +59,10 @@ class FragmentCacheAspect(
         return processComposition(joinPoint, composition)
     }
 
-    private fun processFragment(joinPoint: ProceedingJoinPoint, fragment: CacheFlowFragment): Any? {
+    private fun processFragment(
+        joinPoint: ProceedingJoinPoint,
+        fragment: CacheFlowFragment,
+    ): Any? {
         // Generate cache key
         val key = buildCacheKeyFromExpression(fragment.key, joinPoint)
         if (key.isBlank()) {
@@ -78,7 +80,7 @@ class FragmentCacheAspect(
     private fun executeAndCacheFragment(
         joinPoint: ProceedingJoinPoint,
         fragment: CacheFlowFragment,
-        key: String
+        key: String,
     ): Any? {
         val result = joinPoint.proceed()
         if (result is String) {
@@ -96,7 +98,7 @@ class FragmentCacheAspect(
 
     private fun processComposition(
         joinPoint: ProceedingJoinPoint,
-        composition: CacheFlowComposition
+        composition: CacheFlowComposition,
     ): Any? {
         // Generate cache key
         val key = buildCacheKeyFromExpression(composition.key, joinPoint)
@@ -109,20 +111,26 @@ class FragmentCacheAspect(
         return composedResult ?: joinPoint.proceed()
     }
 
-    private fun tryComposeFragments(composition: CacheFlowComposition, key: String, joinPoint: ProceedingJoinPoint): String? {
+    private fun tryComposeFragments(
+        composition: CacheFlowComposition,
+        key: String,
+        joinPoint: ProceedingJoinPoint,
+    ): String? {
         if (composition.template.isBlank() || composition.fragments.isEmpty()) {
             return null
         }
 
         // Evaluate SpEL expressions in fragment keys
-        val evaluatedFragmentKeys = composition.fragments.map { fragmentKey ->
-            evaluateFragmentKeyExpression(fragmentKey, joinPoint)
-        }.filter { it.isNotBlank() }
+        val evaluatedFragmentKeys =
+            composition.fragments
+                .map { fragmentKey ->
+                    evaluateFragmentKeyExpression(fragmentKey, joinPoint)
+                }.filter { it.isNotBlank() }
 
         val composedResult =
             fragmentCacheService.composeFragmentsByKeys(
                 composition.template,
-                evaluatedFragmentKeys
+                evaluatedFragmentKeys,
             )
 
         return if (composedResult.isNotBlank()) {
@@ -137,7 +145,7 @@ class FragmentCacheAspect(
     private fun registerFragmentDependencies(
         fragmentKey: String,
         dependsOn: Array<String>,
-        joinPoint: ProceedingJoinPoint
+        joinPoint: ProceedingJoinPoint,
     ) {
         if (dependsOn.isEmpty()) return
 
@@ -154,7 +162,10 @@ class FragmentCacheAspect(
         }
     }
 
-    private fun buildDependencyKey(paramName: String, paramValue: Any?): String {
+    private fun buildDependencyKey(
+        paramName: String,
+        paramValue: Any?,
+    ): String {
         val prefix = "$paramName:"
         return when (paramValue) {
             null -> "${prefix}null"
@@ -163,9 +174,15 @@ class FragmentCacheAspect(
         }
     }
 
-    private fun createDependencyKey(prefix: String, value: Any): String = "$prefix$value"
+    private fun createDependencyKey(
+        prefix: String,
+        value: Any,
+    ): String = "$prefix$value"
 
-    private fun evaluateFragmentKeyExpression(fragmentKey: String, joinPoint: ProceedingJoinPoint): String {
+    private fun evaluateFragmentKeyExpression(
+        fragmentKey: String,
+        joinPoint: ProceedingJoinPoint,
+    ): String {
         if (fragmentKey.isBlank()) {
             return ""
         }
@@ -198,7 +215,7 @@ class FragmentCacheAspect(
 
     private fun buildCacheKeyFromExpression(
         keyExpression: String,
-        joinPoint: ProceedingJoinPoint
+        joinPoint: ProceedingJoinPoint,
     ): String {
         if (keyExpression.isBlank()) {
             return buildDefaultCacheKey(joinPoint)
@@ -226,7 +243,7 @@ class FragmentCacheAspect(
         } catch (e: org.springframework.expression.EvaluationException) {
             // Log the evaluation exception for debugging but fall back to default key generation
             println(
-                "Failed to evaluate fragment cache key expression '$keyExpression': ${e.message}"
+                "Failed to evaluate fragment cache key expression '$keyExpression': ${e.message}",
             )
             buildDefaultCacheKey(joinPoint)
         }

@@ -1,13 +1,11 @@
 package io.cacheflow.spring.annotation
 
-import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Registry for managing CacheFlow configurations. Allows for complex configurations to be defined
  * separately from annotations.
  */
-@Component
 class CacheFlowConfigRegistry {
     private val configurations = ConcurrentHashMap<String, CacheFlowConfig>()
 
@@ -17,7 +15,10 @@ class CacheFlowConfigRegistry {
      * @param name The configuration name
      * @param config The configuration
      */
-    fun register(name: String, config: CacheFlowConfig) {
+    fun register(
+        name: String,
+        config: CacheFlowConfig,
+    ) {
         configurations[name] = config
     }
 
@@ -36,8 +37,10 @@ class CacheFlowConfigRegistry {
      * @param defaultConfig The default configuration to return if not found
      * @return The configuration or default
      */
-    fun getOrDefault(name: String, defaultConfig: CacheFlowConfig): CacheFlowConfig =
-        configurations[name] ?: defaultConfig
+    fun getOrDefault(
+        name: String,
+        defaultConfig: CacheFlowConfig,
+    ): CacheFlowConfig = configurations[name] ?: defaultConfig
 
     /**
      * Checks if a configuration exists.

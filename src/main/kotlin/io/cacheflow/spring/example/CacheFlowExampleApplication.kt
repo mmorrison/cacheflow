@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service
  */
 @SpringBootApplication
 class CacheFlowExampleApplication : CommandLineRunner {
-
     /**
      * Example service demonstrating cache operations.
      */
@@ -40,7 +39,10 @@ class CacheFlowExampleApplication : CommandLineRunner {
          * @param newData The new data value
          */
         @CacheFlowEvict(key = "#id")
-        fun updateData(id: Long, newData: String) {
+        fun updateData(
+            id: Long,
+            newData: String,
+        ) {
             println("Updating data for id: $id with: $newData")
         }
     }
@@ -52,7 +54,8 @@ class CacheFlowExampleApplication : CommandLineRunner {
      */
     override fun run(vararg args: String?) {
         val service =
-            SpringApplication.run(CacheFlowExampleApplication::class.java, *args)
+            SpringApplication
+                .run(CacheFlowExampleApplication::class.java, *args)
                 .getBean(ExampleService::class.java)
 
         println("=== CacheFlow Example ===")

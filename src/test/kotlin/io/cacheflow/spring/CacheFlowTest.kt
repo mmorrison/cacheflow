@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 
 class CacheFlowTest {
-
     @Test
     fun `should cache and retrieve`() {
         val cacheService = CacheFlowServiceImpl()

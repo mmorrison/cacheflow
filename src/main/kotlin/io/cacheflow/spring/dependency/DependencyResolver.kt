@@ -7,14 +7,16 @@ package io.cacheflow.spring.dependency
  * dependent caches when a dependency changes.
  */
 interface DependencyResolver {
-
     /**
      * Tracks a dependency relationship between a cache key and a dependency key.
      *
      * @param cacheKey The cache key that depends on the dependency
      * @param dependencyKey The key that the cache depends on
      */
-    fun trackDependency(cacheKey: String, dependencyKey: String)
+    fun trackDependency(
+        cacheKey: String,
+        dependencyKey: String,
+    )
 
     /**
      * Invalidates all caches that depend on the given dependency key.
@@ -46,7 +48,10 @@ interface DependencyResolver {
      * @param cacheKey The cache key
      * @param dependencyKey The dependency key to remove
      */
-    fun removeDependency(cacheKey: String, dependencyKey: String)
+    fun removeDependency(
+        cacheKey: String,
+        dependencyKey: String,
+    )
 
     /**
      * Clears all dependencies for a cache key.

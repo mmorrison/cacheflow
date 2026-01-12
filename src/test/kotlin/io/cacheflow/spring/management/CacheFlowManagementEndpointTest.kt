@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class CacheFlowManagementEndpointTest {
-
     private lateinit var cacheService: CacheFlowService
     private lateinit var endpoint: CacheFlowManagementEndpoint
 

@@ -23,7 +23,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 class CacheFlowAutoConfigurationTest {
-
     @Test
     fun `should have correct annotations`() {
         val configClass = CacheFlowAutoConfiguration::class.java
@@ -97,7 +96,7 @@ class CacheFlowAutoConfigurationTest {
                 CacheFlowService::class.java,
                 DependencyResolver::class.java,
                 CacheKeyVersioner::class.java,
-                CacheFlowConfigRegistry::class.java
+                CacheFlowConfigRegistry::class.java,
             )
 
         // Check @Bean
@@ -112,7 +111,7 @@ class CacheFlowAutoConfigurationTest {
         val method =
             CacheFlowManagementConfiguration::class.java.getDeclaredMethod(
                 "cacheFlowManagementEndpoint",
-                CacheFlowService::class.java
+                CacheFlowService::class.java,
             )
 
         // Check @Bean
@@ -158,13 +157,16 @@ class CacheFlowAutoConfigurationTest {
 
         // These should not throw exceptions even with null service
         assertDoesNotThrow {
-            aspectConfig.cacheFlowAspect(mock(CacheFlowService::class.java), mockDependencyResolver, mockCacheKeyVersioner, mockConfigRegistry)
+            aspectConfig.cacheFlowAspect(
+                mock(CacheFlowService::class.java),
+                mockDependencyResolver,
+                mockCacheKeyVersioner,
+                mockConfigRegistry,
+            )
             managementConfig.cacheFlowManagementEndpoint(mock(CacheFlowService::class.java))
         }
     }
 
     // Helper function to create mock
-    private fun <T> mock(clazz: Class<T>): T {
-        return org.mockito.Mockito.mock(clazz)
-    }
+    private fun <T> mock(clazz: Class<T>): T = org.mockito.Mockito.mock(clazz)
 }

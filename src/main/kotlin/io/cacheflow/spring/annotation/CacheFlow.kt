@@ -29,7 +29,7 @@ data class CacheFlowConfig(
     val versioned: Boolean = false,
     val timestampField: String = DEFAULT_TIMESTAMP_FIELD,
     /** Configuration name for complex setups using CacheFlowConfigBuilder. */
-    val config: String = ""
+    val config: String = "",
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -85,7 +85,7 @@ data class CacheFlowConfig(
 @Target(
     AnnotationTarget.FUNCTION,
     AnnotationTarget.PROPERTY_GETTER,
-    AnnotationTarget.PROPERTY_SETTER
+    AnnotationTarget.PROPERTY_SETTER,
 )
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CacheFlow(
@@ -102,7 +102,7 @@ annotation class CacheFlow(
     /** The field name to extract timestamp from for versioning. */
     val timestampField: String = DEFAULT_TIMESTAMP_FIELD,
     /** Configuration name for complex setups using CacheFlowConfigBuilder. */
-    val config: String = ""
+    val config: String = "",
 )
 
 /** Alternative annotation name for compatibility. */
@@ -110,7 +110,7 @@ annotation class CacheFlow(
 @Target(
     AnnotationTarget.FUNCTION,
     AnnotationTarget.PROPERTY_GETTER,
-    AnnotationTarget.PROPERTY_SETTER
+    AnnotationTarget.PROPERTY_SETTER,
 )
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CacheFlowCached(
@@ -127,5 +127,5 @@ annotation class CacheFlowCached(
     /** The field name to extract timestamp from for versioning. */
     val timestampField: String = DEFAULT_TIMESTAMP_FIELD,
     /** Configuration name for complex setups using CacheFlowConfigBuilder. */
-    val config: String = ""
+    val config: String = "",
 )

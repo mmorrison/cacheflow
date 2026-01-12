@@ -7,7 +7,6 @@ package io.cacheflow.spring.fragment
  * retrieving, and invalidating individual fragments.
  */
 interface FragmentStorageService {
-
     /**
      * Caches a fragment with the given key and TTL.
      *
@@ -15,7 +14,11 @@ interface FragmentStorageService {
      * @param fragment The fragment content to cache
      * @param ttl Time to live in seconds
      */
-    fun cacheFragment(key: String, fragment: String, ttl: Long)
+    fun cacheFragment(
+        key: String,
+        fragment: String,
+        ttl: Long,
+    )
 
     /**
      * Retrieves a fragment from the cache.

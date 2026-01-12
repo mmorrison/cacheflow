@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class EdgeCachePropertiesTest {
-
     @Test
     fun `should create properties with default values`() {
         val properties = EdgeCacheProperties()
@@ -29,15 +28,15 @@ class EdgeCachePropertiesTest {
             EdgeCacheProperties(
                 enabled = false,
                 cloudflare =
-                EdgeCacheProperties.CloudflareEdgeCacheProperties(
-                    enabled = true,
-                    zoneId = "zone123",
-                    apiToken = "token123",
-                    keyPrefix = "cf:",
-                    defaultTtl = 7200L,
-                    autoPurge = false,
-                    purgeOnEvict = false
-                )
+                    EdgeCacheProperties.CloudflareEdgeCacheProperties(
+                        enabled = true,
+                        zoneId = "zone123",
+                        apiToken = "token123",
+                        keyPrefix = "cf:",
+                        defaultTtl = 7200L,
+                        autoPurge = false,
+                        purgeOnEvict = false,
+                    ),
             )
 
         assertFalse(properties.enabled)
@@ -73,7 +72,7 @@ class EdgeCachePropertiesTest {
                 keyPrefix = "cf:",
                 defaultTtl = 3600L,
                 autoPurge = true,
-                purgeOnEvict = true
+                purgeOnEvict = true,
             )
 
         assertTrue(cloudflare.enabled)
@@ -106,7 +105,7 @@ class EdgeCachePropertiesTest {
                 keyPrefix = "aws:",
                 defaultTtl = 1800L,
                 autoPurge = true,
-                purgeOnEvict = true
+                purgeOnEvict = true,
             )
 
         assertTrue(aws.enabled)
@@ -140,7 +139,7 @@ class EdgeCachePropertiesTest {
                 keyPrefix = "fastly:",
                 defaultTtl = 900L,
                 autoPurge = true,
-                purgeOnEvict = true
+                purgeOnEvict = true,
             )
 
         assertTrue(fastly.enabled)
@@ -167,7 +166,7 @@ class EdgeCachePropertiesTest {
             EdgeCacheProperties.EdgeCacheRateLimitProperties(
                 requestsPerSecond = 100,
                 burstSize = 200,
-                windowSize = 60L
+                windowSize = 60L,
             )
 
         assertEquals(100, rateLimit.requestsPerSecond)
@@ -190,7 +189,7 @@ class EdgeCachePropertiesTest {
             EdgeCacheProperties.EdgeCacheCircuitBreakerProperties(
                 failureThreshold = 10,
                 recoveryTimeout = 120L,
-                halfOpenMaxCalls = 5
+                halfOpenMaxCalls = 5,
             )
 
         assertEquals(10, circuitBreaker.failureThreshold)
@@ -213,7 +212,7 @@ class EdgeCachePropertiesTest {
             EdgeCacheProperties.EdgeCacheBatchingProperties(
                 batchSize = 50,
                 batchTimeout = 5000L,
-                maxConcurrency = 10
+                maxConcurrency = 10,
             )
 
         assertEquals(50, batching.batchSize)
@@ -236,7 +235,7 @@ class EdgeCachePropertiesTest {
             EdgeCacheProperties.EdgeCacheMonitoringProperties(
                 enableMetrics = true,
                 enableTracing = true,
-                logLevel = "DEBUG"
+                logLevel = "DEBUG",
             )
 
         assertTrue(monitoring.enableMetrics)

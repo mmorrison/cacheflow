@@ -15,7 +15,6 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
 class FragmentCacheServiceTest {
-
     @Mock private lateinit var cacheService: CacheFlowService
 
     @Mock private lateinit var tagManager: FragmentTagManager

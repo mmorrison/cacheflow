@@ -23,7 +23,6 @@ import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.Mockito.`when`
 
 class CacheFlowAspectTest {
-
     private lateinit var cacheService: CacheFlowService
     private lateinit var dependencyResolver: DependencyResolver
     private lateinit var cacheKeyVersioner: CacheKeyVersioner
@@ -50,9 +49,7 @@ class CacheFlowAspectTest {
         `when`(joinPoint.signature).thenReturn(methodSignature)
     }
 
-    private fun <T> safeEq(value: T): T {
-        return eq(value) ?: value
-    }
+    private fun <T> safeEq(value: T): T = eq(value) ?: value
 
     @Test
     fun `should proceed when no CacheFlow annotation present`() {
@@ -74,7 +71,7 @@ class CacheFlowAspectTest {
             TestClass::class.java.getDeclaredMethod(
                 "methodWithCacheFlow",
                 String::class.java,
-                String::class.java
+                String::class.java,
             )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
@@ -97,7 +94,7 @@ class CacheFlowAspectTest {
             TestClass::class.java.getDeclaredMethod(
                 "methodWithCacheFlow",
                 String::class.java,
-                String::class.java
+                String::class.java,
             )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
@@ -119,7 +116,7 @@ class CacheFlowAspectTest {
             TestClass::class.java.getDeclaredMethod(
                 "methodWithCacheFlowConfig",
                 String::class.java,
-                String::class.java
+                String::class.java,
             )
 
         val configName = "testConfig"
@@ -147,7 +144,7 @@ class CacheFlowAspectTest {
             TestClass::class.java.getDeclaredMethod(
                 "methodWithCacheFlowConfig",
                 String::class.java,
-                String::class.java
+                String::class.java,
             )
 
         val configName = "testConfig"
@@ -189,7 +186,7 @@ class CacheFlowAspectTest {
             TestClass::class.java.getDeclaredMethod(
                 "methodWithCacheFlowCached",
                 String::class.java,
-                String::class.java
+                String::class.java,
             )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
@@ -226,7 +223,7 @@ class CacheFlowAspectTest {
             TestClass::class.java.getDeclaredMethod(
                 "methodWithCacheFlowEvict",
                 String::class.java,
-                String::class.java
+                String::class.java,
             )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
@@ -249,7 +246,7 @@ class CacheFlowAspectTest {
             TestClass::class.java.getDeclaredMethod(
                 "methodWithCacheFlowEvictBeforeInvocation",
                 String::class.java,
-                String::class.java
+                String::class.java,
             )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
@@ -320,7 +317,7 @@ class CacheFlowAspectTest {
             TestClass::class.java.getDeclaredMethod(
                 "methodWithCacheFlow",
                 String::class.java,
-                String::class.java
+                String::class.java,
             )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
@@ -344,7 +341,7 @@ class CacheFlowAspectTest {
             TestClass::class.java.getDeclaredMethod(
                 "methodWithCustomTtl",
                 String::class.java,
-                String::class.java
+                String::class.java,
             )
 
         `when`(joinPoint.signature).thenReturn(methodSignature)
@@ -364,19 +361,34 @@ class CacheFlowAspectTest {
     // Test class with various annotated methods
     class TestClass {
         @CacheFlow(key = "#arg1 + '_' + #arg2")
-        fun methodWithCacheFlow(arg1: String, arg2: String): String = "result"
+        fun methodWithCacheFlow(
+            arg1: String,
+            arg2: String,
+        ): String = "result"
 
         @CacheFlow(key = "#arg1 + '_' + #arg2", config = "testConfig")
-        fun methodWithCacheFlowConfig(arg1: String, arg2: String): String = "result"
+        fun methodWithCacheFlowConfig(
+            arg1: String,
+            arg2: String,
+        ): String = "result"
 
         @CacheFlowCached(key = "#arg1 + '_' + #arg2")
-        fun methodWithCacheFlowCached(arg1: String, arg2: String): String = "result"
+        fun methodWithCacheFlowCached(
+            arg1: String,
+            arg2: String,
+        ): String = "result"
 
         @CacheFlowEvict(key = "#arg1 + '_' + #arg2")
-        fun methodWithCacheFlowEvict(arg1: String, arg2: String): String = "result"
+        fun methodWithCacheFlowEvict(
+            arg1: String,
+            arg2: String,
+        ): String = "result"
 
         @CacheFlowEvict(key = "#arg1 + '_' + #arg2", beforeInvocation = true)
-        fun methodWithCacheFlowEvictBeforeInvocation(arg1: String, arg2: String): String = "result"
+        fun methodWithCacheFlowEvictBeforeInvocation(
+            arg1: String,
+            arg2: String,
+        ): String = "result"
 
         @CacheFlowEvict(allEntries = true)
         fun methodWithCacheFlowEvictAll(): String = "result"
@@ -388,7 +400,10 @@ class CacheFlowAspectTest {
         fun methodWithBlankKey(): String = "result"
 
         @CacheFlow(key = "#arg1 + '_' + #arg2", ttl = 1800L)
-        fun methodWithCustomTtl(arg1: String, arg2: String): String = "result"
+        fun methodWithCustomTtl(
+            arg1: String,
+            arg2: String,
+        ): String = "result"
 
         fun methodWithoutAnnotation(): String = "result"
     }

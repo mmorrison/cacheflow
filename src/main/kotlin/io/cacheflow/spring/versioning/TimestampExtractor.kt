@@ -9,7 +9,6 @@ import java.time.temporal.TemporalAccessor
  * versioned cache keys in Russian Doll caching.
  */
 interface TimestampExtractor {
-
     /**
      * Extracts a timestamp from an object.
      *

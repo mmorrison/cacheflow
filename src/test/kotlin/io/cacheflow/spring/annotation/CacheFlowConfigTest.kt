@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class CacheFlowConfigTest {
-
     @Test
     fun `should create config with default values`() {
         val config = CacheFlowConfig()
@@ -34,7 +33,7 @@ class CacheFlowConfigTest {
                 tags = arrayOf("tag1", "tag2"),
                 condition = "true",
                 unless = "false",
-                sync = true
+                sync = true,
             )
 
         assertEquals("test-key", config.key)
@@ -58,7 +57,7 @@ class CacheFlowConfigTest {
                 tags = arrayOf("tag1", "tag2"),
                 condition = "true",
                 unless = "false",
-                sync = true
+                sync = true,
             )
 
         val config2 =
@@ -70,7 +69,7 @@ class CacheFlowConfigTest {
                 tags = arrayOf("tag1", "tag2"),
                 condition = "true",
                 unless = "false",
-                sync = true
+                sync = true,
             )
 
         assertEquals(config1, config2)
@@ -131,7 +130,7 @@ class CacheFlowConfigTest {
                 tags = arrayOf("tag1", "tag2"),
                 condition = "true",
                 unless = "false",
-                sync = true
+                sync = true,
             )
 
         val hashCode1 = config.hashCode()
