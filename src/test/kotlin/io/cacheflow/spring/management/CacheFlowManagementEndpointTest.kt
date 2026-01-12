@@ -1,5 +1,6 @@
 package io.cacheflow.spring.management
 
+import io.cacheflow.spring.config.CacheFlowProperties
 import io.cacheflow.spring.service.CacheFlowService
 import io.cacheflow.spring.service.impl.CacheFlowServiceImpl
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -14,7 +15,7 @@ class CacheFlowManagementEndpointTest {
 
     @BeforeEach
     fun setUp() {
-        cacheService = CacheFlowServiceImpl()
+        cacheService = CacheFlowServiceImpl(CacheFlowProperties())
         endpoint = CacheFlowManagementEndpoint(cacheService)
     }
 

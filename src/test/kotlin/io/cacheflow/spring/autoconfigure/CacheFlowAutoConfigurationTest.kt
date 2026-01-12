@@ -2,11 +2,14 @@ package io.cacheflow.spring.autoconfigure
 
 import io.cacheflow.spring.annotation.CacheFlowConfigRegistry
 import io.cacheflow.spring.aspect.CacheFlowAspect
+import io.cacheflow.spring.config.CacheFlowProperties
 import io.cacheflow.spring.dependency.DependencyResolver
+import io.cacheflow.spring.edge.service.EdgeCacheIntegrationService
 import io.cacheflow.spring.management.CacheFlowManagementEndpoint
 import io.cacheflow.spring.service.CacheFlowService
 import io.cacheflow.spring.service.impl.CacheFlowServiceImpl
 import io.cacheflow.spring.versioning.CacheKeyVersioner
+import io.micrometer.core.instrument.MeterRegistry
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -21,6 +24,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.redis.core.RedisTemplate
 
 class CacheFlowAutoConfigurationTest {
     @Test
@@ -48,7 +52,7 @@ class CacheFlowAutoConfigurationTest {
     @Test
     fun `should create cacheFlowService bean`() {
         val config = CacheFlowCoreConfiguration()
-        val service = config.cacheFlowService()
+        val service = config.cacheFlowService(CacheFlowProperties(), null, null, null)
 
         assertNotNull(service)
         assertTrue(service is CacheFlowServiceImpl)
@@ -79,7 +83,14 @@ class CacheFlowAutoConfigurationTest {
 
     @Test
     fun `cacheFlowService method should have correct annotations`() {
-        val method = CacheFlowCoreConfiguration::class.java.getDeclaredMethod("cacheFlowService")
+        val method =
+            CacheFlowCoreConfiguration::class.java.getDeclaredMethod(
+                "cacheFlowService",
+                CacheFlowProperties::class.java,
+                RedisTemplate::class.java,
+                EdgeCacheIntegrationService::class.java,
+                MeterRegistry::class.java,
+            )
 
         // Check @Bean
         assertTrue(method.isAnnotationPresent(Bean::class.java))
@@ -134,8 +145,8 @@ class CacheFlowAutoConfigurationTest {
         val mockCacheKeyVersioner = mock(CacheKeyVersioner::class.java)
         val mockConfigRegistry = mock(CacheFlowConfigRegistry::class.java)
 
-        val service1 = coreConfig.cacheFlowService()
-        val service2 = coreConfig.cacheFlowService()
+        val service1 = coreConfig.cacheFlowService(CacheFlowProperties(), null, null, null)
+        val service2 = coreConfig.cacheFlowService(CacheFlowProperties(), null, null, null)
         val aspect1 = aspectConfig.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner, mockConfigRegistry)
         val aspect2 = aspectConfig.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner, mockConfigRegistry)
         val endpoint1 = managementConfig.cacheFlowManagementEndpoint(mockService)

@@ -26,5 +26,6 @@ import org.springframework.context.annotation.Import
     CacheFlowFragmentConfiguration::class,
     CacheFlowAspectConfiguration::class,
     CacheFlowManagementConfiguration::class,
+    CacheFlowRedisConfiguration::class,
 )
 class CacheFlowAutoConfiguration

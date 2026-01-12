@@ -1,16 +1,22 @@
 package io.cacheflow.spring.autoconfigure
 
 import io.cacheflow.spring.annotation.CacheFlowConfigRegistry
+import io.cacheflow.spring.config.CacheFlowProperties
 import io.cacheflow.spring.dependency.CacheDependencyTracker
 import io.cacheflow.spring.dependency.DependencyResolver
+import io.cacheflow.spring.edge.service.EdgeCacheIntegrationService
 import io.cacheflow.spring.service.CacheFlowService
 import io.cacheflow.spring.service.impl.CacheFlowServiceImpl
 import io.cacheflow.spring.versioning.CacheKeyVersioner
 import io.cacheflow.spring.versioning.TimestampExtractor
 import io.cacheflow.spring.versioning.impl.DefaultTimestampExtractor
+import io.micrometer.core.instrument.MeterRegistry
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.redis.core.RedisTemplate
 
 /**
  * Core configuration for CacheFlow services.
@@ -23,11 +29,20 @@ class CacheFlowCoreConfiguration {
     /**
      * Creates the CacheFlow service bean.
      *
+     * @param properties Cache configuration properties
+     * @param redisTemplate Optional Redis template for distributed caching
+     * @param edgeCacheService Optional Edge cache service for edge integration
+     * @param meterRegistry Optional MeterRegistry for metrics
      * @return The CacheFlow service implementation
      */
     @Bean
     @ConditionalOnMissingBean
-    fun cacheFlowService(): CacheFlowService = CacheFlowServiceImpl()
+    fun cacheFlowService(
+        properties: CacheFlowProperties,
+        @Autowired(required = false) @Qualifier("cacheFlowRedisTemplate") redisTemplate: RedisTemplate<String, Any>?,
+        @Autowired(required = false) edgeCacheService: EdgeCacheIntegrationService?,
+        @Autowired(required = false) meterRegistry: MeterRegistry?,
+    ): CacheFlowService = CacheFlowServiceImpl(properties, redisTemplate, edgeCacheService, meterRegistry)
 
     /**
      * Creates the dependency resolver bean.
