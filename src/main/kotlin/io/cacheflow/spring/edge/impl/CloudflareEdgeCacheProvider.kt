@@ -2,18 +2,11 @@ package io.cacheflow.spring.edge.impl
 
 import io.cacheflow.spring.edge.BatchingConfig
 import io.cacheflow.spring.edge.CircuitBreakerConfig
-import io.cacheflow.spring.edge.EdgeCacheConfiguration
-import io.cacheflow.spring.edge.EdgeCacheCost
 import io.cacheflow.spring.edge.EdgeCacheOperation
-import io.cacheflow.spring.edge.EdgeCacheProvider
 import io.cacheflow.spring.edge.EdgeCacheResult
 import io.cacheflow.spring.edge.EdgeCacheStatistics
 import io.cacheflow.spring.edge.MonitoringConfig
 import io.cacheflow.spring.edge.RateLimit
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.web.reactive.function.client.WebClient
@@ -27,10 +20,9 @@ class CloudflareEdgeCacheProvider(
     private val apiToken: String,
     private val keyPrefix: String = "rd-cache:",
     private val baseUrl: String = "https://api.cloudflare.com/client/v4/zones/$zoneId",
-) : EdgeCacheProvider {
+) : AbstractEdgeCacheProvider() {
     override val providerName: String = "cloudflare"
-
-    private val costPerPurge = 0.001 // $0.001 per purge operation
+    override val costPerOperation = 0.001 // $0.001 per purge operation
 
     override suspend fun isHealthy(): Boolean =
         try {
@@ -61,39 +53,21 @@ class CloudflareEdgeCacheProvider(
                     .bodyToMono(CloudflarePurgeResponse::class.java)
                     .awaitSingle()
 
-            val latency = Duration.between(startTime, Instant.now())
-            val cost =
-                EdgeCacheCost(
-                    operation = EdgeCacheOperation.PURGE_URL,
-                    costPerOperation = costPerPurge,
-                    totalCost = costPerPurge,
-                )
-
-            EdgeCacheResult.success(
-                provider = providerName,
+            buildSuccessResult(
                 operation = EdgeCacheOperation.PURGE_URL,
-                url = url,
+                startTime = startTime,
                 purgedCount = 1,
-                cost = cost,
-                latency = latency,
+                url = url,
                 metadata = mapOf("cloudflare_response" to response, "zone_id" to zoneId),
             )
         } catch (e: Exception) {
-            EdgeCacheResult.failure(
-                provider = providerName,
+            buildFailureResult(
                 operation = EdgeCacheOperation.PURGE_URL,
                 error = e,
                 url = url,
             )
         }
     }
-
-    override fun purgeUrls(urls: Flow<String>): Flow<EdgeCacheResult> =
-        flow {
-            urls
-                .buffer(100) // Buffer up to 100 URLs
-                .collect { url -> emit(purgeUrl(url)) }
-        }
 
     override suspend fun purgeByTag(tag: String): EdgeCacheResult {
         val startTime = Instant.now()
@@ -110,26 +84,15 @@ class CloudflareEdgeCacheProvider(
                     .bodyToMono(CloudflarePurgeResponse::class.java)
                     .awaitSingle()
 
-            val latency = Duration.between(startTime, Instant.now())
-            val cost =
-                EdgeCacheCost(
-                    operation = EdgeCacheOperation.PURGE_TAG,
-                    costPerOperation = costPerPurge,
-                    totalCost = costPerPurge,
-                )
-
-            EdgeCacheResult.success(
-                provider = providerName,
+            buildSuccessResult(
                 operation = EdgeCacheOperation.PURGE_TAG,
-                tag = tag,
+                startTime = startTime,
                 purgedCount = response.result?.purgedCount ?: 0,
-                cost = cost,
-                latency = latency,
+                tag = tag,
                 metadata = mapOf("cloudflare_response" to response, "zone_id" to zoneId),
             )
         } catch (e: Exception) {
-            EdgeCacheResult.failure(
-                provider = providerName,
+            buildFailureResult(
                 operation = EdgeCacheOperation.PURGE_TAG,
                 error = e,
                 tag = tag,
@@ -152,91 +115,67 @@ class CloudflareEdgeCacheProvider(
                     .bodyToMono(CloudflarePurgeResponse::class.java)
                     .awaitSingle()
 
-            val latency = Duration.between(startTime, Instant.now())
-            val cost =
-                EdgeCacheCost(
-                    operation = EdgeCacheOperation.PURGE_ALL,
-                    costPerOperation = costPerPurge,
-                    totalCost = costPerPurge,
-                )
-
-            EdgeCacheResult.success(
-                provider = providerName,
+            buildSuccessResult(
                 operation = EdgeCacheOperation.PURGE_ALL,
+                startTime = startTime,
                 purgedCount = response.result?.purgedCount ?: 0,
-                cost = cost,
-                latency = latency,
                 metadata = mapOf("cloudflare_response" to response, "zone_id" to zoneId),
             )
         } catch (e: Exception) {
-            EdgeCacheResult.failure(
-                provider = providerName,
+            buildFailureResult(
                 operation = EdgeCacheOperation.PURGE_ALL,
                 error = e,
             )
         }
     }
 
-    override suspend fun getStatistics(): EdgeCacheStatistics =
-        try {
-            val response =
-                webClient
-                    .get()
-                    .uri("$baseUrl/analytics/dashboard")
-                    .header("Authorization", "Bearer $apiToken")
-                    .retrieve()
-                    .bodyToMono(CloudflareAnalyticsResponse::class.java)
-                    .awaitSingle()
+    override suspend fun getStatisticsFromProvider(): EdgeCacheStatistics {
+        val response =
+            webClient
+                .get()
+                .uri("$baseUrl/analytics/dashboard")
+                .header("Authorization", "Bearer $apiToken")
+                .retrieve()
+                .bodyToMono(CloudflareAnalyticsResponse::class.java)
+                .awaitSingle()
 
-            EdgeCacheStatistics(
-                provider = providerName,
-                totalRequests = response.totalRequests ?: 0,
-                successfulRequests = response.successfulRequests ?: 0,
-                failedRequests = response.failedRequests ?: 0,
-                averageLatency = Duration.ofMillis(response.averageLatency ?: 0),
-                totalCost = response.totalCost ?: 0.0,
-                cacheHitRate = response.cacheHitRate,
-            )
-        } catch (e: Exception) {
-            // Return default statistics if API call fails
-            EdgeCacheStatistics(
-                provider = providerName,
-                totalRequests = 0,
-                successfulRequests = 0,
-                failedRequests = 0,
-                averageLatency = Duration.ZERO,
-                totalCost = 0.0,
-            )
-        }
-
-    override fun getConfiguration(): EdgeCacheConfiguration =
-        EdgeCacheConfiguration(
+        return EdgeCacheStatistics(
             provider = providerName,
-            enabled = true,
-            rateLimit =
-                RateLimit(
-                    requestsPerSecond = 10,
-                    burstSize = 20,
-                    windowSize = Duration.ofMinutes(1),
-                ),
-            circuitBreaker =
-                CircuitBreakerConfig(
-                    failureThreshold = 5,
-                    recoveryTimeout = Duration.ofMinutes(1),
-                    halfOpenMaxCalls = 3,
-                ),
-            batching =
-                BatchingConfig(
-                    batchSize = 100,
-                    batchTimeout = Duration.ofSeconds(5),
-                    maxConcurrency = 10,
-                ),
-            monitoring =
-                MonitoringConfig(
-                    enableMetrics = true,
-                    enableTracing = true,
-                    logLevel = "INFO",
-                ),
+            totalRequests = response.totalRequests ?: 0,
+            successfulRequests = response.successfulRequests ?: 0,
+            failedRequests = response.failedRequests ?: 0,
+            averageLatency = Duration.ofMillis(response.averageLatency ?: 0),
+            totalCost = response.totalCost ?: 0.0,
+            cacheHitRate = response.cacheHitRate,
+        )
+    }
+
+    override fun createRateLimit(): RateLimit =
+        RateLimit(
+            requestsPerSecond = 10,
+            burstSize = 20,
+            windowSize = Duration.ofMinutes(1),
+        )
+
+    override fun createCircuitBreaker(): CircuitBreakerConfig =
+        CircuitBreakerConfig(
+            failureThreshold = 5,
+            recoveryTimeout = Duration.ofMinutes(1),
+            halfOpenMaxCalls = 3,
+        )
+
+    override fun createBatchingConfig(): BatchingConfig =
+        BatchingConfig(
+            batchSize = 100,
+            batchTimeout = Duration.ofSeconds(5),
+            maxConcurrency = 10,
+        )
+
+    override fun createMonitoringConfig(): MonitoringConfig =
+        MonitoringConfig(
+            enableMetrics = true,
+            enableTracing = true,
+            logLevel = "INFO",
         )
 }
 

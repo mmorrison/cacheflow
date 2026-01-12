@@ -2,18 +2,10 @@ package io.cacheflow.spring.edge.impl
 
 import io.cacheflow.spring.edge.BatchingConfig
 import io.cacheflow.spring.edge.CircuitBreakerConfig
-import io.cacheflow.spring.edge.EdgeCacheConfiguration
-import io.cacheflow.spring.edge.EdgeCacheCost
 import io.cacheflow.spring.edge.EdgeCacheOperation
-import io.cacheflow.spring.edge.EdgeCacheProvider
 import io.cacheflow.spring.edge.EdgeCacheResult
-import io.cacheflow.spring.edge.EdgeCacheStatistics
 import io.cacheflow.spring.edge.MonitoringConfig
 import io.cacheflow.spring.edge.RateLimit
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 import software.amazon.awssdk.services.cloudfront.CloudFrontClient
 import software.amazon.awssdk.services.cloudfront.model.CreateInvalidationRequest
 import software.amazon.awssdk.services.cloudfront.model.GetDistributionRequest
@@ -27,10 +19,9 @@ class AwsCloudFrontEdgeCacheProvider(
     private val cloudFrontClient: CloudFrontClient,
     private val distributionId: String,
     private val keyPrefix: String = "rd-cache:",
-) : EdgeCacheProvider {
+) : AbstractEdgeCacheProvider() {
     override val providerName: String = "aws-cloudfront"
-
-    private val costPerInvalidation = 0.005 // $0.005 per invalidation
+    override val costPerOperation = 0.005 // $0.005 per invalidation
 
     override suspend fun isHealthy(): Boolean =
         try {
@@ -66,21 +57,11 @@ class AwsCloudFrontEdgeCacheProvider(
                         ).build(),
                 )
 
-            val latency = Duration.between(startTime, Instant.now())
-            val cost =
-                EdgeCacheCost(
-                    operation = EdgeCacheOperation.PURGE_URL,
-                    costPerOperation = costPerInvalidation,
-                    totalCost = costPerInvalidation,
-                )
-
-            EdgeCacheResult.success(
-                provider = providerName,
+            buildSuccessResult(
                 operation = EdgeCacheOperation.PURGE_URL,
-                url = url,
+                startTime = startTime,
                 purgedCount = 1,
-                cost = cost,
-                latency = latency,
+                url = url,
                 metadata =
                     mapOf(
                         "invalidation_id" to response.invalidation().id(),
@@ -89,21 +70,13 @@ class AwsCloudFrontEdgeCacheProvider(
                     ),
             )
         } catch (e: Exception) {
-            EdgeCacheResult.failure(
-                provider = providerName,
+            buildFailureResult(
                 operation = EdgeCacheOperation.PURGE_URL,
                 error = e,
                 url = url,
             )
         }
     }
-
-    override fun purgeUrls(urls: Flow<String>): Flow<EdgeCacheResult> =
-        flow {
-            urls
-                .buffer(100) // Buffer up to 100 URLs
-                .collect { url -> emit(purgeUrl(url)) }
-        }
 
     override suspend fun purgeByTag(tag: String): EdgeCacheResult {
         val startTime = Instant.now()
@@ -114,11 +87,11 @@ class AwsCloudFrontEdgeCacheProvider(
             val urls = getUrlsByTag(tag)
 
             if (urls.isEmpty()) {
-                return EdgeCacheResult.success(
-                    provider = providerName,
+                return buildSuccessResult(
                     operation = EdgeCacheOperation.PURGE_TAG,
-                    tag = tag,
+                    startTime = startTime,
                     purgedCount = 0,
+                    tag = tag,
                     metadata = mapOf("message" to "No URLs found for tag"),
                 )
             }
@@ -143,21 +116,11 @@ class AwsCloudFrontEdgeCacheProvider(
                         ).build(),
                 )
 
-            val latency = Duration.between(startTime, Instant.now())
-            val cost =
-                EdgeCacheCost(
-                    operation = EdgeCacheOperation.PURGE_TAG,
-                    costPerOperation = costPerInvalidation,
-                    totalCost = costPerInvalidation * urls.size,
-                )
-
-            EdgeCacheResult.success(
-                provider = providerName,
+            buildSuccessResult(
                 operation = EdgeCacheOperation.PURGE_TAG,
-                tag = tag,
+                startTime = startTime,
                 purgedCount = urls.size.toLong(),
-                cost = cost,
-                latency = latency,
+                tag = tag,
                 metadata =
                     mapOf(
                         "invalidation_id" to response.invalidation().id(),
@@ -167,8 +130,7 @@ class AwsCloudFrontEdgeCacheProvider(
                     ),
             )
         } catch (e: Exception) {
-            EdgeCacheResult.failure(
-                provider = providerName,
+            buildFailureResult(
                 operation = EdgeCacheOperation.PURGE_TAG,
                 error = e,
                 tag = tag,
@@ -200,20 +162,10 @@ class AwsCloudFrontEdgeCacheProvider(
                         ).build(),
                 )
 
-            val latency = Duration.between(startTime, Instant.now())
-            val cost =
-                EdgeCacheCost(
-                    operation = EdgeCacheOperation.PURGE_ALL,
-                    costPerOperation = costPerInvalidation,
-                    totalCost = costPerInvalidation,
-                )
-
-            EdgeCacheResult.success(
-                provider = providerName,
+            buildSuccessResult(
                 operation = EdgeCacheOperation.PURGE_ALL,
+                startTime = startTime,
                 purgedCount = Long.MAX_VALUE, // All entries
-                cost = cost,
-                latency = latency,
                 metadata =
                     mapOf(
                         "invalidation_id" to response.invalidation().id(),
@@ -222,64 +174,39 @@ class AwsCloudFrontEdgeCacheProvider(
                     ),
             )
         } catch (e: Exception) {
-            EdgeCacheResult.failure(
-                provider = providerName,
+            buildFailureResult(
                 operation = EdgeCacheOperation.PURGE_ALL,
                 error = e,
             )
         }
     }
 
-    override suspend fun getStatistics(): EdgeCacheStatistics =
-        try {
-            EdgeCacheStatistics(
-                provider = providerName,
-                totalRequests = 0, // CloudFront doesn't provide this via API
-                successfulRequests = 0,
-                failedRequests = 0,
-                averageLatency = Duration.ZERO,
-                totalCost = 0.0,
-                cacheHitRate = null,
-            )
-        } catch (e: Exception) {
-            EdgeCacheStatistics(
-                provider = providerName,
-                totalRequests = 0,
-                successfulRequests = 0,
-                failedRequests = 0,
-                averageLatency = Duration.ZERO,
-                totalCost = 0.0,
-            )
-        }
+    override fun createRateLimit(): RateLimit =
+        RateLimit(
+            requestsPerSecond = 5, // CloudFront has stricter limits
+            burstSize = 10,
+            windowSize = Duration.ofMinutes(1),
+        )
 
-    override fun getConfiguration(): EdgeCacheConfiguration =
-        EdgeCacheConfiguration(
-            provider = providerName,
-            enabled = true,
-            rateLimit =
-                RateLimit(
-                    requestsPerSecond = 5, // CloudFront has stricter limits
-                    burstSize = 10,
-                    windowSize = Duration.ofMinutes(1),
-                ),
-            circuitBreaker =
-                CircuitBreakerConfig(
-                    failureThreshold = 3,
-                    recoveryTimeout = Duration.ofMinutes(2),
-                    halfOpenMaxCalls = 2,
-                ),
-            batching =
-                BatchingConfig(
-                    batchSize = 50, // CloudFront has lower batch limits
-                    batchTimeout = Duration.ofSeconds(10),
-                    maxConcurrency = 5,
-                ),
-            monitoring =
-                MonitoringConfig(
-                    enableMetrics = true,
-                    enableTracing = true,
-                    logLevel = "INFO",
-                ),
+    override fun createCircuitBreaker(): CircuitBreakerConfig =
+        CircuitBreakerConfig(
+            failureThreshold = 3,
+            recoveryTimeout = Duration.ofMinutes(2),
+            halfOpenMaxCalls = 2,
+        )
+
+    override fun createBatchingConfig(): BatchingConfig =
+        BatchingConfig(
+            batchSize = 50, // CloudFront has lower batch limits
+            batchTimeout = Duration.ofSeconds(10),
+            maxConcurrency = 5,
+        )
+
+    override fun createMonitoringConfig(): MonitoringConfig =
+        MonitoringConfig(
+            enableMetrics = true,
+            enableTracing = true,
+            logLevel = "INFO",
         )
 
     /** Get URLs by tag (requires external storage/mapping) This is a placeholder implementation */
