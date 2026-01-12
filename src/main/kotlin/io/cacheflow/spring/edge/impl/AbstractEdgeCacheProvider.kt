@@ -12,7 +12,6 @@ import io.cacheflow.spring.edge.MonitoringConfig
 import io.cacheflow.spring.edge.RateLimit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import java.time.Duration
 import java.time.Instant

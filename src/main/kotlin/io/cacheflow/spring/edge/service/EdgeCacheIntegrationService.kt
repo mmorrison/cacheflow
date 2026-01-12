@@ -18,16 +18,16 @@ class EdgeCacheIntegrationService(
     private val edgeCacheManager: EdgeCacheManager,
 ) {
     /** Purge a single URL from edge cache */
-    suspend fun purgeUrl(url: String): Flow<EdgeCacheResult> = edgeCacheManager.purgeUrl(url)
+    fun purgeUrl(url: String): Flow<EdgeCacheResult> = edgeCacheManager.purgeUrl(url)
 
     /** Purge multiple URLs from edge cache */
     fun purgeUrls(urls: List<String>): Flow<EdgeCacheResult> = edgeCacheManager.purgeUrls(urls.asFlow())
 
     /** Purge URLs by tag from edge cache */
-    suspend fun purgeByTag(tag: String): Flow<EdgeCacheResult> = edgeCacheManager.purgeByTag(tag)
+    fun purgeByTag(tag: String): Flow<EdgeCacheResult> = edgeCacheManager.purgeByTag(tag)
 
     /** Purge all cache entries from edge cache */
-    suspend fun purgeAll(): Flow<EdgeCacheResult> = edgeCacheManager.purgeAll()
+    fun purgeAll(): Flow<EdgeCacheResult> = edgeCacheManager.purgeAll()
 
     /** Build a URL for a given cache key and base URL */
     fun buildUrl(
@@ -45,7 +45,7 @@ class EdgeCacheIntegrationService(
     ): List<String> = cacheKeys.map { buildUrl(baseUrl, it) }
 
     /** Purge cache key from edge cache using base URL */
-    suspend fun purgeCacheKey(
+    fun purgeCacheKey(
         baseUrl: String,
         cacheKey: String,
     ): Flow<EdgeCacheResult> {

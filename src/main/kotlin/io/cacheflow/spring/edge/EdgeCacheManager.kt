@@ -8,7 +8,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import org.springframework.stereotype.Component
@@ -26,6 +25,10 @@ class EdgeCacheManager(
     private val configuration: EdgeCacheConfiguration,
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
 ) {
+    companion object {
+        private const val MSG_EDGE_CACHING_DISABLED = "Edge caching is disabled"
+        private const val MSG_RATE_LIMIT_EXCEEDED = "Rate limit exceeded"
+    }
     private val rateLimiter =
         EdgeCacheRateLimiter(configuration.rateLimit ?: RateLimit(10, 20), scope)
 
@@ -37,14 +40,14 @@ class EdgeCacheManager(
     private val metrics = EdgeCacheMetrics()
 
     /** Purge a single URL from all enabled providers */
-    suspend fun purgeUrl(url: String): Flow<EdgeCacheResult> =
+    fun purgeUrl(url: String): Flow<EdgeCacheResult> =
         flow {
             if (!configuration.enabled) {
                 emit(
                     EdgeCacheResult.failure(
                         "disabled",
                         EdgeCacheOperation.PURGE_URL,
-                        IllegalStateException("Edge caching is disabled"),
+                        IllegalStateException(MSG_EDGE_CACHING_DISABLED),
                     ),
                 )
                 return@flow
@@ -59,7 +62,7 @@ class EdgeCacheManager(
                         EdgeCacheResult.failure(
                             "rate_limited",
                             EdgeCacheOperation.PURGE_URL,
-                            RateLimitExceededException("Rate limit exceeded"),
+                            RateLimitExceededException(MSG_RATE_LIMIT_EXCEEDED),
                         ),
                     )
                     return@flow
@@ -115,14 +118,14 @@ class EdgeCacheManager(
         }
 
     /** Purge by tag from all enabled providers */
-    suspend fun purgeByTag(tag: String): Flow<EdgeCacheResult> =
+    fun purgeByTag(tag: String): Flow<EdgeCacheResult> =
         flow {
             if (!configuration.enabled) {
                 emit(
                     EdgeCacheResult.failure(
                         "disabled",
                         EdgeCacheOperation.PURGE_TAG,
-                        IllegalStateException("Edge caching is disabled"),
+                        IllegalStateException(MSG_EDGE_CACHING_DISABLED),
                     ),
                 )
                 return@flow
@@ -137,7 +140,7 @@ class EdgeCacheManager(
                         EdgeCacheResult.failure(
                             "rate_limited",
                             EdgeCacheOperation.PURGE_TAG,
-                            RateLimitExceededException("Rate limit exceeded"),
+                            RateLimitExceededException(MSG_RATE_LIMIT_EXCEEDED),
                         ),
                     )
                     return@flow
@@ -167,14 +170,14 @@ class EdgeCacheManager(
         }
 
     /** Purge all cache entries from all enabled providers */
-    suspend fun purgeAll(): Flow<EdgeCacheResult> =
+    fun purgeAll(): Flow<EdgeCacheResult> =
         flow {
             if (!configuration.enabled) {
                 emit(
                     EdgeCacheResult.failure(
                         "disabled",
                         EdgeCacheOperation.PURGE_ALL,
-                        IllegalStateException("Edge caching is disabled"),
+                        IllegalStateException(MSG_EDGE_CACHING_DISABLED),
                     ),
                 )
                 return@flow
@@ -189,7 +192,7 @@ class EdgeCacheManager(
                         EdgeCacheResult.failure(
                             "rate_limited",
                             EdgeCacheOperation.PURGE_ALL,
-                            RateLimitExceededException("Rate limit exceeded"),
+                            RateLimitExceededException(MSG_RATE_LIMIT_EXCEEDED),
                         ),
                     )
                     return@flow
