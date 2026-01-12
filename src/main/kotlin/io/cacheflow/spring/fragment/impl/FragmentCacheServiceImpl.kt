@@ -24,9 +24,10 @@ class FragmentCacheServiceImpl(
         key: String,
         fragment: String,
         ttl: Long,
+        tags: Set<String>,
     ) {
         val fragmentKey = buildFragmentKey(key)
-        cacheService.put(fragmentKey, fragment, ttl)
+        cacheService.put(fragmentKey, fragment, ttl, tags)
     }
 
     override fun getFragment(key: String): String? {
@@ -51,8 +52,9 @@ class FragmentCacheServiceImpl(
     }
 
     override fun invalidateFragmentsByTag(tag: String) {
+        cacheService.evictByTags(tag)
         val fragmentKeys = tagManager.getFragmentsByTag(tag).toList()
-        fragmentKeys.forEach { key -> invalidateFragment(key) }
+        fragmentKeys.forEach { key -> tagManager.removeFragmentFromAllTags(key) }
     }
 
     override fun invalidateAllFragments() {

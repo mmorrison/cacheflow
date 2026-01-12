@@ -26,4 +26,6 @@ annotation class CacheFlowComposition(
     val template: String = "",
     /** Time to live for the composed result in seconds. */
     val ttl: Long = -1,
+    /** Array of tags for group-based eviction. */
+    val tags: Array<String> = [],
 )

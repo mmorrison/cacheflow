@@ -1,6 +1,9 @@
-# Russian Doll Caching Implementation Plan (Level 3 Upgrade)
+# Distributed & Reactive CacheFlow Strategy
+
+> **Goal:** Elevate CacheFlow to Level 3 maturity by implementing robust distributed state management, real-time coordination, and operational excellence features.
 
 ## 📋 Strategy: "Distributed & Reactive"
+
 We will focus on making the Russian Doll pattern robust in a distributed environment by moving state from local memory to Redis and implementing active communication between instances.
 
 ---
@@ -49,6 +52,15 @@ We will focus on making the Russian Doll pattern robust in a distributed environ
     *   **Interface:** `interface CacheWarmer { fun warm(cache: CacheFlowService) }`.
     *   **Runner:** A `CommandLineRunner` that auto-detects all `CacheWarmer` beans and executes them on startup.
     *   **Config:** Add properties `cacheflow.warming.enabled` (default `true`) and `cacheflow.warming.parallelism`.
+
+#### 5. Tag-Based Cache Eviction (❌ -> ✅)
+*   **Problem:** `evictByTags()` currently clears the entire local cache (aggressive) and doesn't support tag eviction for Redis. Only Edge cache properly supports tag-based eviction.
+*   **Solution:** Implement proper tag tracking for Local and Redis caches.
+    *   **Options:**
+        *   Add tag metadata to `CacheEntry` and maintain a tag→keys index in both local and Redis storage.
+        *   Alternatively, document current behavior as a known limitation and make it configurable.
+    *   **Current Workaround:** Local cache calls `cache.clear()` on tag eviction to ensure consistency (safe but aggressive).
+    *   **Location:** `CacheFlowServiceImpl.evictByTags()` (line 190)
 
 ---
 

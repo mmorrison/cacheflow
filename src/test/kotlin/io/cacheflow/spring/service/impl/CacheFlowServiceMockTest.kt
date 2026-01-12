@@ -24,6 +24,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.core.ValueOperations
+import org.springframework.data.redis.core.SetOperations
 import java.util.concurrent.TimeUnit
 
 class CacheFlowServiceMockTest {
@@ -33,6 +34,9 @@ class CacheFlowServiceMockTest {
 
     @Mock
     private lateinit var valueOperations: ValueOperations<String, Any>
+    
+    @Mock
+    private lateinit var setOperations: SetOperations<String, Any>
 
     @Mock
     private lateinit var edgeCacheService: EdgeCacheIntegrationService
@@ -71,6 +75,7 @@ class CacheFlowServiceMockTest {
 
         // Setup Redis Mocks
         `when`(redisTemplate.opsForValue()).thenReturn(valueOperations)
+        `when`(redisTemplate.opsForSet()).thenReturn(setOperations)
 
         // Setup Metrics Mocks
         `when`(meterRegistry.counter("cacheflow.local.hits")).thenReturn(localHitCounter)
@@ -81,10 +86,6 @@ class CacheFlowServiceMockTest {
         `when`(meterRegistry.counter("cacheflow.evictions")).thenReturn(evictCounter)
 
         // Setup Edge Mocks
-        // Note: Since these launch coroutines, we might not see the result immediately in unit tests without some waiting/concurrency handling,
-        // but verify calls should work if we ensure the scope is active or we spy/verify the call happened.
-        // However, CacheFlowServiceImpl launches a new coroutine on a private scope. 
-        // We can verify the service call was made.
         `when`(edgeCacheService.purgeCacheKey(anyString(), anyString())).thenReturn(
             flowOf(EdgeCacheResult.success("test", EdgeCacheOperation.PURGE_URL))
         )
@@ -117,7 +118,7 @@ class CacheFlowServiceMockTest {
     @Test
     fun `get should check Redis on local miss`() {
         val key = "key1"
-        val redisKey = "test-prefix:key1"
+        val redisKey = "test-prefix:data:key1"
         val value = "redis-value"
 
         `when`(valueOperations.get(redisKey)).thenReturn(value)
@@ -135,7 +136,7 @@ class CacheFlowServiceMockTest {
     @Test
     fun `get should populate local cache on Redis hit`() {
         val key = "key1"
-        val redisKey = "test-prefix:key1"
+        val redisKey = "test-prefix:data:key1"
         val value = "redis-value"
 
         `when`(valueOperations.get(redisKey)).thenReturn(value)
@@ -155,7 +156,7 @@ class CacheFlowServiceMockTest {
     @Test
     fun `get should return null on Redis miss`() {
         val key = "missing"
-        val redisKey = "test-prefix:missing"
+        val redisKey = "test-prefix:data:missing"
 
         `when`(valueOperations.get(redisKey)).thenReturn(null)
 
@@ -168,7 +169,7 @@ class CacheFlowServiceMockTest {
     @Test
     fun `put should write to local and Redis`() {
         val key = "key1"
-        val redisKey = "test-prefix:key1"
+        val redisKey = "test-prefix:data:key1"
         val value = "value1"
         val ttl = 60L
 
@@ -184,7 +185,7 @@ class CacheFlowServiceMockTest {
     @Test
     fun `evict should remove from local, Redis and Edge`() {
         val key = "key1"
-        val redisKey = "test-prefix:key1"
+        val redisKey = "test-prefix:data:key1"
 
         // Pre-populate local
         cacheService.put(key, "val", 60)
@@ -208,14 +209,21 @@ class CacheFlowServiceMockTest {
 
     @Test
     fun `evictAll should clear local, Redis and Edge`() {
-        val redisKeyPattern = "test-prefix:*"
-        val keys = setOf("test-prefix:k1", "test-prefix:k2")
-        `when`(redisTemplate.keys(redisKeyPattern)).thenReturn(keys)
+        val redisDataKeyPattern = "test-prefix:data:*"
+        val redisTagKeyPattern = "test-prefix:tag:*"
+        
+        val dataKeys = setOf("test-prefix:data:k1", "test-prefix:data:k2")
+        val tagKeys = setOf("test-prefix:tag:t1")
+        
+        `when`(redisTemplate.keys(redisDataKeyPattern)).thenReturn(dataKeys)
+        `when`(redisTemplate.keys(redisTagKeyPattern)).thenReturn(tagKeys)
 
         cacheService.evictAll()
 
-        verify(redisTemplate).keys(redisKeyPattern)
-        verify(redisTemplate).delete(keys)
+        verify(redisTemplate).keys(redisDataKeyPattern)
+        verify(redisTemplate).delete(dataKeys)
+        verify(redisTemplate).keys(redisTagKeyPattern)
+        verify(redisTemplate).delete(tagKeys)
         
         Thread.sleep(100)
         verify(edgeCacheService).purgeAll()
@@ -223,20 +231,42 @@ class CacheFlowServiceMockTest {
     }
     
     @Test
-    fun `evictByTags should trigger edge tag purge`() {
-        val tags = arrayOf("tag1", "tag2")
+    fun `evictByTags should trigger local and Redis tag purge`() {
+        val tags = arrayOf("tag1")
+        val redisTagKey = "test-prefix:tag:tag1"
+        val redisDataKey = "test-prefix:data:key1"
+        
+        // Setup Redis mock for members
+        `when`(setOperations.members(redisTagKey)).thenReturn(setOf("key1"))
         
         cacheService.evictByTags(*tags)
         
         Thread.sleep(100)
+        // Verify Redis data key deletion
+        verify(redisTemplate).delete(listOf(redisDataKey))
+        // Verify Redis tag key deletion
+        verify(redisTemplate).delete(redisTagKey)
+        
+        // Verify Edge purge
         verify(edgeCacheService).purgeByTag("tag1")
-        verify(edgeCacheService).purgeByTag("tag2")
-        // Note: evictByTags implementation in Service doesn't explicitly increment evictCounter currently based on code reading,
-        // it calls cache.clear() but evictAll increments counter. evictByTags does NOT call evictAll().
-        // Let's check the code: 
-        // override fun evictByTags(vararg tags: String) { ... cache.clear() } 
-        // It does NOT increment eviction counter in the code I wrote. 
-        // So no verification of counter here unless I add it.
+        
+        verify(evictCounter, times(1)).increment()
+    }
+
+    @Test
+    fun `evict should clean up tag indexes`() {
+        val key = "key1"
+        val tags = setOf("tag1")
+        val redisTagKey = "test-prefix:tag:tag1"
+        
+        // Put with tags first to populate internal index
+        cacheService.put(key, "value", 60, tags)
+        
+        // Evict
+        cacheService.evict(key)
+        
+        // Verify Redis SREM
+        verify(setOperations).remove(redisTagKey, key)
     }
 
     @Test
