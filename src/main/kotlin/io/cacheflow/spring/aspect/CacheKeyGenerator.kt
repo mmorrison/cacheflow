@@ -8,7 +8,7 @@ import org.springframework.expression.EvaluationContext
 import org.springframework.expression.Expression
 import org.springframework.expression.ExpressionParser
 import org.springframework.expression.spel.standard.SpelExpressionParser
-import org.springframework.expression.spel.support.StandardEvaluationContext
+import org.springframework.expression.spel.support.SimpleEvaluationContext
 
 /**
  * Service for generating cache keys from SpEL expressions and method parameters. Extracted from
@@ -78,7 +78,7 @@ class CacheKeyGenerator(
     }
 
     private fun buildEvaluationContext(joinPoint: ProceedingJoinPoint): EvaluationContext {
-        val context = StandardEvaluationContext()
+        val context = SimpleEvaluationContext.forReadOnlyDataBinding().build()
         val method = joinPoint.signature as MethodSignature
         val parameterNames = method.parameterNames
 

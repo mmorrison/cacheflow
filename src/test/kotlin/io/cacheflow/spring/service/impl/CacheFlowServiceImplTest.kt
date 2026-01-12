@@ -185,7 +185,7 @@ class CacheFlowServiceImplTest {
     @Test
     fun `should handle concurrent access`() {
         val threads = mutableListOf<Thread>()
-        val results = mutableListOf<Any?>()
+        val results = java.util.Collections.synchronizedList(mutableListOf<Any?>())
 
         // Add some initial data
         cacheService.put("key1", "value1", 60)

@@ -8,10 +8,9 @@ interface CacheFlowService {
      * @param key The cache key
      * @return The cached value or null if not found
      */
-
     fun get(key: String): Any?
 
-/**
+    /**
      * Stores a value in the cache.
      *
      * @param key The cache key
@@ -29,11 +28,9 @@ interface CacheFlowService {
      *
      * @param key The cache key to evict
      */
-
     fun evict(key: String)
 
     /** Evicts all cache entries. */
-
     fun evictAll()
 
     /**
@@ -41,7 +38,6 @@ interface CacheFlowService {
      *
      * @param tags The tags to match for eviction
      */
-
     fun evictByTags(vararg tags: String)
 
     /**
@@ -49,7 +45,6 @@ interface CacheFlowService {
      *
      * @return The number of entries in the cache
      */
-
     fun size(): Long
 
     /**
@@ -57,6 +52,5 @@ interface CacheFlowService {
      *
      * @return Set of all cache keys
      */
-
     fun keys(): Set<String>
 }
