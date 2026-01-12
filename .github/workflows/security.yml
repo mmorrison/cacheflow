@@ -28,7 +28,7 @@ jobs:
           distribution: "temurin"
 
       - name: Cache Gradle packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -44,7 +44,7 @@ jobs:
         run: ./gradlew dependencyCheckAnalyze
 
       - name: Upload OWASP dependency check results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: dependency-check-report
@@ -79,7 +79,7 @@ jobs:
           distribution: "temurin"
 
       - name: Cache Gradle packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches

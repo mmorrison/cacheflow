@@ -21,7 +21,7 @@ jobs:
           distribution: "temurin"
 
       - name: Cache Gradle packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -45,7 +45,7 @@ jobs:
           ./gradlew dependencyUpdates --console=plain >> dependency-update-report.md
 
       - name: Upload dependency update report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dependency-update-report
           path: dependency-update-report.md
