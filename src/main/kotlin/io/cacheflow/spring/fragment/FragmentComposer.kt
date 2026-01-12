@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component
  */
 @Component
 class FragmentComposer {
-
     /**
      * Composes multiple fragments into a single result using a template.
      *
@@ -18,7 +17,10 @@ class FragmentComposer {
      * @param fragments Map of placeholder names to fragment content
      * @return The composed result
      */
-    fun composeFragments(template: String, fragments: Map<String, String>): String {
+    fun composeFragments(
+        template: String,
+        fragments: Map<String, String>,
+    ): String {
         var result = template
 
         fragments.forEach { (placeholder, fragment) ->
@@ -38,24 +40,24 @@ class FragmentComposer {
      * @return The composed result
      */
     fun composeFragmentsByKeys(
-            template: String,
-            fragmentKeys: List<String>,
-            fragmentRetriever: (String) -> String?
+        template: String,
+        fragmentKeys: List<String>,
+        fragmentRetriever: (String) -> String?,
     ): String {
         // Extract placeholder names from template
         val placeholderPattern = "\\{\\{([^}]+)\\}\\}".toRegex()
         val placeholders = placeholderPattern.findAll(template).map { it.groupValues[1] }.toSet()
-        
+
         // Map fragment keys to placeholder names
         val fragments = mutableMapOf<String, String>()
-        
+
         for (fragmentKey in fragmentKeys) {
             val fragmentContent = fragmentRetriever(fragmentKey)
             if (fragmentContent != null) {
                 // Try to find matching placeholder by extracting the last part of the key
                 val keyParts = fragmentKey.split(":")
                 val lastPart = keyParts.lastOrNull()
-                
+
                 // Check if this matches any placeholder
                 for (placeholder in placeholders) {
                     if (lastPart == placeholder || fragmentKey.contains(placeholder)) {
@@ -76,7 +78,10 @@ class FragmentComposer {
      * @param fragments Map of available fragments
      * @return Set of missing placeholder names
      */
-    fun findMissingPlaceholders(template: String, fragments: Map<String, String>): Set<String> {
+    fun findMissingPlaceholders(
+        template: String,
+        fragments: Map<String, String>,
+    ): Set<String> {
         val placeholderPattern = "\\{\\{([^}]+)\\}\\}".toRegex()
         val placeholders = placeholderPattern.findAll(template).map { it.groupValues[1] }.toSet()
 

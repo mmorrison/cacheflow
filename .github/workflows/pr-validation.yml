@@ -1,5 +1,10 @@
 name: PR Validation
 
+permissions:
+  checks: write
+  contents: read
+  pull-requests: read
+
 on:
   pull_request:
     branches: [main, develop]
@@ -16,14 +21,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up JDK 17
+      - name: Set up JDK 24
         uses: actions/setup-java@v4
         with:
-          java-version: 17
+          java-version: 24
           distribution: "temurin"
 
       - name: Cache Gradle packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -38,7 +43,8 @@ jobs:
       - name: Run code quality checks
         run: |
           ./gradlew ktlintCheck
-          # ./gradlew detekt  # Temporarily disabled due to version conflicts
+          # Detekt temporarily disabled - waiting for Gradle 9.1 + detekt 2.0.0-alpha.1
+          # ./gradlew detekt
 
       - name: Run tests
         run: ./gradlew test
@@ -54,13 +60,5 @@ jobs:
           echo "Checking for TODO/FIXME comments..."
           if grep -r "TODO\|FIXME" src/ --exclude-dir=test; then
             echo "Found TODO/FIXME comments. Please address them before merging."
-            exit 1
-          fi
-
-      - name: Check commit message format
-        run: |
-          echo "Checking commit message format..."
-          if ! echo "${{ github.event.head_commit.message }}" | grep -E "^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .+"; then
-            echo "Commit message should follow conventional commit format: type(scope): description"
             exit 1
           fi

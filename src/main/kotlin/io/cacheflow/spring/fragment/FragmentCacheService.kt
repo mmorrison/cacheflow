@@ -8,4 +8,6 @@ package io.cacheflow.spring.fragment
  * composed together to form larger cached content.
  */
 interface FragmentCacheService :
-        FragmentStorageService, FragmentCompositionService, FragmentManagementService
+    FragmentStorageService,
+    FragmentCompositionService,
+    FragmentManagementService

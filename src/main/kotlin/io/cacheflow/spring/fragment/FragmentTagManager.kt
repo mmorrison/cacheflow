@@ -1,7 +1,6 @@
 package io.cacheflow.spring.fragment
 
 import java.util.concurrent.ConcurrentHashMap
-import org.springframework.stereotype.Component
 
 /**
  * Manages fragment tags for group-based operations in Russian Doll caching.
@@ -9,9 +8,7 @@ import org.springframework.stereotype.Component
  * This service handles the association between fragments and tags, allowing for efficient
  * group-based invalidation and retrieval operations.
  */
-@Component
-class FragmentTagManager {
-
+open class FragmentTagManager {
     private val fragmentTags = ConcurrentHashMap<String, MutableSet<String>>()
 
     /**
@@ -20,7 +17,10 @@ class FragmentTagManager {
      * @param key The fragment key
      * @param tag The tag to associate with the fragment
      */
-    fun addFragmentTag(key: String, tag: String) {
+    fun addFragmentTag(
+        key: String,
+        tag: String,
+    ) {
         fragmentTags.computeIfAbsent(tag) { ConcurrentHashMap.newKeySet() }.add(key)
     }
 
@@ -30,7 +30,10 @@ class FragmentTagManager {
      * @param key The fragment key
      * @param tag The tag to remove
      */
-    fun removeFragmentTag(key: String, tag: String) {
+    fun removeFragmentTag(
+        key: String,
+        tag: String,
+    ) {
         fragmentTags[tag]?.remove(key)
         if (fragmentTags[tag]?.isEmpty() == true) {
             fragmentTags.remove(tag)
@@ -51,13 +54,12 @@ class FragmentTagManager {
      * @param key The fragment key
      * @return Set of tags
      */
-    fun getFragmentTags(key: String): Set<String> {
-        return fragmentTags
-                .entries
-                .filter { (_, keys) -> keys.contains(key) }
-                .map { (tag, _) -> tag }
-                .toSet()
-    }
+    fun getFragmentTags(key: String): Set<String> =
+        fragmentTags
+            .map { (tag, keys) -> tag to keys.toSet() }
+            .filter { (_, keys) -> key in keys }
+            .map { (tag, _) -> tag }
+            .toSet()
 
     /**
      * Removes a fragment from all tag associations.

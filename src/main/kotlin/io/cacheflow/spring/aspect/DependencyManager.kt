@@ -5,8 +5,9 @@ import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.reflect.MethodSignature
 
 /** Service for managing cache dependencies. Extracted from CacheFlowAspect to reduce complexity. */
-class DependencyManager(private val dependencyResolver: DependencyResolver) {
-
+class DependencyManager(
+    private val dependencyResolver: DependencyResolver,
+) {
     /**
      * Tracks dependencies for a cache key based on the dependsOn parameter names.
      *
@@ -15,9 +16,9 @@ class DependencyManager(private val dependencyResolver: DependencyResolver) {
      * @param joinPoint The join point containing method parameters
      */
     fun trackDependencies(
-            cacheKey: String,
-            dependsOn: Array<String>,
-            joinPoint: ProceedingJoinPoint
+        cacheKey: String,
+        dependsOn: Array<String>,
+        joinPoint: ProceedingJoinPoint,
     ) {
         if (dependsOn.isEmpty()) return
 
@@ -41,22 +42,24 @@ class DependencyManager(private val dependencyResolver: DependencyResolver) {
      * @param cacheService The cache service to use for eviction
      */
     fun evictWithDependencies(
-            key: String,
-            cacheService: io.cacheflow.spring.service.CacheFlowService
+        key: String,
+        cacheService: io.cacheflow.spring.service.CacheFlowService,
     ) {
         // Evict the main key
         cacheService.evict(key)
 
         // Get and evict all dependent caches
         val dependentKeys = dependencyResolver.invalidateDependentCaches(key)
-dependentKeys.forEach { dependentKey -> cacheService.evict(dependentKey) }
-
+        dependentKeys.forEach { dependentKey -> cacheService.evict(dependentKey) }
 
         // Clear dependencies for the evicted key
         dependencyResolver.clearDependencies(key)
     }
 
-    private fun buildDependencyKey(paramName: String, paramValue: Any?): String {
+    private fun buildDependencyKey(
+        paramName: String,
+        paramValue: Any?,
+    ): String {
         val prefix = "$paramName:"
         return when (paramValue) {
             null -> "${prefix}null"
@@ -65,5 +68,8 @@ dependentKeys.forEach { dependentKey -> cacheService.evict(dependentKey) }
         }
     }
 
-    private fun createDependencyKey(prefix: String, value: Any): String = "$prefix$value"
+    private fun createDependencyKey(
+        prefix: String,
+        value: Any,
+    ): String = "$prefix$value"
 }

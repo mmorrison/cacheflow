@@ -1,12 +1,12 @@
 package io.cacheflow.spring.dependency
 
-import org.junit.jupiter.api.Assertions.*
-
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class CacheDependencyTrackerTest {
-
     private lateinit var dependencyTracker: CacheDependencyTracker
 
     @BeforeEach
@@ -208,13 +208,14 @@ class CacheDependencyTrackerTest {
 
         // When - Create multiple threads that add dependencies concurrently
         repeat(numThreads) { threadIndex ->
-            val thread = Thread {
-                repeat(operationsPerThread) { operationIndex ->
-                    val cacheKey = "key$threadIndex:$operationIndex"
-                    val dependencyKey = "dep$threadIndex:$operationIndex"
-                    dependencyTracker.trackDependency(cacheKey, dependencyKey)
+            val thread =
+                Thread {
+                    repeat(operationsPerThread) { operationIndex ->
+                        val cacheKey = "key$threadIndex:$operationIndex"
+                        val dependencyKey = "dep$threadIndex:$operationIndex"
+                        dependencyTracker.trackDependency(cacheKey, dependencyKey)
+                    }
                 }
-            }
             threads.add(thread)
             thread.start()
         }

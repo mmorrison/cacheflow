@@ -12,7 +12,7 @@ package io.cacheflow.spring.annotation
 @Target(
     AnnotationTarget.FUNCTION,
     AnnotationTarget.PROPERTY_GETTER,
-    AnnotationTarget.PROPERTY_SETTER
+    AnnotationTarget.PROPERTY_SETTER,
 )
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CacheFlowEvict(
@@ -30,7 +30,7 @@ annotation class CacheFlowEvict(
     val beforeInvocation: Boolean = false,
     /** Condition to determine if eviction should be applied. */
 
-    val condition: String = ""
+    val condition: String = "",
 )
 
 /** Alternative annotation name for compatibility. */
@@ -38,7 +38,7 @@ annotation class CacheFlowEvict(
 @Target(
     AnnotationTarget.FUNCTION,
     AnnotationTarget.PROPERTY_GETTER,
-    AnnotationTarget.PROPERTY_SETTER
+    AnnotationTarget.PROPERTY_SETTER,
 )
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CacheFlowEvictAlternative(
@@ -56,7 +56,7 @@ annotation class CacheFlowEvictAlternative(
     val beforeInvocation: Boolean = false,
     /** Condition to determine if eviction should be applied. */
 
-    val condition: String = ""
+    val condition: String = "",
 )
 
 /** Annotation to mark classes as cacheable entities. */
@@ -64,15 +64,13 @@ annotation class CacheFlowEvictAlternative(
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CacheEntity(
-        /** Key prefix for cache entries. */
-        val keyPrefix: String = "",
-        /** Version field name for cache invalidation. */
-        val versionField: String = "updatedAt"
+    /** Key prefix for cache entries. */
+    val keyPrefix: String = "",
+    /** Version field name for cache invalidation. */
+    val versionField: String = "updatedAt",
 )
 
 /** Annotation to mark properties as cache keys. */
-
-
 
 @Target(AnnotationTarget.PROPERTY, AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.RUNTIME)

@@ -1,5 +1,6 @@
 package io.cacheflow.spring.autoconfigure
 
+import io.cacheflow.spring.annotation.CacheFlowConfigRegistry
 import io.cacheflow.spring.dependency.CacheDependencyTracker
 import io.cacheflow.spring.dependency.DependencyResolver
 import io.cacheflow.spring.service.CacheFlowService
@@ -19,7 +20,6 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 class CacheFlowCoreConfiguration {
-
     /**
      * Creates the CacheFlow service bean.
      *
@@ -55,6 +55,14 @@ class CacheFlowCoreConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    fun cacheKeyVersioner(timestampExtractor: TimestampExtractor): CacheKeyVersioner =
-            CacheKeyVersioner(timestampExtractor)
+    fun cacheKeyVersioner(timestampExtractor: TimestampExtractor): CacheKeyVersioner = CacheKeyVersioner(timestampExtractor)
+
+    /**
+     * Creates the CacheFlow configuration registry bean.
+     *
+     * @return The configuration registry
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    fun cacheFlowConfigRegistry(): CacheFlowConfigRegistry = CacheFlowConfigRegistry()
 }

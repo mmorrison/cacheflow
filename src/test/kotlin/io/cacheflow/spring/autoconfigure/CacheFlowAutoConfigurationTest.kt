@@ -1,21 +1,20 @@
 package io.cacheflow.spring.autoconfigure
 
+import io.cacheflow.spring.annotation.CacheFlowConfigRegistry
 import io.cacheflow.spring.aspect.CacheFlowAspect
-import io.cacheflow.spring.autoconfigure.CacheFlowAspectConfiguration
-import io.cacheflow.spring.autoconfigure.CacheFlowCoreConfiguration
-import io.cacheflow.spring.autoconfigure.CacheFlowManagementConfiguration
 import io.cacheflow.spring.dependency.DependencyResolver
 import io.cacheflow.spring.management.CacheFlowManagementEndpoint
 import io.cacheflow.spring.service.CacheFlowService
 import io.cacheflow.spring.service.impl.CacheFlowServiceImpl
 import io.cacheflow.spring.versioning.CacheKeyVersioner
-import org.mockito.Mockito.mock
-
-
-
-
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNotSame
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -24,7 +23,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 class CacheFlowAutoConfigurationTest {
-
     @Test
     fun `should have correct annotations`() {
         val configClass = CacheFlowAutoConfiguration::class.java
@@ -62,7 +60,8 @@ class CacheFlowAutoConfigurationTest {
         val mockService = mock(CacheFlowService::class.java)
         val mockDependencyResolver = mock(DependencyResolver::class.java)
         val mockCacheKeyVersioner = mock(CacheKeyVersioner::class.java)
-        val aspect = config.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner)
+        val mockConfigRegistry = mock(CacheFlowConfigRegistry::class.java)
+        val aspect = config.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner, mockConfigRegistry)
 
         assertNotNull(aspect)
         assertTrue(aspect is CacheFlowAspect)
@@ -92,12 +91,13 @@ class CacheFlowAutoConfigurationTest {
     @Test
     fun `cacheFlowAspect method should have correct annotations`() {
         val method =
-                CacheFlowAspectConfiguration::class.java.getDeclaredMethod(
-                        "cacheFlowAspect",
-                        CacheFlowService::class.java,
-                        DependencyResolver::class.java,
-                        CacheKeyVersioner::class.java
-                )
+            CacheFlowAspectConfiguration::class.java.getDeclaredMethod(
+                "cacheFlowAspect",
+                CacheFlowService::class.java,
+                DependencyResolver::class.java,
+                CacheKeyVersioner::class.java,
+                CacheFlowConfigRegistry::class.java,
+            )
 
         // Check @Bean
         assertTrue(method.isAnnotationPresent(Bean::class.java))
@@ -109,10 +109,10 @@ class CacheFlowAutoConfigurationTest {
     @Test
     fun `cacheFlowManagementEndpoint method should have correct annotations`() {
         val method =
-                CacheFlowManagementConfiguration::class.java.getDeclaredMethod(
-                        "cacheFlowManagementEndpoint",
-                        CacheFlowService::class.java
-                )
+            CacheFlowManagementConfiguration::class.java.getDeclaredMethod(
+                "cacheFlowManagementEndpoint",
+                CacheFlowService::class.java,
+            )
 
         // Check @Bean
         assertTrue(method.isAnnotationPresent(Bean::class.java))
@@ -132,11 +132,12 @@ class CacheFlowAutoConfigurationTest {
         val mockService = mock(CacheFlowService::class.java)
         val mockDependencyResolver = mock(DependencyResolver::class.java)
         val mockCacheKeyVersioner = mock(CacheKeyVersioner::class.java)
+        val mockConfigRegistry = mock(CacheFlowConfigRegistry::class.java)
 
         val service1 = coreConfig.cacheFlowService()
         val service2 = coreConfig.cacheFlowService()
-        val aspect1 = aspectConfig.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner)
-        val aspect2 = aspectConfig.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner)
+        val aspect1 = aspectConfig.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner, mockConfigRegistry)
+        val aspect2 = aspectConfig.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner, mockConfigRegistry)
         val endpoint1 = managementConfig.cacheFlowManagementEndpoint(mockService)
         val endpoint2 = managementConfig.cacheFlowManagementEndpoint(mockService)
 
@@ -152,16 +153,20 @@ class CacheFlowAutoConfigurationTest {
         val managementConfig = CacheFlowManagementConfiguration()
         val mockDependencyResolver = mock(DependencyResolver::class.java)
         val mockCacheKeyVersioner = mock(CacheKeyVersioner::class.java)
+        val mockConfigRegistry = mock(CacheFlowConfigRegistry::class.java)
 
         // These should not throw exceptions even with null service
         assertDoesNotThrow {
-            aspectConfig.cacheFlowAspect(mock(CacheFlowService::class.java), mockDependencyResolver, mockCacheKeyVersioner)
+            aspectConfig.cacheFlowAspect(
+                mock(CacheFlowService::class.java),
+                mockDependencyResolver,
+                mockCacheKeyVersioner,
+                mockConfigRegistry,
+            )
             managementConfig.cacheFlowManagementEndpoint(mock(CacheFlowService::class.java))
         }
     }
 
     // Helper function to create mock
-    private fun <T> mock(clazz: Class<T>): T {
-        return org.mockito.Mockito.mock(clazz)
-    }
+    private fun <T> mock(clazz: Class<T>): T = org.mockito.Mockito.mock(clazz)
 }

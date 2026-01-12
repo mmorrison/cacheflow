@@ -7,7 +7,6 @@ package io.cacheflow.spring.fragment
  * caching.
  */
 interface FragmentManagementService {
-
     /**
      * Invalidates all fragments with the given tag.
      *

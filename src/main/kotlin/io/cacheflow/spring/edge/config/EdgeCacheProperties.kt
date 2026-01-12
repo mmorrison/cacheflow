@@ -35,7 +35,7 @@ data class EdgeCacheProperties(
     val rateLimit: EdgeCacheRateLimitProperties? = null,
     val circuitBreaker: EdgeCacheCircuitBreakerProperties? = null,
     val batching: EdgeCacheBatchingProperties? = null,
-    val monitoring: EdgeCacheMonitoringProperties? = null
+    val monitoring: EdgeCacheMonitoringProperties? = null,
 ) {
     /**
      * Cloudflare edge cache configuration properties.
@@ -55,7 +55,7 @@ data class EdgeCacheProperties(
         val keyPrefix: String = DEFAULT_KEY_PREFIX,
         val defaultTtl: Long = 3_600,
         val autoPurge: Boolean = true,
-        val purgeOnEvict: Boolean = true
+        val purgeOnEvict: Boolean = true,
     )
 
     /**
@@ -74,7 +74,7 @@ data class EdgeCacheProperties(
         val keyPrefix: String = DEFAULT_KEY_PREFIX,
         val defaultTtl: Long = 3_600,
         val autoPurge: Boolean = true,
-        val purgeOnEvict: Boolean = true
+        val purgeOnEvict: Boolean = true,
     )
 
     /**
@@ -95,7 +95,7 @@ data class EdgeCacheProperties(
         val keyPrefix: String = DEFAULT_KEY_PREFIX,
         val defaultTtl: Long = 3_600,
         val autoPurge: Boolean = true,
-        val purgeOnEvict: Boolean = true
+        val purgeOnEvict: Boolean = true,
     )
 
     /**
@@ -108,7 +108,7 @@ data class EdgeCacheProperties(
     data class EdgeCacheRateLimitProperties(
         val requestsPerSecond: Int = DEFAULT_REQUESTS_PER_SECOND,
         val burstSize: Int = DEFAULT_BURST_SIZE,
-        val windowSize: Long = DEFAULT_WINDOW_SIZE_SECONDS // seconds
+        val windowSize: Long = DEFAULT_WINDOW_SIZE_SECONDS, // seconds
     )
 
     /**
@@ -121,7 +121,7 @@ data class EdgeCacheProperties(
     data class EdgeCacheCircuitBreakerProperties(
         val failureThreshold: Int = DEFAULT_FAILURE_THRESHOLD,
         val recoveryTimeout: Long = DEFAULT_RECOVERY_TIMEOUT_SECONDS, // seconds
-        val halfOpenMaxCalls: Int = DEFAULT_HALF_OPEN_MAX_CALLS
+        val halfOpenMaxCalls: Int = DEFAULT_HALF_OPEN_MAX_CALLS,
     )
 
     /**
@@ -134,7 +134,7 @@ data class EdgeCacheProperties(
     data class EdgeCacheBatchingProperties(
         val batchSize: Int = DEFAULT_BATCH_SIZE,
         val batchTimeout: Long = DEFAULT_BATCH_TIMEOUT_SECONDS, // seconds
-        val maxConcurrency: Int = DEFAULT_MAX_CONCURRENCY
+        val maxConcurrency: Int = DEFAULT_MAX_CONCURRENCY,
     )
 
     /**
@@ -147,6 +147,6 @@ data class EdgeCacheProperties(
     data class EdgeCacheMonitoringProperties(
         val enableMetrics: Boolean = true,
         val enableTracing: Boolean = true,
-        val logLevel: String = "INFO"
+        val logLevel: String = "INFO",
     )
 }

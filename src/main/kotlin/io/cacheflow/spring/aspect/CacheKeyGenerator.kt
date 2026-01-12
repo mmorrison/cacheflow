@@ -1,7 +1,6 @@
 package io.cacheflow.spring.aspect
 
-import io.cacheflow.spring.annotation.CacheFlow
-import io.cacheflow.spring.annotation.CacheFlowCached
+import io.cacheflow.spring.annotation.CacheFlowConfig
 import io.cacheflow.spring.versioning.CacheKeyVersioner
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.reflect.MethodSignature
@@ -15,7 +14,9 @@ import org.springframework.expression.spel.support.StandardEvaluationContext
  * Service for generating cache keys from SpEL expressions and method parameters. Extracted from
  * CacheFlowAspect to reduce complexity.
  */
-class CacheKeyGenerator(private val cacheKeyVersioner: CacheKeyVersioner) {
+class CacheKeyGenerator(
+    private val cacheKeyVersioner: CacheKeyVersioner,
+) {
     private val parser: ExpressionParser = SpelExpressionParser()
 
     /**
@@ -26,8 +27,8 @@ class CacheKeyGenerator(private val cacheKeyVersioner: CacheKeyVersioner) {
      * @return The generated cache key, or empty string if expression is invalid
      */
     fun generateCacheKeyFromExpression(
-            keyExpression: String,
-            joinPoint: ProceedingJoinPoint
+        keyExpression: String,
+        joinPoint: ProceedingJoinPoint,
     ): String {
         if (keyExpression.isBlank()) return ""
 
@@ -48,52 +49,23 @@ class CacheKeyGenerator(private val cacheKeyVersioner: CacheKeyVersioner) {
     }
 
     /**
-     * Generates a versioned cache key based on the annotation configuration.
+     * Generates a versioned cache key based on the configuration.
      *
      * @param baseKey The base cache key
-     * @param cached The cache annotation configuration
+     * @param config The cache configuration
      * @param joinPoint The join point
      * @return The versioned cache key
      */
     fun generateVersionedKey(
-            baseKey: String,
-            cached: CacheFlow,
-            joinPoint: ProceedingJoinPoint
+        baseKey: String,
+        config: CacheFlowConfig,
+        joinPoint: ProceedingJoinPoint,
     ): String {
         val method = joinPoint.signature as MethodSignature
         val parameterNames = method.parameterNames
 
         // Try to find the timestamp field in method parameters
-        val timestampField = cached.timestampField
-        val paramIndex = parameterNames.indexOf(timestampField)
-
-        return if (paramIndex >= 0 && paramIndex < joinPoint.args.size) {
-            val timestampValue = joinPoint.args[paramIndex]
-            cacheKeyVersioner.generateVersionedKey(baseKey, timestampValue)
-        } else {
-            // Fall back to using all parameters
-            cacheKeyVersioner.generateVersionedKey(baseKey, joinPoint.args.toList())
-        }
-    }
-
-    /**
-     * Generates a versioned cache key based on the annotation configuration.
-     *
-     * @param baseKey The base cache key
-     * @param cached The cache annotation configuration
-     * @param joinPoint The join point
-     * @return The versioned cache key
-     */
-    fun generateVersionedKey(
-            baseKey: String,
-            cached: CacheFlowCached,
-            joinPoint: ProceedingJoinPoint
-    ): String {
-        val method = joinPoint.signature as MethodSignature
-        val parameterNames = method.parameterNames
-
-        // Try to find the timestamp field in method parameters
-        val timestampField = cached.timestampField
+        val timestampField = config.timestampField
         val paramIndex = parameterNames.indexOf(timestampField)
 
         return if (paramIndex >= 0 && paramIndex < joinPoint.args.size) {

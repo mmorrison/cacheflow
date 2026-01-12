@@ -29,7 +29,7 @@ data class CacheFlowProperties(
     val awsCloudFront: AwsCloudFrontProperties = AwsCloudFrontProperties(),
     val fastly: FastlyProperties = FastlyProperties(),
     val metrics: MetricsProperties = MetricsProperties(),
-    val baseUrl: String = "https://yourdomain.com"
+    val baseUrl: String = "https://yourdomain.com",
 ) {
     /**
      * Storage type enumeration for cache implementation.
@@ -38,7 +38,7 @@ data class CacheFlowProperties(
         IN_MEMORY,
         REDIS,
         CAFFEINE,
-        CLOUDFLARE
+        CLOUDFLARE,
     }
 
     /**
@@ -51,7 +51,7 @@ data class CacheFlowProperties(
     data class RedisProperties(
         val keyPrefix: String = DEFAULT_KEY_PREFIX,
         val database: Int = 0,
-        val timeout: Long = 5_000
+        val timeout: Long = 5_000,
     )
 
     /**
@@ -76,7 +76,7 @@ data class CacheFlowProperties(
         val autoPurge: Boolean = true,
         val purgeOnEvict: Boolean = true,
         val rateLimit: RateLimit? = null,
-        val circuitBreaker: CircuitBreakerConfig? = null
+        val circuitBreaker: CircuitBreakerConfig? = null,
     )
 
     /**
@@ -99,7 +99,7 @@ data class CacheFlowProperties(
         val autoPurge: Boolean = true,
         val purgeOnEvict: Boolean = true,
         val rateLimit: RateLimit? = null,
-        val circuitBreaker: CircuitBreakerConfig? = null
+        val circuitBreaker: CircuitBreakerConfig? = null,
     )
 
     /**
@@ -124,7 +124,7 @@ data class CacheFlowProperties(
         val autoPurge: Boolean = true,
         val purgeOnEvict: Boolean = true,
         val rateLimit: RateLimit? = null,
-        val circuitBreaker: CircuitBreakerConfig? = null
+        val circuitBreaker: CircuitBreakerConfig? = null,
     )
 
     /**
@@ -137,7 +137,7 @@ data class CacheFlowProperties(
     data class RateLimit(
         val requestsPerSecond: Int = 10,
         val burstSize: Int = 20,
-        val windowSize: Long = 60 // seconds
+        val windowSize: Long = 60, // seconds
     )
 
     /**
@@ -150,7 +150,7 @@ data class CacheFlowProperties(
     data class CircuitBreakerConfig(
         val failureThreshold: Int = 5,
         val recoveryTimeout: Long = 60, // seconds
-        val halfOpenMaxCalls: Int = 3
+        val halfOpenMaxCalls: Int = 3,
     )
 
     /**
@@ -159,5 +159,8 @@ data class CacheFlowProperties(
      * @property enabled Whether metrics are enabled
      * @property exportInterval Export interval in seconds
      */
-    data class MetricsProperties(val enabled: Boolean = true, val exportInterval: Long = 60)
+    data class MetricsProperties(
+        val enabled: Boolean = true,
+        val exportInterval: Long = 60,
+    )
 }

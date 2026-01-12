@@ -6,10 +6,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 
-
-
-
-
 /**
  * Main auto-configuration for CacheFlow.
  *
@@ -22,26 +18,13 @@ import org.springframework.context.annotation.Import
     prefix = "cacheflow",
     name = ["enabled"],
     havingValue = "true",
-    matchIfMissing = true
+    matchIfMissing = true,
 )
 @EnableConfigurationProperties(CacheFlowProperties::class)
 @Import(
-        CacheFlowCoreConfiguration::class,
-        CacheFlowFragmentConfiguration::class,
-        CacheFlowAspectConfiguration::class,
-        CacheFlowManagementConfiguration::class
+    CacheFlowCoreConfiguration::class,
+    CacheFlowFragmentConfiguration::class,
+    CacheFlowAspectConfiguration::class,
+    CacheFlowManagementConfiguration::class,
 )
 class CacheFlowAutoConfiguration
-
-
-
-
-
-
-
-
-
-
-
-
-

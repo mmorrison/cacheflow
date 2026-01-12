@@ -1,17 +1,15 @@
 package io.cacheflow.spring.service.impl
 
-
-
-
-
-
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Assertions.*
-
 import org.junit.jupiter.api.Test
 
 class CacheFlowServiceImplTest {
-
     private lateinit var cacheService: CacheFlowServiceImpl
 
     @BeforeEach
@@ -195,10 +193,11 @@ class CacheFlowServiceImplTest {
 
         // Create multiple threads that read and write
         repeat(10) { i ->
-            val thread = Thread {
-                cacheService.put("key$i", "value$i", 60)
-                results.add(cacheService.get("key$i"))
-            }
+            val thread =
+                Thread {
+                    cacheService.put("key$i", "value$i", 60)
+                    results.add(cacheService.get("key$i"))
+                }
             threads.add(thread)
             thread.start()
         }

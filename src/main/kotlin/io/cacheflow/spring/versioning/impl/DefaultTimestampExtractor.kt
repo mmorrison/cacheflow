@@ -4,6 +4,7 @@ import io.cacheflow.spring.versioning.HasCreatedAt
 import io.cacheflow.spring.versioning.HasModifiedAt
 import io.cacheflow.spring.versioning.HasUpdatedAt
 import io.cacheflow.spring.versioning.TimestampExtractor
+import org.springframework.stereotype.Component
 import java.time.DateTimeException
 import java.time.Instant
 import java.time.LocalDateTime
@@ -13,7 +14,6 @@ import java.time.temporal.TemporalAccessor
 import java.util.Date
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
-import org.springframework.stereotype.Component
 
 /**
  * Default implementation of TimestampExtractor that can extract timestamps from various object
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component
  */
 @Component
 class DefaultTimestampExtractor : TimestampExtractor {
-
     override fun extractTimestamp(obj: Any?): Long? {
         if (obj == null) return null
 
@@ -52,12 +51,12 @@ class DefaultTimestampExtractor : TimestampExtractor {
         }
     }
 
-    private fun extractFromTemporalAccessor(temporal: TemporalAccessor): Long? {
-        return try {
+    private fun extractFromTemporalAccessor(temporal: TemporalAccessor): Long? =
+        try {
             when (temporal) {
                 is Instant -> temporal.toEpochMilli()
                 is LocalDateTime ->
-                        temporal.atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    temporal.atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli()
                 is ZonedDateTime -> temporal.toInstant().toEpochMilli()
                 is OffsetDateTime -> temporal.toInstant().toEpochMilli()
                 else -> extractFromGenericTemporal(temporal)
@@ -65,26 +64,23 @@ class DefaultTimestampExtractor : TimestampExtractor {
         } catch (e: DateTimeException) {
             null
         }
-    }
 
-    private fun extractFromGenericTemporal(temporal: TemporalAccessor): Long? {
-        return try {
+    private fun extractFromGenericTemporal(temporal: TemporalAccessor): Long? =
+        try {
             Instant.from(temporal).toEpochMilli()
         } catch (e: DateTimeException) {
             extractFromEpochSeconds(temporal)
         }
-    }
 
-    private fun extractFromEpochSeconds(temporal: TemporalAccessor): Long? {
-        return try {
+    private fun extractFromEpochSeconds(temporal: TemporalAccessor): Long? =
+        try {
             temporal.getLong(java.time.temporal.ChronoField.INSTANT_SECONDS) * 1000
         } catch (e: DateTimeException) {
             null
         }
-    }
 
-    private fun extractFromReflection(obj: Any): Long? {
-        return try {
+    private fun extractFromReflection(obj: Any): Long? =
+        try {
             val properties = obj::class.memberProperties
             findTimestampInProperties(obj, properties)
         } catch (e: java.lang.SecurityException) {
@@ -99,11 +95,10 @@ class DefaultTimestampExtractor : TimestampExtractor {
             // fields
             null
         }
-    }
 
     private fun findTimestampInProperties(
-            obj: Any,
-            properties: Collection<kotlin.reflect.KProperty1<out Any, *>>
+        obj: Any,
+        properties: Collection<kotlin.reflect.KProperty1<out Any, *>>,
     ): Long? {
         val timestampFields = getTimestampFieldNames()
 
@@ -119,32 +114,34 @@ class DefaultTimestampExtractor : TimestampExtractor {
         return null
     }
 
-    private fun getTimestampFieldNames(): List<String> {
-        return listOf(
-                "updatedAt",
-                "updated_at",
-                "updatedAtTimestamp",
-                "lastModified",
-                "createdAt",
-                "created_at",
-                "createdAtTimestamp",
-                "created",
-                "modifiedAt",
-                "modified_at",
-                "modifiedAtTimestamp",
-                "modified",
-                "timestamp",
-                "ts",
-                "time",
-                "date"
+    private fun getTimestampFieldNames(): List<String> =
+        listOf(
+            "updatedAt",
+            "updated_at",
+            "updatedAtTimestamp",
+            "lastModified",
+            "createdAt",
+            "created_at",
+            "createdAtTimestamp",
+            "created",
+            "modifiedAt",
+            "modified_at",
+            "modifiedAtTimestamp",
+            "modified",
+            "timestamp",
+            "ts",
+            "time",
+            "date",
         )
-    }
 
     private fun extractTimestampFromProperty(
-            obj: Any,
-            property: kotlin.reflect.KProperty1<out Any, *>
-    ): Long? {
-        return try {
+        obj: Any,
+        property: kotlin.reflect.KProperty1<out Any, *>,
+    ): Long? =
+        try {
+            // Reflection access needed for flexible timestamp extraction from various domain models
+            // Security: Protected by SecurityException handling and used only for read-only field access
+            @Suppress("kotlin:S3011")
             property.isAccessible = true
             val value = property.getter.call(obj)
             extractTimestamp(value)
@@ -160,5 +157,4 @@ class DefaultTimestampExtractor : TimestampExtractor {
             // fields
             null
         }
-    }
 }

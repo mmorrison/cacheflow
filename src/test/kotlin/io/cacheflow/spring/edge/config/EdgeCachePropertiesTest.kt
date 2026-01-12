@@ -1,15 +1,13 @@
 package io.cacheflow.spring.edge.config
 
-
-
-
-
-import org.junit.jupiter.api.Assertions.*
-
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class EdgeCachePropertiesTest {
-
     @Test
     fun `should create properties with default values`() {
         val properties = EdgeCacheProperties()
@@ -27,19 +25,19 @@ class EdgeCachePropertiesTest {
     @Test
     fun `should create properties with custom values`() {
         val properties =
-                EdgeCacheProperties(
-                        enabled = false,
-                        cloudflare =
-                                EdgeCacheProperties.CloudflareEdgeCacheProperties(
-                                        enabled = true,
-                                        zoneId = "zone123",
-                                        apiToken = "token123",
-                                        keyPrefix = "cf:",
-                                        defaultTtl = 7200L,
-                                        autoPurge = false,
-                                        purgeOnEvict = false
-                                )
-                )
+            EdgeCacheProperties(
+                enabled = false,
+                cloudflare =
+                    EdgeCacheProperties.CloudflareEdgeCacheProperties(
+                        enabled = true,
+                        zoneId = "zone123",
+                        apiToken = "token123",
+                        keyPrefix = "cf:",
+                        defaultTtl = 7200L,
+                        autoPurge = false,
+                        purgeOnEvict = false,
+                    ),
+            )
 
         assertFalse(properties.enabled)
         assertTrue(properties.cloudflare.enabled)
@@ -67,15 +65,15 @@ class EdgeCachePropertiesTest {
     @Test
     fun `CloudflareEdgeCacheProperties should accept custom values`() {
         val cloudflare =
-                EdgeCacheProperties.CloudflareEdgeCacheProperties(
-                        enabled = true,
-                        zoneId = "zone123",
-                        apiToken = "token123",
-                        keyPrefix = "cf:",
-                        defaultTtl = 3600L,
-                        autoPurge = true,
-                        purgeOnEvict = true
-                )
+            EdgeCacheProperties.CloudflareEdgeCacheProperties(
+                enabled = true,
+                zoneId = "zone123",
+                apiToken = "token123",
+                keyPrefix = "cf:",
+                defaultTtl = 3600L,
+                autoPurge = true,
+                purgeOnEvict = true,
+            )
 
         assertTrue(cloudflare.enabled)
         assertEquals("zone123", cloudflare.zoneId)
@@ -101,14 +99,14 @@ class EdgeCachePropertiesTest {
     @Test
     fun `AwsCloudFrontEdgeCacheProperties should accept custom values`() {
         val aws =
-                EdgeCacheProperties.AwsCloudFrontEdgeCacheProperties(
-                        enabled = true,
-                        distributionId = "dist123",
-                        keyPrefix = "aws:",
-                        defaultTtl = 1800L,
-                        autoPurge = true,
-                        purgeOnEvict = true
-                )
+            EdgeCacheProperties.AwsCloudFrontEdgeCacheProperties(
+                enabled = true,
+                distributionId = "dist123",
+                keyPrefix = "aws:",
+                defaultTtl = 1800L,
+                autoPurge = true,
+                purgeOnEvict = true,
+            )
 
         assertTrue(aws.enabled)
         assertEquals("dist123", aws.distributionId)
@@ -134,15 +132,15 @@ class EdgeCachePropertiesTest {
     @Test
     fun `FastlyEdgeCacheProperties should accept custom values`() {
         val fastly =
-                EdgeCacheProperties.FastlyEdgeCacheProperties(
-                        enabled = true,
-                        serviceId = "service123",
-                        apiToken = "token123",
-                        keyPrefix = "fastly:",
-                        defaultTtl = 900L,
-                        autoPurge = true,
-                        purgeOnEvict = true
-                )
+            EdgeCacheProperties.FastlyEdgeCacheProperties(
+                enabled = true,
+                serviceId = "service123",
+                apiToken = "token123",
+                keyPrefix = "fastly:",
+                defaultTtl = 900L,
+                autoPurge = true,
+                purgeOnEvict = true,
+            )
 
         assertTrue(fastly.enabled)
         assertEquals("service123", fastly.serviceId)
@@ -165,11 +163,11 @@ class EdgeCachePropertiesTest {
     @Test
     fun `EdgeCacheRateLimitProperties should accept custom values`() {
         val rateLimit =
-                EdgeCacheProperties.EdgeCacheRateLimitProperties(
-                        requestsPerSecond = 100,
-                        burstSize = 200,
-                        windowSize = 60L
-                )
+            EdgeCacheProperties.EdgeCacheRateLimitProperties(
+                requestsPerSecond = 100,
+                burstSize = 200,
+                windowSize = 60L,
+            )
 
         assertEquals(100, rateLimit.requestsPerSecond)
         assertEquals(200, rateLimit.burstSize)
@@ -188,11 +186,11 @@ class EdgeCachePropertiesTest {
     @Test
     fun `EdgeCacheCircuitBreakerProperties should accept custom values`() {
         val circuitBreaker =
-                EdgeCacheProperties.EdgeCacheCircuitBreakerProperties(
-                        failureThreshold = 10,
-                        recoveryTimeout = 120L,
-                        halfOpenMaxCalls = 5
-                )
+            EdgeCacheProperties.EdgeCacheCircuitBreakerProperties(
+                failureThreshold = 10,
+                recoveryTimeout = 120L,
+                halfOpenMaxCalls = 5,
+            )
 
         assertEquals(10, circuitBreaker.failureThreshold)
         assertEquals(120L, circuitBreaker.recoveryTimeout)
@@ -211,11 +209,11 @@ class EdgeCachePropertiesTest {
     @Test
     fun `EdgeCacheBatchingProperties should accept custom values`() {
         val batching =
-                EdgeCacheProperties.EdgeCacheBatchingProperties(
-                        batchSize = 50,
-                        batchTimeout = 5000L,
-                        maxConcurrency = 10
-                )
+            EdgeCacheProperties.EdgeCacheBatchingProperties(
+                batchSize = 50,
+                batchTimeout = 5000L,
+                maxConcurrency = 10,
+            )
 
         assertEquals(50, batching.batchSize)
         assertEquals(5000L, batching.batchTimeout)
@@ -234,11 +232,11 @@ class EdgeCachePropertiesTest {
     @Test
     fun `EdgeCacheMonitoringProperties should accept custom values`() {
         val monitoring =
-                EdgeCacheProperties.EdgeCacheMonitoringProperties(
-                        enableMetrics = true,
-                        enableTracing = true,
-                        logLevel = "DEBUG"
-                )
+            EdgeCacheProperties.EdgeCacheMonitoringProperties(
+                enableMetrics = true,
+                enableTracing = true,
+                logLevel = "DEBUG",
+            )
 
         assertTrue(monitoring.enableMetrics)
         assertTrue(monitoring.enableTracing)
