@@ -134,7 +134,7 @@ class CacheFlowAspectTest {
 
         assertEquals("result", result)
         verify(configRegistry).get(configName)
-        verify(cacheService).put(any(), eq("result"), eq(600L), any())
+        verify(cacheService).put(any<String>(), eq("result"), eq(600L), any<Set<String>>())
     }
 
     @Test
@@ -162,7 +162,7 @@ class CacheFlowAspectTest {
         assertEquals("result", result)
         verify(configRegistry).get(configName)
         // Should use annotation values (ttl defaults to -1, which uses defaultTtlSeconds 3600L)
-        verify(cacheService).put(any(), eq("result"), eq(3600L), any())
+        verify(cacheService).put(any<String>(), eq("result"), eq(3600L), any<Set<String>>())
     }
 
     @Test
