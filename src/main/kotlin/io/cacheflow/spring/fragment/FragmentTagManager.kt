@@ -57,6 +57,7 @@ open class FragmentTagManager {
     fun getFragmentTags(key: String): Set<String> =
         fragmentTags
             .entries
+            .asSequence()
             .filter { (_, keys) -> keys.contains(key) }
             .map { (tag, _) -> tag }
             .toSet()

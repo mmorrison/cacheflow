@@ -139,6 +139,9 @@ class DefaultTimestampExtractor : TimestampExtractor {
         property: kotlin.reflect.KProperty1<out Any, *>,
     ): Long? =
         try {
+            // Reflection access needed for flexible timestamp extraction from various domain models
+            // Security: Protected by SecurityException handling and used only for read-only field access
+            @Suppress("kotlin:S3011")
             property.isAccessible = true
             val value = property.getter.call(obj)
             extractTimestamp(value)
