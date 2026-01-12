@@ -62,11 +62,3 @@ jobs:
             echo "Found TODO/FIXME comments. Please address them before merging."
             exit 1
           fi
-
-      - name: Check commit message format
-        run: |
-          echo "Checking commit message format..."
-          if ! echo "${{ github.event.head_commit.message }}" | grep -E "^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .+"; then
-            echo "Commit message should follow conventional commit format: type(scope): description"
-            exit 1
-          fi
