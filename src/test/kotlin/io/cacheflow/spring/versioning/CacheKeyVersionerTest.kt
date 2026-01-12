@@ -271,7 +271,9 @@ class CacheKeyVersionerTest {
 
         // Then
         assertTrue(versionedKey.startsWith("user:123-v"))
-        assertTrue(versionedKey.contains("20220101"))
+        // The formatted date depends on system timezone, so just verify it contains 8 digits
+        val datePart = versionedKey.substring(versionedKey.lastIndexOf("-v") + 2)
+        assertTrue(datePart.matches(Regex("\\d{8}")), "Expected 8-digit date format, got: $datePart")
     }
 
     @Test

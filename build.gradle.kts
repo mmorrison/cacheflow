@@ -206,7 +206,7 @@ dependencyCheck {
     suppressionFile = "config/dependency-check-suppressions.xml"
     failBuildOnCVSS = 7.0f
     skip = false
-    autoUpdate = false
+    autoUpdate = true // Enable auto-update to initialize and maintain CVE database
     cveValidForHours = 24 * 7 // 7 days
     failOnError =
         if (project.hasProperty("owasp.failOnError")) {
