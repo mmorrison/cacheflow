@@ -1,7 +1,7 @@
 package io.cacheflow.spring.edge.management
 
-import io.cacheflow.spring.edge.EdgeCacheCircuitBreaker
 import io.cacheflow.spring.edge.CircuitBreakerStatus
+import io.cacheflow.spring.edge.EdgeCacheCircuitBreaker
 import io.cacheflow.spring.edge.EdgeCacheManager
 import io.cacheflow.spring.edge.EdgeCacheMetrics
 import io.cacheflow.spring.edge.EdgeCacheOperation
@@ -10,10 +10,11 @@ import io.cacheflow.spring.edge.EdgeCacheStatistics
 import io.cacheflow.spring.edge.RateLimiterStatus
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.*
+import org.mockito.Mockito.mock
 import org.mockito.kotlin.whenever
 import java.time.Duration
 
@@ -53,16 +54,16 @@ class EdgeCacheManagementEndpointTest {
             // Then
             assertNotNull(result)
             assertEquals(healthStatus, result["providers"])
-            
+
             @Suppress("UNCHECKED_CAST")
             val rateLimiter = result["rateLimiter"] as Map<String, Any>
             assertEquals(5, rateLimiter["availableTokens"])
-            
+
             @Suppress("UNCHECKED_CAST")
             val circuitBreaker = result["circuitBreaker"] as Map<String, Any>
             assertEquals("CLOSED", circuitBreaker["state"])
             assertEquals(0, circuitBreaker["failureCount"])
-            
+
             @Suppress("UNCHECKED_CAST")
             val metricsMap = result["metrics"] as Map<String, Any>
             assertEquals(100L, metricsMap["totalOperations"])
@@ -130,7 +131,7 @@ class EdgeCacheManagementEndpointTest {
 
             // Then
             assertEquals(url, response["url"])
-            
+
             @Suppress("UNCHECKED_CAST")
             val results = response["results"] as List<Map<String, Any?>>
             assertEquals(2, results.size)
@@ -139,7 +140,7 @@ class EdgeCacheManagementEndpointTest {
             assertEquals(1L, results[0]["purgedCount"])
             assertEquals("provider2", results[1]["provider"])
             assertEquals(false, results[1]["success"])
-            
+
             @Suppress("UNCHECKED_CAST")
             val summary = response["summary"] as Map<String, Any>
             assertEquals(2, summary["totalProviders"])
@@ -176,11 +177,11 @@ class EdgeCacheManagementEndpointTest {
 
             // Then
             assertEquals(tag, response["tag"])
-            
+
             @Suppress("UNCHECKED_CAST")
             val results = response["results"] as List<Map<String, Any?>>
             assertEquals(2, results.size)
-            
+
             @Suppress("UNCHECKED_CAST")
             val summary = response["summary"] as Map<String, Any>
             assertEquals(2, summary["totalProviders"])
@@ -217,7 +218,7 @@ class EdgeCacheManagementEndpointTest {
             @Suppress("UNCHECKED_CAST")
             val results = response["results"] as List<Map<String, Any?>>
             assertEquals(2, results.size)
-            
+
             @Suppress("UNCHECKED_CAST")
             val summary = response["summary"] as Map<String, Any>
             assertEquals(2, summary["totalProviders"])
@@ -291,21 +292,31 @@ class EdgeCacheManagementEndpointTest {
             // Given
             val url = "https://example.com/test"
             val result1 =
-                EdgeCacheResult.success(
-                    provider = "provider1",
-                    operation = EdgeCacheOperation.PURGE_URL,
-                    url = url,
-                    purgedCount = 1,
-                    latency = Duration.ofMillis(100),
-                ).copy(cost = io.cacheflow.spring.edge.EdgeCacheCost(EdgeCacheOperation.PURGE_URL, 0.01, "USD", 0.01))
+                EdgeCacheResult
+                    .success(
+                        provider = "provider1",
+                        operation = EdgeCacheOperation.PURGE_URL,
+                        url = url,
+                        purgedCount = 1,
+                        latency = Duration.ofMillis(100),
+                    ).copy(
+                        cost =
+                            io.cacheflow.spring.edge
+                                .EdgeCacheCost(EdgeCacheOperation.PURGE_URL, 0.01, "USD", 0.01),
+                    )
             val result2 =
-                EdgeCacheResult.success(
-                    provider = "provider2",
-                    operation = EdgeCacheOperation.PURGE_URL,
-                    url = url,
-                    purgedCount = 1,
-                    latency = Duration.ofMillis(100),
-                ).copy(cost = io.cacheflow.spring.edge.EdgeCacheCost(EdgeCacheOperation.PURGE_URL, 0.02, "USD", 0.02))
+                EdgeCacheResult
+                    .success(
+                        provider = "provider2",
+                        operation = EdgeCacheOperation.PURGE_URL,
+                        url = url,
+                        purgedCount = 1,
+                        latency = Duration.ofMillis(100),
+                    ).copy(
+                        cost =
+                            io.cacheflow.spring.edge
+                                .EdgeCacheCost(EdgeCacheOperation.PURGE_URL, 0.02, "USD", 0.02),
+                    )
 
             whenever(edgeCacheManager.purgeUrl(url)).thenReturn(flowOf(result1, result2))
 

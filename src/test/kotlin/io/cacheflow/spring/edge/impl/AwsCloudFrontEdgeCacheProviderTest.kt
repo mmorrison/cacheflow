@@ -4,14 +4,25 @@ import io.cacheflow.spring.edge.EdgeCacheOperation
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.*
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
 import software.amazon.awssdk.services.cloudfront.CloudFrontClient
-import software.amazon.awssdk.services.cloudfront.model.*
+import software.amazon.awssdk.services.cloudfront.model.CreateInvalidationRequest
+import software.amazon.awssdk.services.cloudfront.model.CreateInvalidationResponse
+import software.amazon.awssdk.services.cloudfront.model.GetDistributionRequest
+import software.amazon.awssdk.services.cloudfront.model.GetDistributionResponse
+import software.amazon.awssdk.services.cloudfront.model.Invalidation
 import java.time.Duration
 
 class AwsCloudFrontEdgeCacheProviderTest {
@@ -130,7 +141,7 @@ class AwsCloudFrontEdgeCacheProviderTest {
             // Given - This will test the catch block if there's an error in getUrlsByTag
             // But since getUrlsByTag is a private method that returns emptyList,
             // we're testing that the success path with 0 items works correctly
-            
+
             // When
             val result = provider.purgeByTag("test-tag")
 

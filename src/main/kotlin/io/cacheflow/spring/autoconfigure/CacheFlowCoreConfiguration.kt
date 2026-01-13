@@ -42,7 +42,8 @@ class CacheFlowCoreConfiguration {
         @Autowired(required = false) @Qualifier("cacheFlowRedisTemplate") redisTemplate: RedisTemplate<String, Any>?,
         @Autowired(required = false) edgeCacheService: EdgeCacheIntegrationService?,
         @Autowired(required = false) meterRegistry: MeterRegistry?,
-    ): CacheFlowService = CacheFlowServiceImpl(properties, redisTemplate, edgeCacheService, meterRegistry)
+        @Autowired(required = false) redisCacheInvalidator: io.cacheflow.spring.messaging.RedisCacheInvalidator?,
+    ): CacheFlowService = CacheFlowServiceImpl(properties, redisTemplate, edgeCacheService, meterRegistry, redisCacheInvalidator)
 
     /**
      * Creates the dependency resolver bean.
@@ -51,7 +52,10 @@ class CacheFlowCoreConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    fun dependencyResolver(): DependencyResolver = CacheDependencyTracker()
+    fun dependencyResolver(
+        properties: CacheFlowProperties,
+        @Autowired(required = false) redisTemplate: org.springframework.data.redis.core.StringRedisTemplate?,
+    ): DependencyResolver = CacheDependencyTracker(properties, redisTemplate)
 
     /**
      * Creates the timestamp extractor bean.

@@ -178,9 +178,18 @@ class CacheFlowServiceImplTest {
 
     @Test
     fun `should handle evictByTags method`() {
-        // Note: evictByTags is not implemented in CacheFlowServiceImpl
-        // This test verifies the method exists and can be called
-        assertDoesNotThrow { cacheService.evictByTags("tag1", "tag2") }
+        // Given
+        cacheService.put("key1", "value1", 60, setOf("tag1"))
+        cacheService.put("key2", "value2", 60, setOf("tag2"))
+        cacheService.put("key3", "value3", 60, setOf("tag1", "tag3"))
+
+        // When
+        cacheService.evictByTags("tag1")
+
+        // Then
+        assertNull(cacheService.get("key1"))
+        assertEquals("value2", cacheService.get("key2"))
+        assertNull(cacheService.get("key3"))
     }
 
     @Test

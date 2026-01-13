@@ -23,7 +23,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.core.RedisTemplate
 
 class CacheFlowAutoConfigurationTest {
@@ -31,8 +30,8 @@ class CacheFlowAutoConfigurationTest {
     fun `should have correct annotations`() {
         val configClass = CacheFlowAutoConfiguration::class.java
 
-        // Check @Configuration
-        assertTrue(configClass.isAnnotationPresent(Configuration::class.java))
+        // Check @AutoConfiguration
+        assertTrue(configClass.isAnnotationPresent(org.springframework.boot.autoconfigure.AutoConfiguration::class.java))
 
         // Check @ConditionalOnProperty
         val conditionalOnProperty = configClass.getAnnotation(ConditionalOnProperty::class.java)
@@ -52,7 +51,7 @@ class CacheFlowAutoConfigurationTest {
     @Test
     fun `should create cacheFlowService bean`() {
         val config = CacheFlowCoreConfiguration()
-        val service = config.cacheFlowService(CacheFlowProperties(), null, null, null)
+        val service = config.cacheFlowService(CacheFlowProperties(), null, null, null, null)
 
         assertNotNull(service)
         assertTrue(service is CacheFlowServiceImpl)
@@ -82,6 +81,14 @@ class CacheFlowAutoConfigurationTest {
     }
 
     @Test
+    fun `should create cacheWarmer bean`() {
+        val config = CacheFlowWarmingConfiguration()
+        val warmer = config.cacheWarmer(CacheFlowProperties(), emptyList())
+
+        assertNotNull(warmer)
+    }
+
+    @Test
     fun `cacheFlowService method should have correct annotations`() {
         val method =
             CacheFlowCoreConfiguration::class.java.getDeclaredMethod(
@@ -90,6 +97,7 @@ class CacheFlowAutoConfigurationTest {
                 RedisTemplate::class.java,
                 EdgeCacheIntegrationService::class.java,
                 MeterRegistry::class.java,
+                io.cacheflow.spring.messaging.RedisCacheInvalidator::class.java,
             )
 
         // Check @Bean
@@ -136,6 +144,22 @@ class CacheFlowAutoConfigurationTest {
     }
 
     @Test
+    fun `cacheWarmer method should have correct annotations`() {
+        val method =
+            CacheFlowWarmingConfiguration::class.java.getDeclaredMethod(
+                "cacheWarmer",
+                CacheFlowProperties::class.java,
+                List::class.java,
+            )
+
+        // Check @Bean
+        assertTrue(method.isAnnotationPresent(Bean::class.java))
+
+        // Check @ConditionalOnMissingBean
+        assertTrue(method.isAnnotationPresent(ConditionalOnMissingBean::class.java))
+    }
+
+    @Test
     fun `should create different instances for each bean`() {
         val coreConfig = CacheFlowCoreConfiguration()
         val aspectConfig = CacheFlowAspectConfiguration()
@@ -145,8 +169,8 @@ class CacheFlowAutoConfigurationTest {
         val mockCacheKeyVersioner = mock(CacheKeyVersioner::class.java)
         val mockConfigRegistry = mock(CacheFlowConfigRegistry::class.java)
 
-        val service1 = coreConfig.cacheFlowService(CacheFlowProperties(), null, null, null)
-        val service2 = coreConfig.cacheFlowService(CacheFlowProperties(), null, null, null)
+        val service1 = coreConfig.cacheFlowService(CacheFlowProperties(), null, null, null, null)
+        val service2 = coreConfig.cacheFlowService(CacheFlowProperties(), null, null, null, null)
         val aspect1 = aspectConfig.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner, mockConfigRegistry)
         val aspect2 = aspectConfig.cacheFlowAspect(mockService, mockDependencyResolver, mockCacheKeyVersioner, mockConfigRegistry)
         val endpoint1 = managementConfig.cacheFlowManagementEndpoint(mockService)
@@ -156,6 +180,15 @@ class CacheFlowAutoConfigurationTest {
         assertNotSame(service1, service2)
         assertNotSame(aspect1, aspect2)
         assertNotSame(endpoint1, endpoint2)
+    }
+
+    @Test
+    fun `should create different instances for cacheWarmer`() {
+        val config = CacheFlowWarmingConfiguration()
+        val warmer1 = config.cacheWarmer(CacheFlowProperties(), emptyList())
+        val warmer2 = config.cacheWarmer(CacheFlowProperties(), emptyList())
+
+        assertNotSame(warmer1, warmer2)
     }
 
     @Test

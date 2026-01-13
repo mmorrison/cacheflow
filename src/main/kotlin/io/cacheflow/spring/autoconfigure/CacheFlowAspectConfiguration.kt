@@ -75,4 +75,18 @@ class CacheFlowAspectConfiguration {
         dependencyResolver: DependencyResolver,
         tagManager: FragmentTagManager,
     ): FragmentCacheAspect = FragmentCacheAspect(fragmentCacheService, dependencyResolver, tagManager)
+
+    /**
+     * Creates the touch propagation aspect bean.
+     *
+     * @param parentToucher The parent toucher (optional)
+     * @return The touch propagation aspect
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    fun touchPropagationAspect(
+        @org.springframework.beans.factory.annotation.Autowired(required = false) parentToucher: io.cacheflow.spring.aspect.ParentToucher?,
+    ): io.cacheflow.spring.aspect.TouchPropagationAspect =
+        io.cacheflow.spring.aspect
+            .TouchPropagationAspect(parentToucher)
 }

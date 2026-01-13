@@ -5,7 +5,11 @@ import io.cacheflow.spring.edge.EdgeCacheResult
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.Instant
@@ -146,8 +150,7 @@ class AbstractEdgeCacheProviderTest {
             // Given
             val provider =
                 object : TestEdgeCacheProvider() {
-                    override suspend fun getStatisticsFromProvider() =
-                        throw RuntimeException("API error")
+                    override suspend fun getStatisticsFromProvider() = throw RuntimeException("API error")
                 }
 
             // When
@@ -196,8 +199,7 @@ class AbstractEdgeCacheProviderTest {
         // Given
         val provider =
             object : TestEdgeCacheProvider() {
-                override fun createRateLimit() =
-                    super.createRateLimit().copy(requestsPerSecond = 50)
+                override fun createRateLimit() = super.createRateLimit().copy(requestsPerSecond = 50)
             }
 
         // When
@@ -212,8 +214,7 @@ class AbstractEdgeCacheProviderTest {
         // Given
         val provider =
             object : TestEdgeCacheProvider() {
-                override fun createBatchingConfig() =
-                    super.createBatchingConfig().copy(batchSize = 200)
+                override fun createBatchingConfig() = super.createBatchingConfig().copy(batchSize = 200)
             }
 
         // When

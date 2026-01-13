@@ -1,9 +1,10 @@
 package io.cacheflow.spring.autoconfigure
 
+import io.cacheflow.spring.autoconfigure.CacheFlowWarmingConfiguration
 import io.cacheflow.spring.config.CacheFlowProperties
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 
 /**
@@ -13,19 +14,15 @@ import org.springframework.context.annotation.Import
  * configuration properties.
  */
 
-@Configuration
-@ConditionalOnProperty(
-    prefix = "cacheflow",
-    name = ["enabled"],
-    havingValue = "true",
-    matchIfMissing = true,
-)
+@AutoConfiguration
+@ConditionalOnProperty(prefix = "cacheflow", name = ["enabled"], havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(CacheFlowProperties::class)
 @Import(
     CacheFlowCoreConfiguration::class,
     CacheFlowFragmentConfiguration::class,
+    CacheFlowRedisConfiguration::class,
     CacheFlowAspectConfiguration::class,
     CacheFlowManagementConfiguration::class,
-    CacheFlowRedisConfiguration::class,
+    CacheFlowWarmingConfiguration::class,
 )
 class CacheFlowAutoConfiguration
