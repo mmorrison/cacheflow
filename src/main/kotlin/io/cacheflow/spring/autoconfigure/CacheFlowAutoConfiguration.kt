@@ -1,7 +1,7 @@
 package io.cacheflow.spring.autoconfigure
 
-import io.cacheflow.spring.config.CacheFlowProperties
 import io.cacheflow.spring.autoconfigure.CacheFlowWarmingConfiguration
+import io.cacheflow.spring.config.CacheFlowProperties
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties

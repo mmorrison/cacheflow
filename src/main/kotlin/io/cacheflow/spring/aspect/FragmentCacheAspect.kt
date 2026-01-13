@@ -82,12 +82,15 @@ class FragmentCacheAspect(
         val result = joinPoint.proceed()
         if (result is String) {
             val ttl = if (fragment.ttl > 0) fragment.ttl else defaultTtlSeconds
-            
+
             // Evaluate tags
-            val evaluatedTags = fragment.tags.map { tag ->
-                evaluateFragmentKeyExpression(tag, joinPoint)
-            }.filter { it.isNotBlank() }.toSet()
-            
+            val evaluatedTags =
+                fragment.tags
+                    .map { tag ->
+                        evaluateFragmentKeyExpression(tag, joinPoint)
+                    }.filter { it.isNotBlank() }
+                    .toSet()
+
             fragmentCacheService.cacheFragment(key, result, ttl, evaluatedTags)
 
             // Add tags to local tag manager for local tracking
@@ -137,12 +140,15 @@ class FragmentCacheAspect(
 
         return if (composedResult.isNotBlank()) {
             val ttl = if (composition.ttl > 0) composition.ttl else defaultTtlSeconds
-            
+
             // Evaluate tags for composition
-            val evaluatedTags = composition.tags.map { tag ->
-                evaluateFragmentKeyExpression(tag, joinPoint)
-            }.filter { it.isNotBlank() }.toSet()
-            
+            val evaluatedTags =
+                composition.tags
+                    .map { tag ->
+                        evaluateFragmentKeyExpression(tag, joinPoint)
+                    }.filter { it.isNotBlank() }
+                    .toSet()
+
             fragmentCacheService.cacheFragment(key, composedResult, ttl, evaluatedTags)
             composedResult
         } else {

@@ -12,7 +12,6 @@ class CacheWarmer(
     private val properties: CacheFlowProperties,
     private val warmupProviders: List<CacheWarmupProvider>,
 ) : ApplicationListener<ApplicationReadyEvent> {
-
     private val logger = LoggerFactory.getLogger(CacheWarmer::class.java)
 
     override fun onApplicationEvent(event: ApplicationReadyEvent) {

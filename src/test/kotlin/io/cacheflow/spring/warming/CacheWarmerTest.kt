@@ -9,7 +9,6 @@ import org.mockito.kotlin.whenever
 import org.springframework.boot.context.event.ApplicationReadyEvent
 
 class CacheWarmerTest {
-
     @Test
     fun `should execute warmup providers if enabled`() {
         // Given
@@ -41,7 +40,7 @@ class CacheWarmerTest {
         // Then
         verify(provider1, times(0)).warmup()
     }
-    
+
     @Test
     fun `should handle provider exceptions gracefully`() {
         // Given
@@ -49,7 +48,7 @@ class CacheWarmerTest {
         val provider1 = mock<CacheWarmupProvider>()
         val provider2 = mock<CacheWarmupProvider>()
         whenever(provider1.warmup()).thenThrow(RuntimeException("Warmup failed"))
-        
+
         val warmer = CacheWarmer(properties, listOf(provider1, provider2))
         val event = mock<ApplicationReadyEvent>()
 

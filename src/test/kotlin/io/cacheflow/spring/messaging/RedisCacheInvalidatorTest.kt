@@ -1,6 +1,7 @@
 package io.cacheflow.spring.messaging
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.cacheflow.spring.config.CacheFlowProperties
 import io.cacheflow.spring.service.CacheFlowService
 import org.junit.jupiter.api.BeforeEach
@@ -10,10 +11,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.springframework.data.redis.core.StringRedisTemplate
-
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
 class RedisCacheInvalidatorTest {
     private lateinit var properties: CacheFlowProperties

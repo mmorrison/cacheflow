@@ -29,6 +29,7 @@ class EdgeCacheManager(
         private const val MSG_EDGE_CACHING_DISABLED = "Edge caching is disabled"
         private const val MSG_RATE_LIMIT_EXCEEDED = "Rate limit exceeded"
     }
+
     private val rateLimiter =
         EdgeCacheRateLimiter(configuration.rateLimit ?: RateLimit(10, 20), scope)
 

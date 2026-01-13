@@ -43,12 +43,12 @@ interface CacheFlowService {
     fun evictByTags(vararg tags: String)
 
     /**
-     * Evicts a specific cache entry from the local cache only.
-     * Used for distributed cache coordination.
+     * Evicts a specific cache entry from local storage only.
      *
      * @param key The cache key to evict
+     * @return The evicted entry if it existed
      */
-    fun evictLocal(key: String)
+    fun evictLocal(key: String): Any?
 
     /**
      * Evicts cache entries by tags from the local cache only.
@@ -71,6 +71,7 @@ interface CacheFlowService {
      * @return Set of all cache keys
      */
     fun keys(): Set<String>
+
     /**
      * Evicts all cache entries from the local cache only.
      * Used for distributed cache coordination.

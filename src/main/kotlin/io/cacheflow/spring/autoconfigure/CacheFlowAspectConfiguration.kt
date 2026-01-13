@@ -86,5 +86,7 @@ class CacheFlowAspectConfiguration {
     @ConditionalOnMissingBean
     fun touchPropagationAspect(
         @org.springframework.beans.factory.annotation.Autowired(required = false) parentToucher: io.cacheflow.spring.aspect.ParentToucher?,
-    ): io.cacheflow.spring.aspect.TouchPropagationAspect = io.cacheflow.spring.aspect.TouchPropagationAspect(parentToucher)
+    ): io.cacheflow.spring.aspect.TouchPropagationAspect =
+        io.cacheflow.spring.aspect
+            .TouchPropagationAspect(parentToucher)
 }

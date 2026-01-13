@@ -35,7 +35,7 @@ class CacheFlowServiceImpl(
     private val misses = meterRegistry?.counter("cacheflow.misses")
     private val puts = meterRegistry?.counter("cacheflow.puts")
     private val evictions = meterRegistry?.counter("cacheflow.evictions")
-    
+
     private val localHits: Counter? = meterRegistry?.counter("cacheflow.local.hits")
     private val localMisses: Counter? = meterRegistry?.counter("cacheflow.local.misses")
     private val redisHits: Counter? = meterRegistry?.counter("cacheflow.redis.hits")
@@ -70,7 +70,7 @@ class CacheFlowServiceImpl(
                     logger.debug("Redis cache hit for key: {}", key)
                     redisHits?.increment()
                     // Populate local cache (L1) from Redis (L2)
-                    // Note: Tags are lost if we don't store them in L2 as well. 
+                    // Note: Tags are lost if we don't store them in L2 as well.
                     // In a full implementation, we might store metadata in a separate Redis key.
                     // For now, we populate local without tags on Redis hit.
                     putLocal(key, redisValue, properties.defaultTtl, emptySet())
@@ -106,7 +106,7 @@ class CacheFlowServiceImpl(
             try {
                 val redisKey = getRedisKey(key)
                 redisTemplate?.opsForValue()?.set(redisKey, value, ttl, TimeUnit.SECONDS)
-                
+
                 // Index tags in Redis
                 tags.forEach { tag ->
                     redisTemplate?.opsForSet()?.add(getRedisTagKey(tag), key)
@@ -125,7 +125,7 @@ class CacheFlowServiceImpl(
     ) {
         val expiresAt = System.currentTimeMillis() + ttl * millisecondsPerSecond
         cache[key] = CacheEntry(value, expiresAt, tags)
-        
+
         // Update local tag index
         tags.forEach { tag ->
             localTagIndex.computeIfAbsent(tag) { ConcurrentHashMap.newKeySet() }.add(key)
@@ -134,23 +134,20 @@ class CacheFlowServiceImpl(
 
     override fun evict(key: String) {
         evictions?.increment()
-        
+
         // 1. Evict Local and clean up index
-        evictLocal(key)
+        val entry = evictLocal(key) as? CacheEntry
 
         // 2. Evict Redis
         if (isRedisEnabled) {
             try {
                 val redisKey = getRedisKey(key)
                 redisTemplate?.delete(redisKey)
-                
+
                 // Clean up tag index in Redis
-                // Note: We don't have the entry here if it was already removed from local.
-                // Ideally, we should look it up first or use a better structure.
-                // For now, if we don't have the entry locally, we can't clean up Redis tags easily
-                // without extra lookup. This is a known limitation of the current simple design.
-                // If distributed, the dependency tracker might help.
-                // redisTemplate?.opsForSet()?.remove(getRedisTagKey(tag), key)
+                entry?.tags?.forEach { tag ->
+                    redisTemplate?.opsForSet()?.remove(getRedisTagKey(tag), key)
+                }
 
                 // 3. Publish Invalidation Message
                 redisCacheInvalidator?.publish(io.cacheflow.spring.messaging.InvalidationType.EVICT, keys = setOf(key))
@@ -183,24 +180,29 @@ class CacheFlowServiceImpl(
         evictions?.increment()
         cache.clear()
         localTagIndex.clear()
-        
+
         // 2. Redis Eviction
         if (isRedisEnabled) {
             try {
-                // Determine pattern for all keys
-                val pattern = properties.redis.keyPrefix + "*"
-                val keys = redisTemplate?.keys(pattern)
-                if (!keys.isNullOrEmpty()) {
-                    redisTemplate?.delete(keys)
+                // Delete all cache data keys
+                val dataKeys = redisTemplate?.keys(getRedisKey("*"))
+                if (!dataKeys.isNullOrEmpty()) {
+                    redisTemplate?.delete(dataKeys)
                 }
-                
+
+                // Delete all tag index keys
+                val tagKeys = redisTemplate?.keys(getRedisTagKey("*"))
+                if (!tagKeys.isNullOrEmpty()) {
+                    redisTemplate?.delete(tagKeys)
+                }
+
                 // 3. Publish Invalidation Message
                 redisCacheInvalidator?.publish(io.cacheflow.spring.messaging.InvalidationType.EVICT_ALL)
             } catch (e: Exception) {
                 logger.error("Error clearing Redis cache", e)
             }
         }
-        
+
         if (edgeCacheService != null) {
             scope.launch {
                 try {
@@ -214,7 +216,7 @@ class CacheFlowServiceImpl(
 
     override fun evictByTags(vararg tags: String) {
         evictions?.increment()
-        
+
         tags.forEach { tag ->
             // 1. Local Eviction
             evictLocalByTags(tag)
@@ -228,7 +230,7 @@ class CacheFlowServiceImpl(
                         // Delete actual data keys
                         val redisKeys = keys.map { getRedisKey(it as String) }
                         redisTemplate?.delete(redisKeys)
-                        
+
                         // Remove tag key
                         redisTemplate?.delete(tagKey)
                     }
@@ -253,7 +255,7 @@ class CacheFlowServiceImpl(
         }
     }
 
-    override fun evictLocal(key: String) {
+    override fun evictLocal(key: String): Any? {
         val entry = cache.remove(key)
         entry?.tags?.forEach { tag ->
             localTagIndex[tag]?.remove(key)
@@ -261,6 +263,7 @@ class CacheFlowServiceImpl(
                 localTagIndex.remove(tag)
             }
         }
+        return entry
     }
 
     override fun evictLocalByTags(vararg tags: String) {
@@ -281,7 +284,7 @@ class CacheFlowServiceImpl(
     override fun keys(): Set<String> = cache.keys.toSet()
 
     private fun getRedisKey(key: String): String = properties.redis.keyPrefix + "data:" + key
-    
+
     private fun getRedisTagKey(tag: String): String = properties.redis.keyPrefix + "tag:" + tag
 
     private data class CacheEntry(

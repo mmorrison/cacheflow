@@ -11,13 +11,10 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @ConditionalOnProperty(prefix = "cacheflow.warming", name = ["enabled"], havingValue = "true", matchIfMissing = true)
 class CacheFlowWarmingConfiguration {
-
     @Bean
     @ConditionalOnMissingBean
     fun cacheWarmer(
         properties: CacheFlowProperties,
         warmupProviders: List<CacheWarmupProvider>,
-    ): CacheWarmer {
-        return CacheWarmer(properties, warmupProviders)
-    }
+    ): CacheWarmer = CacheWarmer(properties, warmupProviders)
 }

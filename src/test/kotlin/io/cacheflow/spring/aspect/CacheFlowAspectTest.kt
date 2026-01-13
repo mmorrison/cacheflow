@@ -7,7 +7,6 @@ import io.cacheflow.spring.annotation.CacheFlowConfigRegistry
 import io.cacheflow.spring.annotation.CacheFlowEvict
 import io.cacheflow.spring.dependency.DependencyResolver
 import io.cacheflow.spring.service.CacheFlowService
-import io.cacheflow.spring.service.impl.CacheFlowServiceImpl
 import io.cacheflow.spring.versioning.CacheKeyVersioner
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.reflect.MethodSignature

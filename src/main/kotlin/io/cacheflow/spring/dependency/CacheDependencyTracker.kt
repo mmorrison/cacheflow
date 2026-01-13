@@ -34,11 +34,9 @@ class CacheDependencyTracker(
     private val isRedisEnabled: Boolean
         get() = properties.storage == CacheFlowProperties.StorageType.REDIS && redisTemplate != null
 
-    private fun getRedisDependencyKey(cacheKey: String): String =
-        "${properties.redis.keyPrefix}deps:$cacheKey"
+    private fun getRedisDependencyKey(cacheKey: String): String = "${properties.redis.keyPrefix}deps:$cacheKey"
 
-    private fun getRedisReverseDependencyKey(dependencyKey: String): String =
-        "${properties.redis.keyPrefix}rev-deps:$dependencyKey"
+    private fun getRedisReverseDependencyKey(dependencyKey: String): String = "${properties.redis.keyPrefix}rev-deps:$dependencyKey"
 
     override fun trackDependency(
         cacheKey: String,
